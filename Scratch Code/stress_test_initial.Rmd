@@ -1,0 +1,121 @@
+---
+title: "stress_test_initial"
+output:
+  pdf_document: default
+---
+```{r, message=FALSE, warning=FALSE}
+setwd("~/Documents/PSTAT296/Project/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/Scratch Code")
+library(dplyr)
+library(readr)
+mort_2020_2020 <- read_csv("~/Documents/PSTAT296/Project/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/Databy3yr/mort_2020-2020.csv")
+mort_2017_2019 <- read_csv("~/Documents/PSTAT296/Project/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/Databy3yr/mort_2017-2019.csv")
+```
+
+```{r}
+# Compare column names
+identical(names(mort_2020_2020), names(mort_2017_2019))
+mort_2017_2020 <- bind_rows(mort_2020_2020, mort_2017_2019)
+
+drug_overdose <- c(paste0("X", 40:44), paste0("X", 60:64), "X85", paste0("Y", 10:14))
+opioid_codes <- c("T400", "T401", "T402", "T403", "T404", "T406")
+```
+First, check two data sets have the exact same columns so that they can combine. 
+
+Ucod column:
+```{r}
+library(dplyr)
+
+# ucod column
+# Drug overdose deaths
+mort_2017_2020 %>%
+  filter(ucod %in% c(drug_overdose)) %>%
+  group_by(year) %>%
+  summarise(drug_overdose_deaths = n()) %>%
+  mutate(year = as.character(year)) %>%
+  arrange(year) %>%
+  bind_rows(
+    summarise(., year = "Total", drug_overdose_deaths = sum(drug_overdose_deaths))
+  )
+
+
+# type of opioid code
+mort_2017_2020 %>%
+  filter(ucod %in% opioid_codes) %>%
+  summarise(type_of_opioid = n()) 
+```
+In the `ucod` column, it only recorded whether the person died because of drug 
+overdose and did not specify opioid information. 
+
+Record_ columns: 
+```{r}
+temp <- mort_2017_2020 %>%
+  mutate(
+    drug = if_any(starts_with("record_"), ~ . %in% drug_overdose)
+  )
+
+temp <- temp %>%
+  mutate(
+    opioid = if_any(starts_with("record_"), ~ . %in% opioid_codes)
+  )
+
+temp <- temp %>%
+  mutate(
+    overall = if_any(starts_with("record_"), ~ . %in% c(drug_overdose,opioid_codes))
+  )
+
+temp %>%
+  group_by(year) %>%
+  summarise(
+    n_drug_overdose = sum(drug, na.rm = TRUE),
+    n_opioid = sum(opioid, na.rm = TRUE),
+    n_overall= sum(overall, na.rm = TRUE)
+  )
+```
+
+In the `record_` columns, we can see that in each year total number of drug 
+is greater than total number of death caused by opioid, which makes sense because 
+some drug overdose death might be caused by other drugs. Since we are concerned 
+about opioid-related death, we will only use `opioid` column to count number of 
+opioid death. 
+
+```{r}
+temp %>% 
+  filter(drug == FALSE & opioid == TRUE) %>% 
+  arrange(record_1)
+
+Opioid_NonOverdose <- temp %>% 
+    group_by(year) %>% 
+    filter(drug == FALSE & opioid == TRUE) %>% 
+    summarise(
+      Opioid_NoOverdose = n()
+      )
+
+Opioid_Overdose <- temp %>% 
+  group_by(year) %>% 
+  filter(drug == TRUE & opioid == TRUE) %>% 
+  summarise(
+    Opioid_overdose = n()
+    )
+
+Total_Death <- temp %>% 
+  group_by(year) %>% 
+  summarise(
+    Total = n()
+  )
+
+combined <- Opioid_NonOverdose %>%
+  left_join(Opioid_Overdose, by = "year") %>%
+  mutate(`Opioid-Related Death` = Opioid_NoOverdose + Opioid_overdose) %>% 
+  left_join(Total_Death, by = "year") %>% 
+  mutate(`% Opioid Death` = (`Opioid-Related Death` / Total) * 100)
+  
+combined
+```
+Most people that had opioid in their death record died because of drug overdose, which 
+we definitely count toward opioid-related death. 
+
+There are 175 person that have opioid in their death, classified as Opioid-Non-Overdose.
+Among these observations, the main cause of death include car accidents (including driver and pedestrian), accidental poisoned by and exposure to alcohol, and intentional self-poionsing by and exposure to other gases and vapours. Since doctors included 
+opioid in their death record, we assume that opioid could be the main driver of their 
+death and will count toward the opioid-related death in our project. 
+
