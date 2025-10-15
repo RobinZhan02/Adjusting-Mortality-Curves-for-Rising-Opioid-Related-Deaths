@@ -17,6 +17,7 @@ library(dplyr)
 library(tseries)
 library(forecast)
 library(ggfortify)
+library(strucchange)
 ```
 
 ## Background Research
@@ -108,4 +109,141 @@ ggplot(age_change, aes(x = year, y = pct_change, color = age)) +
     legend.position = "right",
     plot.title = element_text(face = "bold")
   )
+```
+
+```{r warning=FALSE}
+# Compute year-to-year percent change per age group
+age_diff <- age_data %>%
+  group_by(age) %>%
+  arrange(year, .by_group = TRUE) %>%
+  mutate(
+    pct_change = 100 * (val - lag(val))
+  ) %>%
+  ungroup()
+
+ggplot(age_diff, aes(x = year, y = pct_change, color = age)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 1.5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
+  labs(
+    title = "Year-to-Year Change in Opioid Mortality Rate by Age Group",
+    x = "Year",
+    y = "Difference",
+    color = "Age Group"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "right",
+    plot.title = element_text(face = "bold")
+  )
+```
+
+
+```{r}
+# Group the age buckets into young, middle, and old.
+age_data <- age_data %>%
+  mutate(
+    age_group = case_when(
+      age %in% c("15-19 years", "20-24 years") ~ "young",
+      age %in% c("55-59 years", "59-64 years") ~ "old", 
+      TRUE ~ "middle"                    
+    )
+  )
+head(age_data)
+```
+
+The only limitation to this approach is that rates are given in deaths per 100k, thus that when age groups are aggregated it makes the assumption that each age group has the same number of people, which is obviously not true. If population data was available, rescaling can be done to give weights to mortality rates for each age group
+
+```{r warning=FALSE, message=FALSE}
+age_data %>%
+  group_by(year, age_group) %>%
+  summarise(
+    middle_rate = mean(val, na.rm = TRUE),
+    low_rate = mean(lower, na.rm = TRUE),
+    high_rate = mean(upper, na.rm = TRUE)
+  ) %>%
+  ggplot(aes(x = year, y = middle_rate, color = age_group, fill = age_group)) +
+  geom_ribbon(aes(ymin = low_rate, ymax = high_rate), alpha = 0.2, color = NA) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 1.8) +
+  labs(
+    title = "Average Opioid Mortality Rate by Age Group (1990–2000)",
+    x = "Year",
+    y = "Rate per 100,000 population",
+    color = "Age Group",
+    fill = "Age Group"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "right",
+    plot.title = element_text(face = "bold")
+  )
+```
+
+```{r}
+age_grouped <- age_data %>%
+  group_by(year, age_group) %>%
+  summarise(
+    middle_rate = mean(val, na.rm = TRUE),
+    low_rate = mean(lower, na.rm = TRUE),
+    high_rate = mean(upper, na.rm = TRUE)
+  ) %>%
+  ungroup()
+
+library(tidyverse)
+library(forecast)
+library(tseries)
+
+# Loop through each age group
+for (group in unique(age_grouped$age_group)) {
+  
+  cat("\n--------------------------------------\n")
+  cat("Results for:", group, "\n")
+  
+  # Subset for that group
+  sub <- age_grouped %>%
+    filter(age_group == group) %>%
+    arrange(year)
+  
+  # Create time series
+  ts_obj <- ts(sub$middle_rate, start = min(sub$year), frequency = 1)
+  
+  # Run ADF test on original
+  adf_orig <- adf.test(ts_obj)
+  cat("ADF (original series) p-value:", round(adf_orig$p.value, 4), "\n")
+  
+  # Difference the series
+  ts_diff <- diff(ts_obj)
+  
+  # Run ADF test on differenced series
+  adf_diff <- adf.test(ts_diff)
+  cat("ADF (differenced series) p-value:", round(adf_diff$p.value, 4), "\n")
+  
+  # Optional: Plot both series
+  par(mfrow = c(2, 1))  # two plots per group
+  plot(ts_obj, main = paste("Original Series -", group),
+       ylab = "Rate per 100k", xlab = "Year")
+  plot(ts_diff, main = paste("Differenced Series -", group),
+       ylab = "Difference Rate per 100k", xlab = "Year")
+  
+  cat("--------------------------------------\n")
+}
+
+
+```
+
+```{r}
+breakpoints(middle_rate ~ 1, data = filter(age_grouped, age_group == "middle"))
+breakpoints(middle_rate ~ 1, data = filter(age_grouped, age_group == "old"))
+breakpoints(middle_rate ~ 1, data = filter(age_grouped, age_group == "young"))
+```
+
+```{r}
+library(zoo)
+sub <- filter(age_grouped, age_group == "middle")
+rollmean <- rollapply(sub$middle_rate, 3, mean, fill = NA)
+rollvar  <- rollapply(sub$middle_rate, 3, var, fill = NA)
+plot(sub$year, rollmean, type = "l", main = "Rolling Mean")
+plot(sub$year, rollvar, type = "l", main = "Rolling Variance")
+
 ```
