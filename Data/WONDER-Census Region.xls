@@ -1,0 +1,168 @@
+"Notes"	"Census Region"	"Census Region Code"	"Year"	"Year Code"	Deaths	Population	Crude Rate
+	"Census Region 1: Northeast"	"CENS-R1"	"1999"	"1999"	3899	53343775	7.3
+	"Census Region 1: Northeast"	"CENS-R1"	"2000"	"2000"	3884	53594378	7.2
+	"Census Region 1: Northeast"	"CENS-R1"	"2001"	"2001"	4451	53915522	8.3
+	"Census Region 1: Northeast"	"CENS-R1"	"2002"	"2002"	4586	54143915	8.5
+	"Census Region 1: Northeast"	"CENS-R1"	"2003"	"2003"	5025	54334453	9.2
+	"Census Region 1: Northeast"	"CENS-R1"	"2004"	"2004"	4708	54423533	8.7
+	"Census Region 1: Northeast"	"CENS-R1"	"2005"	"2005"	5308	54451230	9.7
+	"Census Region 1: Northeast"	"CENS-R1"	"2006"	"2006"	6420	54522659	11.8
+	"Census Region 1: Northeast"	"CENS-R1"	"2007"	"2007"	6361	54653362	11.6
+	"Census Region 1: Northeast"	"CENS-R1"	"2008"	"2008"	6333	54875926	11.5
+	"Census Region 1: Northeast"	"CENS-R1"	"2009"	"2009"	5848	55133101	10.6
+	"Census Region 1: Northeast"	"CENS-R1"	"2010"	"2010"	6310	55317240	11.4
+	"Census Region 1: Northeast"	"CENS-R1"	"2011"	"2011"	7550	55521598	13.6
+	"Census Region 1: Northeast"	"CENS-R1"	"2012"	"2012"	7961	55761091	14.3
+	"Census Region 1: Northeast"	"CENS-R1"	"2013"	"2013"	8811	55943073	15.7
+	"Census Region 1: Northeast"	"CENS-R1"	"2014"	"2014"	9476	56152333	16.9
+	"Census Region 1: Northeast"	"CENS-R1"	"2015"	"2015"	11529	56283891	20.5
+	"Census Region 1: Northeast"	"CENS-R1"	"2016"	"2016"	15331	56209510	27.3
+	"Census Region 1: Northeast"	"CENS-R1"	"2017"	"2017"	17138	56470581	30.3
+	"Census Region 1: Northeast"	"CENS-R1"	"2018"	"2018"	16113	56111079	28.7
+	"Census Region 1: Northeast"	"CENS-R1"	"2019"	"2019"	16021	55982803	28.6
+	"Census Region 1: Northeast"	"CENS-R1"	"2020"	"2020"	18721	55849869	33.5
+"Total"	"Census Region 1: Northeast"	"CENS-R1"			191784	1212994922	15.8
+	"Census Region 2: Midwest"	"CENS-R2"	"1999"	"1999"	3390	64100061	5.3
+	"Census Region 2: Midwest"	"CENS-R2"	"2000"	"2000"	3761	64392776	5.8
+	"Census Region 2: Midwest"	"CENS-R2"	"2001"	"2001"	4314	64776531	6.7
+	"Census Region 2: Midwest"	"CENS-R2"	"2002"	"2002"	4959	65018293	7.6
+	"Census Region 2: Midwest"	"CENS-R2"	"2003"	"2003"	4985	65276954	7.6
+	"Census Region 2: Midwest"	"CENS-R2"	"2004"	"2004"	5985	65532305	9.1
+	"Census Region 2: Midwest"	"CENS-R2"	"2005"	"2005"	6606	65751872	10.0
+	"Census Region 2: Midwest"	"CENS-R2"	"2006"	"2006"	7819	66028555	11.8
+	"Census Region 2: Midwest"	"CENS-R2"	"2007"	"2007"	7842	66293689	11.8
+	"Census Region 2: Midwest"	"CENS-R2"	"2008"	"2008"	8182	66523935	12.3
+	"Census Region 2: Midwest"	"CENS-R2"	"2009"	"2009"	8195	66748437	12.3
+	"Census Region 2: Midwest"	"CENS-R2"	"2010"	"2010"	8916	66927001	13.3
+	"Census Region 2: Midwest"	"CENS-R2"	"2011"	"2011"	9473	67158835	14.1
+	"Census Region 2: Midwest"	"CENS-R2"	"2012"	"2012"	9690	67316297	14.4
+	"Census Region 2: Midwest"	"CENS-R2"	"2013"	"2013"	10567	67547890	15.6
+	"Census Region 2: Midwest"	"CENS-R2"	"2014"	"2014"	11449	67745108	16.9
+	"Census Region 2: Midwest"	"CENS-R2"	"2015"	"2015"	12605	67907403	18.6
+	"Census Region 2: Midwest"	"CENS-R2"	"2016"	"2016"	15609	67941429	23.0
+	"Census Region 2: Midwest"	"CENS-R2"	"2017"	"2017"	17767	68179351	26.1
+	"Census Region 2: Midwest"	"CENS-R2"	"2018"	"2018"	16279	68308744	23.8
+	"Census Region 2: Midwest"	"CENS-R2"	"2019"	"2019"	17012	68329004	24.9
+	"Census Region 2: Midwest"	"CENS-R2"	"2020"	"2020"	21026	68316744	30.8
+"Total"	"Census Region 2: Midwest"	"CENS-R2"			216431	1466121214	14.8
+	"Census Region 3: South"	"CENS-R3"	"1999"	"1999"	5986	99164460	6.0
+	"Census Region 3: South"	"CENS-R3"	"2000"	"2000"	7006	100236820	7.0
+	"Census Region 3: South"	"CENS-R3"	"2001"	"2001"	8531	101849575	8.4
+	"Census Region 3: South"	"CENS-R3"	"2002"	"2002"	9527	103150787	9.2
+	"Census Region 3: South"	"CENS-R3"	"2003"	"2003"	10966	104380188	10.5
+	"Census Region 3: South"	"CENS-R3"	"2004"	"2004"	11841	105883977	11.2
+	"Census Region 3: South"	"CENS-R3"	"2005"	"2005"	12602	107479771	11.7
+	"Census Region 3: South"	"CENS-R3"	"2006"	"2006"	14394	109076933	13.2
+	"Census Region 3: South"	"CENS-R3"	"2007"	"2007"	14909	110688742	13.5
+	"Census Region 3: South"	"CENS-R3"	"2008"	"2008"	14987	112184930	13.4
+	"Census Region 3: South"	"CENS-R3"	"2009"	"2009"	15630	113548615	13.8
+	"Census Region 3: South"	"CENS-R3"	"2010"	"2010"	16016	114555744	14.0
+	"Census Region 3: South"	"CENS-R3"	"2011"	"2011"	16691	116046736	14.4
+	"Census Region 3: South"	"CENS-R3"	"2012"	"2012"	16441	117257221	14.0
+	"Census Region 3: South"	"CENS-R3"	"2013"	"2013"	16712	118383453	14.1
+	"Census Region 3: South"	"CENS-R3"	"2014"	"2014"	18068	119771934	15.1
+	"Census Region 3: South"	"CENS-R3"	"2015"	"2015"	20031	121182847	16.5
+	"Census Region 3: South"	"CENS-R3"	"2016"	"2016"	24598	122319574	20.1
+	"Census Region 3: South"	"CENS-R3"	"2017"	"2017"	26973	123658624	21.8
+	"Census Region 3: South"	"CENS-R3"	"2018"	"2018"	26141	124753948	21.0
+	"Census Region 3: South"	"CENS-R3"	"2019"	"2019"	27600	125580448	22.0
+	"Census Region 3: South"	"CENS-R3"	"2020"	"2020"	37465	126662754	29.6
+"Total"	"Census Region 3: South"	"CENS-R3"			373115	2497818081	14.9
+	"Census Region 4: West"	"CENS-R4"	"1999"	"1999"	6104	62431872	9.8
+	"Census Region 4: West"	"CENS-R4"	"2000"	"2000"	5360	63197932	8.5
+	"Census Region 4: West"	"CENS-R4"	"2001"	"2001"	4618	64427327	7.2
+	"Census Region 4: West"	"CENS-R4"	"2002"	"2002"	7418	65312198	11.4
+	"Census Region 4: West"	"CENS-R4"	"2003"	"2003"	8009	66116338	12.1
+	"Census Region 4: West"	"CENS-R4"	"2004"	"2004"	8249	66965483	12.3
+	"Census Region 4: West"	"CENS-R4"	"2005"	"2005"	8826	67833726	13.0
+	"Census Region 4: West"	"CENS-R4"	"2006"	"2006"	9402	68751765	13.7
+	"Census Region 4: West"	"CENS-R4"	"2007"	"2007"	10067	69595414	14.5
+	"Census Region 4: West"	"CENS-R4"	"2008"	"2008"	10077	70509175	14.3
+	"Census Region 4: West"	"CENS-R4"	"2009"	"2009"	10610	71341376	14.9
+	"Census Region 4: West"	"CENS-R4"	"2010"	"2010"	10509	71945553	14.6
+	"Census Region 4: West"	"CENS-R4"	"2011"	"2011"	11141	72864748	15.3
+	"Census Region 4: West"	"CENS-R4"	"2012"	"2012"	11064	73579431	15.0
+	"Census Region 4: West"	"CENS-R4"	"2013"	"2013"	11645	74254423	15.7
+	"Census Region 4: West"	"CENS-R4"	"2014"	"2014"	11878	75187681	15.8
+	"Census Region 4: West"	"CENS-R4"	"2015"	"2015"	12290	76044679	16.2
+	"Census Region 4: West"	"CENS-R4"	"2016"	"2016"	12633	76657000	16.5
+	"Census Region 4: West"	"CENS-R4"	"2017"	"2017"	13296	77410622	17.2
+	"Census Region 4: West"	"CENS-R4"	"2018"	"2018"	13948	77993663	17.9
+	"Census Region 4: West"	"CENS-R4"	"2019"	"2019"	15495	78347268	19.8
+	"Census Region 4: West"	"CENS-R4"	"2020"	"2020"	20683	78654756	26.3
+"Total"	"Census Region 4: West"	"CENS-R4"			233322	1569422430	14.9
+"Total"					1014652	6746356647	15.0
+"---"
+"Dataset: Multiple Cause of Death, 1999-2020"
+"Query Parameters:"
+"Title: WONDER-Census Region"
+"MCD - ICD-10 Codes: T40.0 (Opium); T40.1 (Heroin); T40.2 (Other opioids); T40.3 (Methadone); T40.4 (Other synthetic narcotics);"
+"T40.6 (Other and unspecified narcotics); X40 (Accidental poisoning by and exposure to nonopioid analgesics, antipyretics and"
+"antirheumatics); X41 (Accidental poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and"
+"psychotropic drugs, not elsewhere classified); X42 (Accidental poisoning by and exposure to narcotics and psychodysleptics"
+"[hallucinogens], not elsewhere classified); X43 (Accidental poisoning by and exposure to other drugs acting on the autonomic"
+"nervous system); X44 (Accidental poisoning by and exposure to other and unspecified drugs, medicaments and biological"
+"substances); X60 (Intentional self-poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics); X61"
+"(Intentional self-poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not"
+"elsewhere classified); X62 (Intentional self-poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not"
+"elsewhere classified); X63 (Intentional self-poisoning by and exposure to other drugs acting on the autonomic nervous system);"
+"X64 (Intentional self-poisoning by and exposure to other and unspecified drugs, medicaments and biological substances); X85"
+"(Assault by drugs, medicaments and biological substances); Y10 (Poisoning by and exposure to nonopioid analgesics, antipyretics"
+"and antirheumatics, undetermined intent); Y11 (Poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism"
+"and psychotropic drugs, not elsewhere classified, undetermined intent); Y12 (Poisoning by and exposure to narcotics and"
+"psychodysleptics [hallucinogens], not elsewhere classified, undetermined intent); Y13 (Poisoning by and exposure to other drugs"
+"acting on the autonomic nervous system, undetermined intent); Y14 (Poisoning by and exposure to other and unspecified drugs,"
+"medicaments and biological substances, undetermined intent)"
+"Group By: Census Region; Year"
+"Show Totals: True"
+"Show Zero Values: False"
+"Show Suppressed: True"
+"Calculate Rates Per: 100,000"
+"Rate Options: Default intercensal populations for years 2001-2009 (except Infant Age Groups)"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/mcd.html for more information."
+"---"
+"Query Date: Oct 29, 2025 1:48:47 AM"
+"---"
+"Suggested Citation: Centers for Disease Control and Prevention, National Center for Health Statistics. National Vital Statistics"
+"System, Mortality 1999-2020 on CDC WONDER Online Database, released in 2021. Data are from the Multiple Cause of Death Files,"
+"1999-2020, as compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative"
+"Program. Accessed at http://wonder.cdc.gov/mcd-icd10.html on Oct 29, 2025 1:48:47 AM"
+"---"
+Caveats:
+"1. As of April 3, 2017, the underlying cause of death has been revised for 125 deaths in 2014. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#2014-Revision."
+"2. Circumstances in Georgia for the years 2008 and 2009 have resulted in unusually high death counts for the ICD-10 cause of"
+"death code R99, ""Other ill-defined and unspecified causes of mortality."" Caution should be used in interpreting these data."
+"More information: http://wonder.cdc.gov/wonder/help/mcd.html#Georgia-Reporting-Anomalies."
+"3. Circumstances in New Jersey for the year 2009 have resulted in unusually high death counts for the ICD-10 cause of death code"
+"R99, ""Other ill-defined and unspecified causes of mortality"" and therefore unusually low death counts in other ICD-10 codes,"
+"most notably R95, ""Sudden Infant Death Syndrome"" and X40-X49, ""Unintentional poisoning."" Caution should be used in"
+"interpreting these data. More information: http://wonder.cdc.gov/wonder/help/mcd.html#New-Jersey-Reporting-Anomalies."
+"4. Circumstances in California resulted in unusually high death counts for the ICD-10 cause of death code R99, ""Other"
+"ill-defined and unspecified causes of mortality"" for deaths occurring in years 2000 and 2001. Caution should be used in"
+"interpreting these data. More information: http://wonder.cdc.gov/wonder/help/mcd.html#California-Reporting-Anomalies."
+"5. The population figures for year 2020 are bridged-race estimates of the July 1 resident population, from the Vintage 2020"
+"postcensal series released by NCHS on September 22, 2021. The population figures for year 2019 are bridged-race estimates of the"
+"July 1 resident population, from the Vintage 2019 postcensal series released by NCHS on July 9, 2020. The population figures for"
+"year 2018 are bridged-race estimates of the July 1 resident population, from the Vintage 2018 postcensal series released by NCHS"
+"on June 25, 2019. The population figures for year 2017 are bridged-race estimates of the July 1 resident population, from the"
+"Vintage 2017 postcensal series released by NCHS on June 27, 2018. The population figures for year 2016 are bridged-race"
+"estimates of the July 1 resident population, from the Vintage 2016 postcensal series released by NCHS on June 26, 2017. The"
+"population figures for year 2015 are bridged-race estimates of the July 1 resident population, from the Vintage 2015 postcensal"
+"series released by NCHS on June 28, 2016. The population figures for year 2014 are bridged-race estimates of the July 1 resident"
+"population, from the Vintage 2014 postcensal series released by NCHS on June 30, 2015. The population figures for year 2013 are"
+"bridged-race estimates of the July 1 resident population, from the Vintage 2013 postcensal series released by NCHS on June 26,"
+"2014. The population figures for year 2012 are bridged-race estimates of the July 1 resident population, from the Vintage 2012"
+"postcensal series released by NCHS on June 13, 2013. Population figures for 2011 are bridged-race estimates of the July 1"
+"resident population, from the county-level postcensal Vintage 2011 series released by NCHS on July 18, 2012. Population figures"
+"for 2010 are April 1 Census counts. The population figures for years 2001 - 2009, are bridged-race estimates of the July 1"
+"resident population, from the revised intercensal county-level 2000 - 2009 series released by NCHS on October 26, 2012."
+"Population figures for 2000 are April 1 Census counts. Population figures for 1999 are from the 1990-1999 intercensal series of"
+"July 1 estimates. Population figures for Infant Age Groups are the number of live births. <br/><b>Note:</b> Rates and population"
+"figures for years 2001 - 2009 differ slightly from previously published reports, due to use of the population estimates which"
+"were available at the time of release."
+"6. The population figures used in the calculation of death rates for the age group 'under 1 year' are the estimates of the"
+"resident population that is under one year of age. More information: http://wonder.cdc.gov/wonder/help/mcd.html#Age Group."
+"7. Changes to cause of death classification affect reporting trends. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#ICD-10 Changes."

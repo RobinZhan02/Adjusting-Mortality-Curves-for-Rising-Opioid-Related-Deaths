@@ -1,0 +1,283 @@
+"Notes"	"Census Division"	"Census Division Code"	"Year"	"Year Code"	Deaths	Population	Crude Rate
+	"Division 1: New England"	"CENS-D1"	"1999"	"1999"	1106	13837653	8.0
+	"Division 1: New England"	"CENS-D1"	"2000"	"2000"	1091	13922517	7.8
+	"Division 1: New England"	"CENS-D1"	"2001"	"2001"	1436	14041043	10.2
+	"Division 1: New England"	"CENS-D1"	"2002"	"2002"	1540	14122441	10.9
+	"Division 1: New England"	"CENS-D1"	"2003"	"2003"	1688	14182454	11.9
+	"Division 1: New England"	"CENS-D1"	"2004"	"2004"	1512	14206683	10.6
+	"Division 1: New England"	"CENS-D1"	"2005"	"2005"	1718	14216656	12.1
+	"Division 1: New England"	"CENS-D1"	"2006"	"2006"	2024	14245540	14.2
+	"Division 1: New England"	"CENS-D1"	"2007"	"2007"	1980	14279205	13.9
+	"Division 1: New England"	"CENS-D1"	"2008"	"2008"	1801	14340115	12.6
+	"Division 1: New England"	"CENS-D1"	"2009"	"2009"	1846	14403575	12.8
+	"Division 1: New England"	"CENS-D1"	"2010"	"2010"	1706	14444865	11.8
+	"Division 1: New England"	"CENS-D1"	"2011"	"2011"	1995	14492360	13.8
+	"Division 1: New England"	"CENS-D1"	"2012"	"2012"	1983	14562704	13.6
+	"Division 1: New England"	"CENS-D1"	"2013"	"2013"	2476	14618806	16.9
+	"Division 1: New England"	"CENS-D1"	"2014"	"2014"	2891	14680722	19.7
+	"Division 1: New England"	"CENS-D1"	"2015"	"2015"	3728	14727584	25.3
+	"Division 1: New England"	"CENS-D1"	"2016"	"2016"	4625	14735525	31.4
+	"Division 1: New England"	"CENS-D1"	"2017"	"2017"	4723	14810001	31.9
+	"Division 1: New England"	"CENS-D1"	"2018"	"2018"	4697	14853290	31.6
+	"Division 1: New England"	"CENS-D1"	"2019"	"2019"	4788	14845063	32.3
+	"Division 1: New England"	"CENS-D1"	"2020"	"2020"	5301	14847468	35.7
+"Total"	"Division 1: New England"	"CENS-D1"			56655	317416270	17.8
+	"Division 2: Middle Atlantic"	"CENS-D2"	"1999"	"1999"	2793	39506122	7.1
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2000"	"2000"	2793	39671861	7.0
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2001"	"2001"	3015	39874479	7.6
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2002"	"2002"	3046	40021474	7.6
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2003"	"2003"	3337	40151999	8.3
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2004"	"2004"	3196	40216850	7.9
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2005"	"2005"	3590	40234574	8.9
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2006"	"2006"	4396	40277119	10.9
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2007"	"2007"	4381	40374157	10.9
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2008"	"2008"	4532	40535811	11.2
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2009"	"2009"	4002	40729526	9.8
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2010"	"2010"	4604	40872375	11.3
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2011"	"2011"	5555	41029238	13.5
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2012"	"2012"	5978	41198387	14.5
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2013"	"2013"	6335	41324267	15.3
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2014"	"2014"	6585	41471611	15.9
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2015"	"2015"	7801	41556307	18.8
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2016"	"2016"	10706	41473985	25.8
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2017"	"2017"	12415	41660580	29.8
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2018"	"2018"	11416	41257789	27.7
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2019"	"2019"	11233	41137740	27.3
+	"Division 2: Middle Atlantic"	"CENS-D2"	"2020"	"2020"	13420	41002401	32.7
+"Total"	"Division 2: Middle Atlantic"	"CENS-D2"			135129	895578652	15.1
+	"Division 3: East North Central"	"CENS-D3"	"1999"	"1999"	2659	44969225	5.9
+	"Division 3: East North Central"	"CENS-D3"	"2000"	"2000"	2962	45155037	6.6
+	"Division 3: East North Central"	"CENS-D3"	"2001"	"2001"	3318	45401564	7.3
+	"Division 3: East North Central"	"CENS-D3"	"2002"	"2002"	3823	45550284	8.4
+	"Division 3: East North Central"	"CENS-D3"	"2003"	"2003"	3686	45707787	8.1
+	"Division 3: East North Central"	"CENS-D3"	"2004"	"2004"	4579	45844372	10.0
+	"Division 3: East North Central"	"CENS-D3"	"2005"	"2005"	5043	45949142	11.0
+	"Division 3: East North Central"	"CENS-D3"	"2006"	"2006"	5991	46071573	13.0
+	"Division 3: East North Central"	"CENS-D3"	"2007"	"2007"	5990	46187992	13.0
+	"Division 3: East North Central"	"CENS-D3"	"2008"	"2008"	6257	46275120	13.5
+	"Division 3: East North Central"	"CENS-D3"	"2009"	"2009"	6027	46355854	13.0
+	"Division 3: East North Central"	"CENS-D3"	"2010"	"2010"	6610	46421564	14.2
+	"Division 3: East North Central"	"CENS-D3"	"2011"	"2011"	7045	46519084	15.1
+	"Division 3: East North Central"	"CENS-D3"	"2012"	"2012"	7291	46566572	15.7
+	"Division 3: East North Central"	"CENS-D3"	"2013"	"2013"	8004	46662180	17.2
+	"Division 3: East North Central"	"CENS-D3"	"2014"	"2014"	8801	46739039	18.8
+	"Division 3: East North Central"	"CENS-D3"	"2015"	"2015"	9773	46787011	20.9
+	"Division 3: East North Central"	"CENS-D3"	"2016"	"2016"	12344	46755973	26.4
+	"Division 3: East North Central"	"CENS-D3"	"2017"	"2017"	14320	46885244	30.5
+	"Division 3: East North Central"	"CENS-D3"	"2018"	"2018"	12727	46931883	27.1
+	"Division 3: East North Central"	"CENS-D3"	"2019"	"2019"	13090	46902431	27.9
+	"Division 3: East North Central"	"CENS-D3"	"2020"	"2020"	16255	46834910	34.7
+"Total"	"Division 3: East North Central"	"CENS-D3"			166595	1017473841	16.4
+	"Division 4: West North Central"	"CENS-D4"	"1999"	"1999"	731	19130836	3.8
+	"Division 4: West North Central"	"CENS-D4"	"2000"	"2000"	799	19237739	4.2
+	"Division 4: West North Central"	"CENS-D4"	"2001"	"2001"	996	19374967	5.1
+	"Division 4: West North Central"	"CENS-D4"	"2002"	"2002"	1136	19468009	5.8
+	"Division 4: West North Central"	"CENS-D4"	"2003"	"2003"	1299	19569167	6.6
+	"Division 4: West North Central"	"CENS-D4"	"2004"	"2004"	1406	19687933	7.1
+	"Division 4: West North Central"	"CENS-D4"	"2005"	"2005"	1563	19802730	7.9
+	"Division 4: West North Central"	"CENS-D4"	"2006"	"2006"	1828	19956982	9.2
+	"Division 4: West North Central"	"CENS-D4"	"2007"	"2007"	1852	20105697	9.2
+	"Division 4: West North Central"	"CENS-D4"	"2008"	"2008"	1925	20248815	9.5
+	"Division 4: West North Central"	"CENS-D4"	"2009"	"2009"	2168	20392583	10.6
+	"Division 4: West North Central"	"CENS-D4"	"2010"	"2010"	2306	20505437	11.2
+	"Division 4: West North Central"	"CENS-D4"	"2011"	"2011"	2428	20639751	11.8
+	"Division 4: West North Central"	"CENS-D4"	"2012"	"2012"	2399	20749725	11.6
+	"Division 4: West North Central"	"CENS-D4"	"2013"	"2013"	2563	20885710	12.3
+	"Division 4: West North Central"	"CENS-D4"	"2014"	"2014"	2648	21006069	12.6
+	"Division 4: West North Central"	"CENS-D4"	"2015"	"2015"	2832	21120392	13.4
+	"Division 4: West North Central"	"CENS-D4"	"2016"	"2016"	3265	21185456	15.4
+	"Division 4: West North Central"	"CENS-D4"	"2017"	"2017"	3447	21294107	16.2
+	"Division 4: West North Central"	"CENS-D4"	"2018"	"2018"	3552	21376861	16.6
+	"Division 4: West North Central"	"CENS-D4"	"2019"	"2019"	3922	21426573	18.3
+	"Division 4: West North Central"	"CENS-D4"	"2020"	"2020"	4771	21481834	22.2
+"Total"	"Division 4: West North Central"	"CENS-D4"			49836	448647373	11.1
+	"Division 5: South Atlantic"	"CENS-D5"	"1999"	"1999"	3247	51141114	6.3
+	"Division 5: South Atlantic"	"CENS-D5"	"2000"	"2000"	3940	51769160	7.6
+	"Division 5: South Atlantic"	"CENS-D5"	"2001"	"2001"	4930	52753858	9.3
+	"Division 5: South Atlantic"	"CENS-D5"	"2002"	"2002"	5357	53543625	10.0
+	"Division 5: South Atlantic"	"CENS-D5"	"2003"	"2003"	5936	54261722	10.9
+	"Division 5: South Atlantic"	"CENS-D5"	"2004"	"2004"	6425	55186148	11.6
+	"Division 5: South Atlantic"	"CENS-D5"	"2005"	"2005"	6652	56145779	11.8
+	"Division 5: South Atlantic"	"CENS-D5"	"2006"	"2006"	7647	57156873	13.4
+	"Division 5: South Atlantic"	"CENS-D5"	"2007"	"2007"	7943	57964590	13.7
+	"Division 5: South Atlantic"	"CENS-D5"	"2008"	"2008"	8247	58693474	14.1
+	"Division 5: South Atlantic"	"CENS-D5"	"2009"	"2009"	8234	59300986	13.9
+	"Division 5: South Atlantic"	"CENS-D5"	"2010"	"2010"	8400	59777037	14.1
+	"Division 5: South Atlantic"	"CENS-D5"	"2011"	"2011"	8805	60513771	14.6
+	"Division 5: South Atlantic"	"CENS-D5"	"2012"	"2012"	8510	61188567	13.9
+	"Division 5: South Atlantic"	"CENS-D5"	"2013"	"2013"	8536	61783647	13.8
+	"Division 5: South Atlantic"	"CENS-D5"	"2014"	"2014"	9373	62514615	15.0
+	"Division 5: South Atlantic"	"CENS-D5"	"2015"	"2015"	10789	63276764	17.1
+	"Division 5: South Atlantic"	"CENS-D5"	"2016"	"2016"	14491	63923309	22.7
+	"Division 5: South Atlantic"	"CENS-D5"	"2017"	"2017"	16128	64705532	24.9
+	"Division 5: South Atlantic"	"CENS-D5"	"2018"	"2018"	15621	65322408	23.9
+	"Division 5: South Atlantic"	"CENS-D5"	"2019"	"2019"	16411	65784817	24.9
+	"Division 5: South Atlantic"	"CENS-D5"	"2020"	"2020"	22136	66392969	33.3
+"Total"	"Division 5: South Atlantic"	"CENS-D5"			207758	1303100765	15.9
+	"Division 6: East South Central"	"CENS-D6"	"1999"	"1999"	912	16915308	5.4
+	"Division 6: East South Central"	"CENS-D6"	"2000"	"2000"	1062	17022810	6.2
+	"Division 6: East South Central"	"CENS-D6"	"2001"	"2001"	1287	17139549	7.5
+	"Division 6: East South Central"	"CENS-D6"	"2002"	"2002"	1463	17224563	8.5
+	"Division 6: East South Central"	"CENS-D6"	"2003"	"2003"	1809	17336785	10.4
+	"Division 6: East South Central"	"CENS-D6"	"2004"	"2004"	2004	17476649	11.5
+	"Division 6: East South Central"	"CENS-D6"	"2005"	"2005"	2228	17649547	12.6
+	"Division 6: East South Central"	"CENS-D6"	"2006"	"2006"	2617	17841964	14.7
+	"Division 6: East South Central"	"CENS-D6"	"2007"	"2007"	2670	18033589	14.8
+	"Division 6: East South Central"	"CENS-D6"	"2008"	"2008"	2787	18203301	15.3
+	"Division 6: East South Central"	"CENS-D6"	"2009"	"2009"	2866	18339805	15.6
+	"Division 6: East South Central"	"CENS-D6"	"2010"	"2010"	3178	18432505	17.2
+	"Division 6: East South Central"	"CENS-D6"	"2011"	"2011"	3236	18553961	17.4
+	"Division 6: East South Central"	"CENS-D6"	"2012"	"2012"	3303	18643607	17.7
+	"Division 6: East South Central"	"CENS-D6"	"2013"	"2013"	3329	18716202	17.8
+	"Division 6: East South Central"	"CENS-D6"	"2014"	"2014"	3639	18806265	19.3
+	"Division 6: East South Central"	"CENS-D6"	"2015"	"2015"	4064	18876703	21.5
+	"Division 6: East South Central"	"CENS-D6"	"2016"	"2016"	4434	18940194	23.4
+	"Division 6: East South Central"	"CENS-D6"	"2017"	"2017"	4807	19029020	25.3
+	"Division 6: East South Central"	"CENS-D6"	"2018"	"2018"	4496	19112813	23.5
+	"Division 6: East South Central"	"CENS-D6"	"2019"	"2019"	4954	19176181	25.8
+	"Division 6: East South Central"	"CENS-D6"	"2020"	"2020"	7099	19252403	36.9
+"Total"	"Division 6: East South Central"	"CENS-D6"			68244	400723724	17.0
+	"Division 7: West South Central"	"CENS-D7"	"1999"	"1999"	1827	31108038	5.9
+	"Division 7: West South Central"	"CENS-D7"	"2000"	"2000"	2004	31444850	6.4
+	"Division 7: West South Central"	"CENS-D7"	"2001"	"2001"	2314	31956168	7.2
+	"Division 7: West South Central"	"CENS-D7"	"2002"	"2002"	2707	32382599	8.4
+	"Division 7: West South Central"	"CENS-D7"	"2003"	"2003"	3221	32781681	9.8
+	"Division 7: West South Central"	"CENS-D7"	"2004"	"2004"	3412	33221180	10.3
+	"Division 7: West South Central"	"CENS-D7"	"2005"	"2005"	3722	33684445	11.0
+	"Division 7: West South Central"	"CENS-D7"	"2006"	"2006"	4130	34078096	12.1
+	"Division 7: West South Central"	"CENS-D7"	"2007"	"2007"	4296	34690563	12.4
+	"Division 7: West South Central"	"CENS-D7"	"2008"	"2008"	3953	35288155	11.2
+	"Division 7: West South Central"	"CENS-D7"	"2009"	"2009"	4530	35907824	12.6
+	"Division 7: West South Central"	"CENS-D7"	"2010"	"2010"	4438	36346202	12.2
+	"Division 7: West South Central"	"CENS-D7"	"2011"	"2011"	4650	36979004	12.6
+	"Division 7: West South Central"	"CENS-D7"	"2012"	"2012"	4628	37425047	12.4
+	"Division 7: West South Central"	"CENS-D7"	"2013"	"2013"	4847	37883604	12.8
+	"Division 7: West South Central"	"CENS-D7"	"2014"	"2014"	5056	38451054	13.1
+	"Division 7: West South Central"	"CENS-D7"	"2015"	"2015"	5178	39029380	13.3
+	"Division 7: West South Central"	"CENS-D7"	"2016"	"2016"	5673	39456071	14.4
+	"Division 7: West South Central"	"CENS-D7"	"2017"	"2017"	6038	39924072	15.1
+	"Division 7: West South Central"	"CENS-D7"	"2018"	"2018"	6024	40318727	14.9
+	"Division 7: West South Central"	"CENS-D7"	"2019"	"2019"	6235	40619450	15.3
+	"Division 7: West South Central"	"CENS-D7"	"2020"	"2020"	8230	41017382	20.1
+"Total"	"Division 7: West South Central"	"CENS-D7"			97113	793993592	12.2
+	"Division 8: Mountain"	"CENS-D8"	"1999"	"1999"	1862	17861084	10.4
+	"Division 8: Mountain"	"CENS-D8"	"2000"	"2000"	1951	18172295	10.7
+	"Division 8: Mountain"	"CENS-D8"	"2001"	"2001"	2083	18634548	11.2
+	"Division 8: Mountain"	"CENS-D8"	"2002"	"2002"	2477	18992632	13.0
+	"Division 8: Mountain"	"CENS-D8"	"2003"	"2003"	2750	19312120	14.2
+	"Division 8: Mountain"	"CENS-D8"	"2004"	"2004"	2829	19709944	14.4
+	"Division 8: Mountain"	"CENS-D8"	"2005"	"2005"	3200	20175601	15.9
+	"Division 8: Mountain"	"CENS-D8"	"2006"	"2006"	3395	20703894	16.4
+	"Division 8: Mountain"	"CENS-D8"	"2007"	"2007"	3764	21165124	17.8
+	"Division 8: Mountain"	"CENS-D8"	"2008"	"2008"	3721	21554191	17.3
+	"Division 8: Mountain"	"CENS-D8"	"2009"	"2009"	3961	21858509	18.1
+	"Division 8: Mountain"	"CENS-D8"	"2010"	"2010"	4041	22065451	18.3
+	"Division 8: Mountain"	"CENS-D8"	"2011"	"2011"	4410	22373411	19.7
+	"Division 8: Mountain"	"CENS-D8"	"2012"	"2012"	4477	22617874	19.8
+	"Division 8: Mountain"	"CENS-D8"	"2013"	"2013"	4603	22881245	20.1
+	"Division 8: Mountain"	"CENS-D8"	"2014"	"2014"	4665	23197119	20.1
+	"Division 8: Mountain"	"CENS-D8"	"2015"	"2015"	4826	23530498	20.5
+	"Division 8: Mountain"	"CENS-D8"	"2016"	"2016"	5093	23855067	21.3
+	"Division 8: Mountain"	"CENS-D8"	"2017"	"2017"	5334	24158117	22.1
+	"Division 8: Mountain"	"CENS-D8"	"2018"	"2018"	5577	24552385	22.7
+	"Division 8: Mountain"	"CENS-D8"	"2019"	"2019"	5974	24854998	24.0
+	"Division 8: Mountain"	"CENS-D8"	"2020"	"2020"	7573	25213395	30.0
+"Total"	"Division 8: Mountain"	"CENS-D8"			88566	477439502	18.6
+	"Division 9: Pacific"	"CENS-D9"	"1999"	"1999"	4242	44570788	9.5
+	"Division 9: Pacific"	"CENS-D9"	"2000"	"2000"	3409	45025637	7.6
+	"Division 9: Pacific"	"CENS-D9"	"2001"	"2001"	2535	45792779	5.5
+	"Division 9: Pacific"	"CENS-D9"	"2002"	"2002"	4941	46319566	10.7
+	"Division 9: Pacific"	"CENS-D9"	"2003"	"2003"	5259	46804218	11.2
+	"Division 9: Pacific"	"CENS-D9"	"2004"	"2004"	5420	47255539	11.5
+	"Division 9: Pacific"	"CENS-D9"	"2005"	"2005"	5626	47658125	11.8
+	"Division 9: Pacific"	"CENS-D9"	"2006"	"2006"	6007	48047871	12.5
+	"Division 9: Pacific"	"CENS-D9"	"2007"	"2007"	6303	48430290	13.0
+	"Division 9: Pacific"	"CENS-D9"	"2008"	"2008"	6356	48954984	13.0
+	"Division 9: Pacific"	"CENS-D9"	"2009"	"2009"	6649	49482867	13.4
+	"Division 9: Pacific"	"CENS-D9"	"2010"	"2010"	6468	49880102	13.0
+	"Division 9: Pacific"	"CENS-D9"	"2011"	"2011"	6731	50491337	13.3
+	"Division 9: Pacific"	"CENS-D9"	"2012"	"2012"	6587	50961557	12.9
+	"Division 9: Pacific"	"CENS-D9"	"2013"	"2013"	7042	51373178	13.7
+	"Division 9: Pacific"	"CENS-D9"	"2014"	"2014"	7213	51990562	13.9
+	"Division 9: Pacific"	"CENS-D9"	"2015"	"2015"	7464	52514181	14.2
+	"Division 9: Pacific"	"CENS-D9"	"2016"	"2016"	7540	52801933	14.3
+	"Division 9: Pacific"	"CENS-D9"	"2017"	"2017"	7962	53252505	15.0
+	"Division 9: Pacific"	"CENS-D9"	"2018"	"2018"	8371	53441278	15.7
+	"Division 9: Pacific"	"CENS-D9"	"2019"	"2019"	9521	53492270	17.8
+	"Division 9: Pacific"	"CENS-D9"	"2020"	"2020"	13110	53441361	24.5
+"Total"	"Division 9: Pacific"	"CENS-D9"			144756	1091982928	13.3
+"Total"					1014652	6746356647	15.0
+"---"
+"Dataset: Multiple Cause of Death, 1999-2020"
+"Query Parameters:"
+"Title: WONDER-Census Division"
+"MCD - ICD-10 Codes: T40.0 (Opium); T40.1 (Heroin); T40.2 (Other opioids); T40.3 (Methadone); T40.4 (Other synthetic narcotics);"
+"T40.6 (Other and unspecified narcotics); X40 (Accidental poisoning by and exposure to nonopioid analgesics, antipyretics and"
+"antirheumatics); X41 (Accidental poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and"
+"psychotropic drugs, not elsewhere classified); X42 (Accidental poisoning by and exposure to narcotics and psychodysleptics"
+"[hallucinogens], not elsewhere classified); X43 (Accidental poisoning by and exposure to other drugs acting on the autonomic"
+"nervous system); X44 (Accidental poisoning by and exposure to other and unspecified drugs, medicaments and biological"
+"substances); X60 (Intentional self-poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics); X61"
+"(Intentional self-poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not"
+"elsewhere classified); X62 (Intentional self-poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not"
+"elsewhere classified); X63 (Intentional self-poisoning by and exposure to other drugs acting on the autonomic nervous system);"
+"X64 (Intentional self-poisoning by and exposure to other and unspecified drugs, medicaments and biological substances); X85"
+"(Assault by drugs, medicaments and biological substances); Y10 (Poisoning by and exposure to nonopioid analgesics, antipyretics"
+"and antirheumatics, undetermined intent); Y11 (Poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism"
+"and psychotropic drugs, not elsewhere classified, undetermined intent); Y12 (Poisoning by and exposure to narcotics and"
+"psychodysleptics [hallucinogens], not elsewhere classified, undetermined intent); Y13 (Poisoning by and exposure to other drugs"
+"acting on the autonomic nervous system, undetermined intent); Y14 (Poisoning by and exposure to other and unspecified drugs,"
+"medicaments and biological substances, undetermined intent)"
+"Group By: Census Division; Year"
+"Show Totals: True"
+"Show Zero Values: False"
+"Show Suppressed: True"
+"Calculate Rates Per: 100,000"
+"Rate Options: Default intercensal populations for years 2001-2009 (except Infant Age Groups)"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/mcd.html for more information."
+"---"
+"Query Date: Oct 29, 2025 1:49:41 AM"
+"---"
+"Suggested Citation: Centers for Disease Control and Prevention, National Center for Health Statistics. National Vital Statistics"
+"System, Mortality 1999-2020 on CDC WONDER Online Database, released in 2021. Data are from the Multiple Cause of Death Files,"
+"1999-2020, as compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative"
+"Program. Accessed at http://wonder.cdc.gov/mcd-icd10.html on Oct 29, 2025 1:49:41 AM"
+"---"
+Caveats:
+"1. As of April 3, 2017, the underlying cause of death has been revised for 125 deaths in 2014. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#2014-Revision."
+"2. Circumstances in Georgia for the years 2008 and 2009 have resulted in unusually high death counts for the ICD-10 cause of"
+"death code R99, ""Other ill-defined and unspecified causes of mortality."" Caution should be used in interpreting these data."
+"More information: http://wonder.cdc.gov/wonder/help/mcd.html#Georgia-Reporting-Anomalies."
+"3. Circumstances in New Jersey for the year 2009 have resulted in unusually high death counts for the ICD-10 cause of death code"
+"R99, ""Other ill-defined and unspecified causes of mortality"" and therefore unusually low death counts in other ICD-10 codes,"
+"most notably R95, ""Sudden Infant Death Syndrome"" and X40-X49, ""Unintentional poisoning."" Caution should be used in"
+"interpreting these data. More information: http://wonder.cdc.gov/wonder/help/mcd.html#New-Jersey-Reporting-Anomalies."
+"4. Circumstances in California resulted in unusually high death counts for the ICD-10 cause of death code R99, ""Other"
+"ill-defined and unspecified causes of mortality"" for deaths occurring in years 2000 and 2001. Caution should be used in"
+"interpreting these data. More information: http://wonder.cdc.gov/wonder/help/mcd.html#California-Reporting-Anomalies."
+"5. The population figures for year 2020 are bridged-race estimates of the July 1 resident population, from the Vintage 2020"
+"postcensal series released by NCHS on September 22, 2021. The population figures for year 2019 are bridged-race estimates of the"
+"July 1 resident population, from the Vintage 2019 postcensal series released by NCHS on July 9, 2020. The population figures for"
+"year 2018 are bridged-race estimates of the July 1 resident population, from the Vintage 2018 postcensal series released by NCHS"
+"on June 25, 2019. The population figures for year 2017 are bridged-race estimates of the July 1 resident population, from the"
+"Vintage 2017 postcensal series released by NCHS on June 27, 2018. The population figures for year 2016 are bridged-race"
+"estimates of the July 1 resident population, from the Vintage 2016 postcensal series released by NCHS on June 26, 2017. The"
+"population figures for year 2015 are bridged-race estimates of the July 1 resident population, from the Vintage 2015 postcensal"
+"series released by NCHS on June 28, 2016. The population figures for year 2014 are bridged-race estimates of the July 1 resident"
+"population, from the Vintage 2014 postcensal series released by NCHS on June 30, 2015. The population figures for year 2013 are"
+"bridged-race estimates of the July 1 resident population, from the Vintage 2013 postcensal series released by NCHS on June 26,"
+"2014. The population figures for year 2012 are bridged-race estimates of the July 1 resident population, from the Vintage 2012"
+"postcensal series released by NCHS on June 13, 2013. Population figures for 2011 are bridged-race estimates of the July 1"
+"resident population, from the county-level postcensal Vintage 2011 series released by NCHS on July 18, 2012. Population figures"
+"for 2010 are April 1 Census counts. The population figures for years 2001 - 2009, are bridged-race estimates of the July 1"
+"resident population, from the revised intercensal county-level 2000 - 2009 series released by NCHS on October 26, 2012."
+"Population figures for 2000 are April 1 Census counts. Population figures for 1999 are from the 1990-1999 intercensal series of"
+"July 1 estimates. Population figures for Infant Age Groups are the number of live births. <br/><b>Note:</b> Rates and population"
+"figures for years 2001 - 2009 differ slightly from previously published reports, due to use of the population estimates which"
+"were available at the time of release."
+"6. The population figures used in the calculation of death rates for the age group 'under 1 year' are the estimates of the"
+"resident population that is under one year of age. More information: http://wonder.cdc.gov/wonder/help/mcd.html#Age Group."
+"7. Changes to cause of death classification affect reporting trends. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#ICD-10 Changes."
