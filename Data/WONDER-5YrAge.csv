@@ -1,0 +1,581 @@
+"Notes","Five-Year Age Groups","Five-Year Age Groups Code","Year","Year Code",Deaths,Population,Crude Rate,Crude Rate Lower 95% Confidence Interval,Crude Rate Upper 95% Confidence Interval,Crude Rate Standard Error
+,"< 1 year","1","1999","1999",Suppressed,3795762,Suppressed,Suppressed,Suppressed,Suppressed
+,"< 1 year","1","2000","2000",Suppressed,3805648,Suppressed,Suppressed,Suppressed,Suppressed
+,"< 1 year","1","2001","2001",Suppressed,4012658,Suppressed,Suppressed,Suppressed,Suppressed
+,"< 1 year","1","2002","2002",Suppressed,3951461,Suppressed,Suppressed,Suppressed,Suppressed
+,"< 1 year","1","2003","2003",Suppressed,3975871,Suppressed,Suppressed,Suppressed,Suppressed
+,"< 1 year","1","2004","2004",Suppressed,4014258,Suppressed,Suppressed,Suppressed,Suppressed
+,"< 1 year","1","2005","2005",Suppressed,4004393,Suppressed,Suppressed,Suppressed,Suppressed
+,"< 1 year","1","2006","2006",Suppressed,4041738,Suppressed,Suppressed,Suppressed,Suppressed
+,"< 1 year","1","2007","2007",Suppressed,4147997,Suppressed,Suppressed,Suppressed,Suppressed
+,"< 1 year","1","2008","2008",Suppressed,4132735,Suppressed,Suppressed,Suppressed,Suppressed
+,"< 1 year","1","2009","2009",Suppressed,4003587,Suppressed,Suppressed,Suppressed,Suppressed
+,"< 1 year","1","2010","2010",11,3944153,Unreliable,0.1,0.5,0.1
+,"< 1 year","1","2011","2011",12,3996537,Unreliable,0.2,0.5,0.1
+,"< 1 year","1","2012","2012",17,3943077,Unreliable,0.3,0.7,0.1
+,"< 1 year","1","2013","2013",Suppressed,3941783,Suppressed,Suppressed,Suppressed,Suppressed
+,"< 1 year","1","2014","2014",Suppressed,3948350,Suppressed,Suppressed,Suppressed,Suppressed
+,"< 1 year","1","2015","2015",13,3978038,Unreliable,0.2,0.6,0.1
+,"< 1 year","1","2016","2016",12,3970145,Unreliable,0.2,0.5,0.1
+,"< 1 year","1","2017","2017",19,3939295,Unreliable,0.3,0.8,0.1
+,"< 1 year","1","2018","2018",15,3848208,Unreliable,0.2,0.6,0.1
+,"< 1 year","1","2019","2019",19,3783052,Unreliable,0.3,0.8,0.1
+,"< 1 year","1","2020","2020",24,3735010,0.6,0.4,1.0,0.1
+,"1-4 years","1-4","1999","1999",Suppressed,15339782,Suppressed,Suppressed,Suppressed,Suppressed
+,"1-4 years","1-4","2000","2000",Suppressed,15370150,Suppressed,Suppressed,Suppressed,Suppressed
+,"1-4 years","1-4","2001","2001",13,15285559,Unreliable,0.0,0.1,0.0
+,"1-4 years","1-4","2002","2002",15,15477731,Unreliable,0.1,0.2,0.0
+,"1-4 years","1-4","2003","2003",16,15616575,Unreliable,0.1,0.2,0.0
+,"1-4 years","1-4","2004","2004",17,15771627,Unreliable,0.1,0.2,0.0
+,"1-4 years","1-4","2005","2005",20,15913007,0.1,0.1,0.2,0.0
+,"1-4 years","1-4","2006","2006",23,15897145,0.1,0.1,0.2,0.0
+,"1-4 years","1-4","2007","2007",31,15977965,0.2,0.1,0.3,0.0
+,"1-4 years","1-4","2008","2008",37,16138392,0.2,0.2,0.3,0.0
+,"1-4 years","1-4","2009","2009",27,16240931,0.2,0.1,0.2,0.0
+,"1-4 years","1-4","2010","2010",26,16257209,0.2,0.1,0.2,0.0
+,"1-4 years","1-4","2011","2011",32,16165521,0.2,0.1,0.3,0.0
+,"1-4 years","1-4","2012","2012",26,16056267,0.2,0.1,0.2,0.0
+,"1-4 years","1-4","2013","2013",29,15926305,0.2,0.1,0.3,0.0
+,"1-4 years","1-4","2014","2014",34,15928533,0.2,0.1,0.3,0.0
+,"1-4 years","1-4","2015","2015",42,15929243,0.3,0.2,0.4,0.0
+,"1-4 years","1-4","2016","2016",38,15956892,0.2,0.2,0.3,0.0
+,"1-4 years","1-4","2017","2017",26,15999565,0.2,0.1,0.2,0.0
+,"1-4 years","1-4","2018","2018",27,15962067,0.2,0.1,0.2,0.0
+,"1-4 years","1-4","2019","2019",39,15793631,0.2,0.2,0.3,0.0
+,"1-4 years","1-4","2020","2020",58,15566282,0.4,0.3,0.5,0.0
+,"5-9 years","5-9","1999","1999",Suppressed,20606460,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2000","2000",Suppressed,20549505,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2001","2001",Suppressed,20173362,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2002","2002",Suppressed,19872417,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2003","2003",Suppressed,19620851,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2004","2004",Suppressed,19454237,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2005","2005",Suppressed,19389067,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2006","2006",Suppressed,19544688,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2007","2007",Suppressed,19714611,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2008","2008",Suppressed,19929602,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2009","2009",Suppressed,20182499,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2010","2010",Suppressed,20348657,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2011","2011",Suppressed,20334196,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2012","2012",Suppressed,20475536,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2013","2013",Suppressed,20570581,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2014","2014",Suppressed,20519566,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2015","2015",Suppressed,20487176,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2016","2016",10,20429799,Unreliable,0.0,0.1,0.0
+,"5-9 years","5-9","2017","2017",Suppressed,20304238,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2018","2018",Suppressed,20195642,Suppressed,Suppressed,Suppressed,Suppressed
+,"5-9 years","5-9","2019","2019",10,20195895,Unreliable,0.0,0.1,0.0
+,"5-9 years","5-9","2020","2020",11,20237711,Unreliable,0.0,0.1,0.0
+,"10-14 years","10-14","1999","1999",Suppressed,20213364,Suppressed,Suppressed,Suppressed,Suppressed
+,"10-14 years","10-14","2000","2000",13,20528072,Unreliable,0.0,0.1,0.0
+,"10-14 years","10-14","2001","2001",16,20978678,Unreliable,0.0,0.1,0.0
+,"10-14 years","10-14","2002","2002",17,21261421,Unreliable,0.0,0.1,0.0
+,"10-14 years","10-14","2003","2003",12,21415353,Unreliable,0.0,0.1,0.0
+,"10-14 years","10-14","2004","2004",28,21411680,0.1,0.1,0.2,0.0
+,"10-14 years","10-14","2005","2005",17,21212579,Unreliable,0.0,0.1,0.0
+,"10-14 years","10-14","2006","2006",26,21033138,0.1,0.1,0.2,0.0
+,"10-14 years","10-14","2007","2007",33,20841042,0.2,0.1,0.2,0.0
+,"10-14 years","10-14","2008","2008",31,20706655,0.1,0.1,0.2,0.0
+,"10-14 years","10-14","2009","2009",21,20660564,0.1,0.1,0.2,0.0
+,"10-14 years","10-14","2010","2010",31,20677194,0.1,0.1,0.2,0.0
+,"10-14 years","10-14","2011","2011",21,20704852,0.1,0.1,0.2,0.0
+,"10-14 years","10-14","2012","2012",18,20669218,Unreliable,0.1,0.1,0.0
+,"10-14 years","10-14","2013","2013",15,20650454,Unreliable,0.0,0.1,0.0
+,"10-14 years","10-14","2014","2014",18,20671506,Unreliable,0.1,0.1,0.0
+,"10-14 years","10-14","2015","2015",20,20622330,0.1,0.1,0.1,0.0
+,"10-14 years","10-14","2016","2016",23,20618233,0.1,0.1,0.2,0.0
+,"10-14 years","10-14","2017","2017",31,20778454,0.1,0.1,0.2,0.0
+,"10-14 years","10-14","2018","2018",19,20879527,Unreliable,0.1,0.1,0.0
+,"10-14 years","10-14","2019","2019",21,20798268,0.1,0.1,0.2,0.0
+,"10-14 years","10-14","2020","2020",50,20754423,0.2,0.2,0.3,0.0
+,"15-19 years","15-19","1999","1999",157,20084602,0.8,0.7,0.9,0.1
+,"15-19 years","15-19","2000","2000",189,20219890,0.9,0.8,1.1,0.1
+,"15-19 years","15-19","2001","2001",263,20456284,1.3,1.1,1.4,0.1
+,"15-19 years","15-19","2002","2002",316,20610370,1.5,1.4,1.7,0.1
+,"15-19 years","15-19","2003","2003",373,20797166,1.8,1.6,2.0,0.1
+,"15-19 years","15-19","2004","2004",454,21102552,2.2,2.0,2.3,0.1
+,"15-19 years","15-19","2005","2005",437,21486214,2.0,1.8,2.2,0.1
+,"15-19 years","15-19","2006","2006",535,21807709,2.5,2.2,2.7,0.1
+,"15-19 years","15-19","2007","2007",587,22067816,2.7,2.4,2.9,0.1
+,"15-19 years","15-19","2008","2008",599,22210880,2.7,2.5,2.9,0.1
+,"15-19 years","15-19","2009","2009",551,22192810,2.5,2.3,2.7,0.1
+,"15-19 years","15-19","2010","2010",550,22040343,2.5,2.3,2.7,0.1
+,"15-19 years","15-19","2011","2011",556,21644043,2.6,2.4,2.8,0.1
+,"15-19 years","15-19","2012","2012",424,21360702,2.0,1.8,2.2,0.1
+,"15-19 years","15-19","2013","2013",422,21158964,2.0,1.8,2.2,0.1
+,"15-19 years","15-19","2014","2014",416,21067647,2.0,1.8,2.2,0.1
+,"15-19 years","15-19","2015","2015",506,21108903,2.4,2.2,2.6,0.1
+,"15-19 years","15-19","2016","2016",586,21129999,2.8,2.5,3.0,0.1
+,"15-19 years","15-19","2017","2017",507,21131660,2.4,2.2,2.6,0.1
+,"15-19 years","15-19","2018","2018",512,21097221,2.4,2.2,2.6,0.1
+,"15-19 years","15-19","2019","2019",561,21054570,2.7,2.4,2.9,0.1
+,"15-19 years","15-19","2020","2020",1262,20960929,6.0,5.7,6.4,0.2
+,"20-24 years","20-24","1999","1999",464,18591429,2.5,2.3,2.7,0.1
+,"20-24 years","20-24","2000","2000",539,18964001,2.8,2.6,3.1,0.1
+,"20-24 years","20-24","2001","2001",681,19757286,3.4,3.2,3.7,0.1
+,"20-24 years","20-24","2002","2002",863,20243765,4.3,4.0,4.5,0.1
+,"20-24 years","20-24","2003","2003",1026,20591688,5.0,4.7,5.3,0.2
+,"20-24 years","20-24","2004","2004",1142,20845560,5.5,5.2,5.8,0.2
+,"20-24 years","20-24","2005","2005",1248,20959955,6.0,5.6,6.3,0.2
+,"20-24 years","20-24","2006","2006",1561,21036135,7.4,7.1,7.8,0.2
+,"20-24 years","20-24","2007","2007",1589,21077999,7.5,7.2,7.9,0.2
+,"20-24 years","20-24","2008","2008",1695,21180612,8.0,7.6,8.4,0.2
+,"20-24 years","20-24","2009","2009",1678,21384122,7.8,7.5,8.2,0.2
+,"20-24 years","20-24","2010","2010",1837,21585999,8.5,8.1,8.9,0.2
+,"20-24 years","20-24","2011","2011",1989,22153832,9.0,8.6,9.4,0.2
+,"20-24 years","20-24","2012","2012",1920,22583203,8.5,8.1,8.9,0.2
+,"20-24 years","20-24","2013","2013",2064,22795438,9.1,8.7,9.4,0.2
+,"20-24 years","20-24","2014","2014",2290,22912174,10.0,9.6,10.4,0.2
+,"20-24 years","20-24","2015","2015",2576,22739313,11.3,10.9,11.8,0.2
+,"20-24 years","20-24","2016","2016",3441,22381028,15.4,14.9,15.9,0.3
+,"20-24 years","20-24","2017","2017",3587,22118635,16.2,15.7,16.7,0.3
+,"20-24 years","20-24","2018","2018",3106,21873579,14.2,13.7,14.7,0.3
+,"20-24 years","20-24","2019","2019",3164,21632940,14.6,14.1,15.1,0.3
+,"20-24 years","20-24","2020","2020",4724,21594755,21.9,21.3,22.5,0.3
+,"25-29 years","25-29","1999","1999",707,19575057,3.6,3.3,3.9,0.1
+,"25-29 years","25-29","2000","2000",694,19381336,3.6,3.3,3.8,0.1
+,"25-29 years","25-29","2001","2001",736,18819347,3.9,3.6,4.2,0.1
+,"25-29 years","25-29","2002","2002",926,18691340,5.0,4.6,5.3,0.2
+,"25-29 years","25-29","2003","2003",1055,18771585,5.6,5.3,6.0,0.2
+,"25-29 years","25-29","2004","2004",1249,19107055,6.5,6.2,6.9,0.2
+,"25-29 years","25-29","2005","2005",1420,19534710,7.3,6.9,7.6,0.2
+,"25-29 years","25-29","2006","2006",1799,20110011,8.9,8.5,9.4,0.2
+,"25-29 years","25-29","2007","2007",1993,20542698,9.7,9.3,10.1,0.2
+,"25-29 years","25-29","2008","2008",2087,20902668,10.0,9.6,10.4,0.2
+,"25-29 years","25-29","2009","2009",2288,21078228,10.9,10.4,11.3,0.2
+,"25-29 years","25-29","2010","2010",2352,21101849,11.1,10.7,11.6,0.2
+,"25-29 years","25-29","2011","2011",2569,21279794,12.1,11.6,12.5,0.2
+,"25-29 years","25-29","2012","2012",2575,21398326,12.0,11.6,12.5,0.2
+,"25-29 years","25-29","2013","2013",2820,21580198,13.1,12.6,13.5,0.2
+,"25-29 years","25-29","2014","2014",3378,21987938,15.4,14.8,15.9,0.3
+,"25-29 years","25-29","2015","2015",4081,22461554,18.2,17.6,18.7,0.3
+,"25-29 years","25-29","2016","2016",5614,22890884,24.5,23.9,25.2,0.3
+,"25-29 years","25-29","2017","2017",6373,23370460,27.3,26.6,27.9,0.3
+,"25-29 years","25-29","2018","2018",6145,23561756,26.1,25.4,26.7,0.3
+,"25-29 years","25-29","2019","2019",6167,23509016,26.2,25.6,26.9,0.3
+,"25-29 years","25-29","2020","2020",8248,23231243,35.5,34.7,36.3,0.4
+,"30-34 years","30-34","1999","1999",957,20603349,4.6,4.4,4.9,0.2
+,"30-34 years","30-34","2000","2000",946,20510388,4.6,4.3,4.9,0.1
+,"30-34 years","30-34","2001","2001",1019,20652175,4.9,4.6,5.2,0.2
+,"30-34 years","30-34","2002","2002",1283,20658306,6.2,5.9,6.6,0.2
+,"30-34 years","30-34","2003","2003",1360,20472210,6.6,6.3,7.0,0.2
+,"30-34 years","30-34","2004","2004",1324,20159501,6.6,6.2,6.9,0.2
+,"30-34 years","30-34","2005","2005",1490,19723937,7.6,7.2,7.9,0.2
+,"30-34 years","30-34","2006","2006",1731,19285168,9.0,8.6,9.4,0.2
+,"30-34 years","30-34","2007","2007",1825,19170765,9.5,9.1,10.0,0.2
+,"30-34 years","30-34","2008","2008",1939,19304805,10.0,9.6,10.5,0.2
+,"30-34 years","30-34","2009","2009",2072,19645114,10.5,10.1,11.0,0.2
+,"30-34 years","30-34","2010","2010",2323,19962099,11.6,11.2,12.1,0.2
+,"30-34 years","30-34","2011","2011",2715,20510704,13.2,12.7,13.7,0.3
+,"30-34 years","30-34","2012","2012",2844,20910995,13.6,13.1,14.1,0.3
+,"30-34 years","30-34","2013","2013",3091,21264389,14.5,14.0,15.0,0.3
+,"30-34 years","30-34","2014","2014",3650,21528566,17.0,16.4,17.5,0.3
+,"30-34 years","30-34","2015","2015",4487,21675648,20.7,20.1,21.3,0.3
+,"30-34 years","30-34","2016","2016",5938,21786359,27.3,26.6,27.9,0.4
+,"30-34 years","30-34","2017","2017",6808,21972212,31.0,30.2,31.7,0.4
+,"30-34 years","30-34","2018","2018",6694,22136018,30.2,29.5,31.0,0.4
+,"30-34 years","30-34","2019","2019",7142,22431305,31.8,31.1,32.6,0.4
+,"30-34 years","30-34","2020","2020",9991,22838403,43.7,42.9,44.6,0.4
+,"35-39 years","35-39","1999","1999",1481,22882549,6.5,6.1,6.8,0.2
+,"35-39 years","35-39","2000","2000",1463,22706664,6.4,6.1,6.8,0.2
+,"35-39 years","35-39","2001","2001",1563,22235918,7.0,6.7,7.4,0.2
+,"35-39 years","35-39","2002","2002",1855,21751218,8.5,8.1,8.9,0.2
+,"35-39 years","35-39","2003","2003",1825,21264159,8.6,8.2,9.0,0.2
+,"35-39 years","35-39","2004","2004",1726,20874649,8.3,7.9,8.7,0.2
+,"35-39 years","35-39","2005","2005",1754,20798653,8.4,8.0,8.8,0.2
+,"35-39 years","35-39","2006","2006",1995,20941233,9.5,9.1,9.9,0.2
+,"35-39 years","35-39","2007","2007",2075,20963891,9.9,9.5,10.3,0.2
+,"35-39 years","35-39","2008","2008",2159,20817463,10.4,9.9,10.8,0.2
+,"35-39 years","35-39","2009","2009",2108,20507796,10.3,9.8,10.7,0.2
+,"35-39 years","35-39","2010","2010",2250,20179642,11.1,10.7,11.6,0.2
+,"35-39 years","35-39","2011","2011",2372,19594309,12.1,11.6,12.6,0.2
+,"35-39 years","35-39","2012","2012",2461,19488199,12.6,12.1,13.1,0.3
+,"35-39 years","35-39","2013","2013",2606,19603770,13.3,12.8,13.8,0.3
+,"35-39 years","35-39","2014","2014",3206,19921650,16.1,15.5,16.7,0.3
+,"35-39 years","35-39","2015","2015",3990,20374585,19.6,19.0,20.2,0.3
+,"35-39 years","35-39","2016","2016",5406,20773905,26.0,25.3,26.7,0.4
+,"35-39 years","35-39","2017","2017",6308,21231997,29.7,29.0,30.4,0.4
+,"35-39 years","35-39","2018","2018",6451,21563587,29.9,29.2,30.6,0.4
+,"35-39 years","35-39","2019","2019",6966,21737521,32.0,31.3,32.8,0.4
+,"35-39 years","35-39","2020","2020",9804,21828304,44.9,44.0,45.8,0.5
+,"40-44 years","40-44","1999","1999",1757,22194128,7.9,7.5,8.3,0.2
+,"40-44 years","40-44","2000","2000",1814,22441863,8.1,7.7,8.5,0.2
+,"40-44 years","40-44","2001","2001",1941,22815834,8.5,8.1,8.9,0.2
+,"40-44 years","40-44","2002","2002",2373,22889431,10.4,10.0,10.8,0.2
+,"40-44 years","40-44","2003","2003",2405,22890047,10.5,10.1,10.9,0.2
+,"40-44 years","40-44","2004","2004",2503,22925626,10.9,10.5,11.3,0.2
+,"40-44 years","40-44","2005","2005",2422,22706885,10.7,10.2,11.1,0.2
+,"40-44 years","40-44","2006","2006",2663,22302568,11.9,11.5,12.4,0.2
+,"40-44 years","40-44","2007","2007",2621,21832339,12.0,11.5,12.5,0.2
+,"40-44 years","40-44","2008","2008",2554,21375023,11.9,11.5,12.4,0.2
+,"40-44 years","40-44","2009","2009",2596,20980015,12.4,11.9,12.8,0.2
+,"40-44 years","40-44","2010","2010",2511,20890964,12.0,11.5,12.5,0.2
+,"40-44 years","40-44","2011","2011",2684,21033645,12.8,12.3,13.2,0.2
+,"40-44 years","40-44","2012","2012",2625,21028221,12.5,12.0,13.0,0.2
+,"40-44 years","40-44","2013","2013",2783,20848920,13.3,12.9,13.8,0.3
+,"40-44 years","40-44","2014","2014",3132,20591483,15.2,14.7,15.7,0.3
+,"40-44 years","40-44","2015","2015",3494,20215198,17.3,16.7,17.9,0.3
+,"40-44 years","40-44","2016","2016",4341,19696251,22.0,21.4,22.7,0.3
+,"40-44 years","40-44","2017","2017",4841,19643373,24.6,24.0,25.3,0.4
+,"40-44 years","40-44","2018","2018",4963,19714301,25.2,24.5,25.9,0.4
+,"40-44 years","40-44","2019","2019",5459,19921623,27.4,26.7,28.1,0.4
+,"40-44 years","40-44","2020","2020",7862,20307888,38.7,37.9,39.6,0.4
+,"45-49 years","45-49","1999","1999",1374,19654207,7.0,6.6,7.4,0.2
+,"45-49 years","45-49","2000","2000",1485,20092404,7.4,7.0,7.8,0.2
+,"45-49 years","45-49","2001","2001",1660,20698983,8.0,7.6,8.4,0.2
+,"45-49 years","45-49","2002","2002",2073,21252288,9.8,9.3,10.2,0.2
+,"45-49 years","45-49","2003","2003",2339,21722676,10.8,10.3,11.2,0.2
+,"45-49 years","45-49","2004","2004",2448,22065262,11.1,10.7,11.5,0.2
+,"45-49 years","45-49","2005","2005",2676,22417171,11.9,11.5,12.4,0.2
+,"45-49 years","45-49","2006","2006",3028,22715286,13.3,12.9,13.8,0.2
+,"45-49 years","45-49","2007","2007",3020,22799761,13.2,12.8,13.7,0.2
+,"45-49 years","45-49","2008","2008",3149,22820973,13.8,13.3,14.3,0.2
+,"45-49 years","45-49","2009","2009",3253,22862245,14.2,13.7,14.7,0.2
+,"45-49 years","45-49","2010","2010",3059,22708591,13.5,13.0,13.9,0.2
+,"45-49 years","45-49","2011","2011",3199,22158005,14.4,13.9,14.9,0.3
+,"45-49 years","45-49","2012","2012",3157,21689479,14.6,14.0,15.1,0.3
+,"45-49 years","45-49","2013","2013",3122,21208306,14.7,14.2,15.2,0.3
+,"45-49 years","45-49","2014","2014",3343,20888042,16.0,15.5,16.5,0.3
+,"45-49 years","45-49","2015","2015",3712,20853844,17.8,17.2,18.4,0.3
+,"45-49 years","45-49","2016","2016",4494,20947623,21.5,20.8,22.1,0.3
+,"45-49 years","45-49","2017","2017",5080,20973858,24.2,23.6,24.9,0.3
+,"45-49 years","45-49","2018","2018",4826,20747135,23.3,22.6,23.9,0.3
+,"45-49 years","45-49","2019","2019",4956,20397751,24.3,23.6,25.0,0.3
+,"45-49 years","45-49","2020","2020",6708,19970606,33.6,32.8,34.4,0.4
+,"50-54 years","50-54","1999","1999",611,16923612,3.6,3.3,3.9,0.1
+,"50-54 years","50-54","2000","2000",698,17585548,4.0,3.7,4.3,0.2
+,"50-54 years","50-54","2001","2001",920,18687285,4.9,4.6,5.2,0.2
+,"50-54 years","50-54","2002","2002",1286,18739906,6.9,6.5,7.2,0.2
+,"50-54 years","50-54","2003","2003",1418,19097278,7.4,7.0,7.8,0.2
+,"50-54 years","50-54","2004","2004",1553,19564668,7.9,7.5,8.3,0.2
+,"50-54 years","50-54","2005","2005",1861,20078733,9.3,8.8,9.7,0.2
+,"50-54 years","50-54","2006","2006",2266,20570873,11.0,10.6,11.5,0.2
+,"50-54 years","50-54","2007","2007",2455,21140178,11.6,11.2,12.1,0.2
+,"50-54 years","50-54","2008","2008",2725,21639474,12.6,12.1,13.1,0.2
+,"50-54 years","50-54","2009","2009",2769,22004843,12.6,12.1,13.1,0.2
+,"50-54 years","50-54","2010","2010",2882,22298125,12.9,12.5,13.4,0.2
+,"50-54 years","50-54","2011","2011",3059,22560198,13.6,13.1,14.0,0.2
+,"50-54 years","50-54","2012","2012",3142,22579259,13.9,13.4,14.4,0.2
+,"50-54 years","50-54","2013","2013",3347,22559226,14.8,14.3,15.3,0.3
+,"50-54 years","50-54","2014","2014",3644,22570809,16.1,15.6,16.7,0.3
+,"50-54 years","50-54","2015","2015",3883,22334317,17.4,16.8,17.9,0.3
+,"50-54 years","50-54","2016","2016",4580,21839056,21.0,20.4,21.6,0.3
+,"50-54 years","50-54","2017","2017",5127,21401094,24.0,23.3,24.6,0.3
+,"50-54 years","50-54","2018","2018",4739,20884564,22.7,22.0,23.3,0.3
+,"50-54 years","50-54","2019","2019",5059,20477151,24.7,24.0,25.4,0.3
+,"50-54 years","50-54","2020","2020",6550,20395527,32.1,31.3,32.9,0.4
+,"55-59 years","55-59","1999","1999",236,13084821,1.8,1.6,2.0,0.1
+,"55-59 years","55-59","2000","2000",288,13469237,2.1,1.9,2.4,0.1
+,"55-59 years","55-59","2001","2001",338,13968975,2.4,2.2,2.7,0.1
+,"55-59 years","55-59","2002","2002",455,15143067,3.0,2.7,3.3,0.1
+,"55-59 years","55-59","2003","2003",594,15814557,3.8,3.5,4.1,0.2
+,"55-59 years","55-59","2004","2004",725,16607176,4.4,4.0,4.7,0.2
+,"55-59 years","55-59","2005","2005",857,17503220,4.9,4.6,5.2,0.2
+,"55-59 years","55-59","2006","2006",1161,18396860,6.3,5.9,6.7,0.2
+,"55-59 years","55-59","2007","2007",1366,18454772,7.4,7.0,7.8,0.2
+,"55-59 years","55-59","2008","2008",1532,18814568,8.1,7.7,8.6,0.2
+,"55-59 years","55-59","2009","2009",1708,19280603,8.9,8.4,9.3,0.2
+,"55-59 years","55-59","2010","2010",1840,19664805,9.4,8.9,9.8,0.2
+,"55-59 years","55-59","2011","2011",2038,20255548,10.1,9.6,10.5,0.2
+,"55-59 years","55-59","2012","2012",2196,20772517,10.6,10.1,11.0,0.2
+,"55-59 years","55-59","2013","2013",2554,21194430,12.1,11.6,12.5,0.2
+,"55-59 years","55-59","2014","2014",2975,21511449,13.8,13.3,14.3,0.3
+,"55-59 years","55-59","2015","2015",3310,21807942,15.2,14.7,15.7,0.3
+,"55-59 years","55-59","2016","2016",4065,21980108,18.5,17.9,19.1,0.3
+,"55-59 years","55-59","2017","2017",4523,22007956,20.6,20.0,21.2,0.3
+,"55-59 years","55-59","2018","2018",4437,21940985,20.2,19.6,20.8,0.3
+,"55-59 years","55-59","2019","2019",4802,21877391,21.9,21.3,22.6,0.3
+,"55-59 years","55-59","2020","2020",6212,21603099,28.8,28.0,29.5,0.4
+,"60-64 years ","60-64","1999","1999",118,10693205,1.1,0.9,1.3,0.1
+,"60-64 years ","60-64","2000","2000",107,10805447,1.0,0.8,1.2,0.1
+,"60-64 years ","60-64","2001","2001",155,11136320,1.4,1.2,1.6,0.1
+,"60-64 years ","60-64","2002","2002",191,11560265,1.7,1.4,1.9,0.1
+,"60-64 years ","60-64","2003","2003",228,12194388,1.9,1.6,2.1,0.1
+,"60-64 years ","60-64","2004","2004",280,12698128,2.2,1.9,2.5,0.1
+,"60-64 years ","60-64","2005","2005",337,13138277,2.6,2.3,2.8,0.1
+,"60-64 years ","60-64","2006","2006",361,13533253,2.7,2.4,2.9,0.1
+,"60-64 years ","60-64","2007","2007",481,14673662,3.3,3.0,3.6,0.1
+,"60-64 years ","60-64","2008","2008",582,15342495,3.8,3.5,4.1,0.2
+,"60-64 years ","60-64","2009","2009",774,16124997,4.8,4.5,5.1,0.2
+,"60-64 years ","60-64","2010","2010",860,16817924,5.1,4.8,5.5,0.2
+,"60-64 years ","60-64","2011","2011",914,17806592,5.1,4.8,5.5,0.2
+,"60-64 years ","60-64","2012","2012",1025,17813685,5.8,5.4,6.1,0.2
+,"60-64 years ","60-64","2013","2013",1319,18122001,7.3,6.9,7.7,0.2
+,"60-64 years ","60-64","2014","2014",1477,18566132,8.0,7.5,8.4,0.2
+,"60-64 years ","60-64","2015","2015",1779,19069877,9.3,8.9,9.8,0.2
+,"60-64 years ","60-64","2016","2016",2256,19483036,11.6,11.1,12.1,0.2
+,"60-64 years ","60-64","2017","2017",2630,19987702,13.2,12.7,13.7,0.3
+,"60-64 years ","60-64","2018","2018",2841,20331651,14.0,13.5,14.5,0.3
+,"60-64 years ","60-64","2019","2019",3176,20571146,15.4,14.9,16.0,0.3
+,"60-64 years ","60-64","2020","2020",4233,20800578,20.4,19.7,21.0,0.3
+,"65-69 years","65-69","1999","1999",63,9541498,0.7,0.5,0.8,0.1
+,"65-69 years","65-69","2000","2000",53,9533545,0.6,0.4,0.7,0.1
+,"65-69 years","65-69","2001","2001",60,9562233,0.6,0.5,0.8,0.1
+,"65-69 years","65-69","2002","2002",106,9638481,1.1,0.9,1.3,0.1
+,"65-69 years","65-69","2003","2003",113,9830796,1.1,0.9,1.4,0.1
+,"65-69 years","65-69","2004","2004",123,10073429,1.2,1.0,1.4,0.1
+,"65-69 years","65-69","2005","2005",156,10278627,1.5,1.3,1.8,0.1
+,"65-69 years","65-69","2006","2006",160,10553201,1.5,1.3,1.8,0.1
+,"65-69 years","65-69","2007","2007",183,10970235,1.7,1.4,1.9,0.1
+,"65-69 years","65-69","2008","2008",244,11594347,2.1,1.8,2.4,0.1
+,"65-69 years","65-69","2009","2009",276,12092377,2.3,2.0,2.6,0.1
+,"65-69 years","65-69","2010","2010",256,12435263,2.1,1.8,2.3,0.1
+,"65-69 years","65-69","2011","2011",351,12873788,2.7,2.4,3.0,0.1
+,"65-69 years","65-69","2012","2012",413,13977353,3.0,2.7,3.2,0.1
+,"65-69 years","65-69","2013","2013",481,14608717,3.3,3.0,3.6,0.2
+,"65-69 years","65-69","2014","2014",616,15325266,4.0,3.7,4.3,0.2
+,"65-69 years","65-69","2015","2015",758,16067468,4.7,4.4,5.1,0.2
+,"65-69 years","65-69","2016","2016",900,16820083,5.4,5.0,5.7,0.2
+,"65-69 years","65-69","2017","2017",1097,16836381,6.5,6.1,6.9,0.2
+,"65-69 years","65-69","2018","2018",1306,17086893,7.6,7.2,8.1,0.2
+,"65-69 years","65-69","2019","2019",1461,17455001,8.4,7.9,8.8,0.2
+,"65-69 years","65-69","2020","2020",1949,17873667,10.9,10.4,11.4,0.2
+,"70-74 years","70-74","1999","1999",33,8877411,0.4,0.3,0.5,0.1
+,"70-74 years","70-74","2000","2000",36,8857441,0.4,0.3,0.6,0.1
+,"70-74 years","70-74","2001","2001",39,8821946,0.4,0.3,0.6,0.1
+,"70-74 years","70-74","2002","2002",50,8750054,0.6,0.4,0.8,0.1
+,"70-74 years","70-74","2003","2003",57,8670119,0.7,0.5,0.9,0.1
+,"70-74 years","70-74","2004","2004",63,8594104,0.7,0.6,0.9,0.1
+,"70-74 years","70-74","2005","2005",73,8603070,0.8,0.7,1.1,0.1
+,"70-74 years","70-74","2006","2006",77,8649826,0.9,0.7,1.1,0.1
+,"70-74 years","70-74","2007","2007",94,8728492,1.1,0.9,1.3,0.1
+,"70-74 years","70-74","2008","2008",99,8911332,1.1,0.9,1.4,0.1
+,"70-74 years","70-74","2009","2009",127,9140722,1.4,1.1,1.6,0.1
+,"70-74 years","70-74","2010","2010",118,9278166,1.3,1.0,1.5,0.1
+,"70-74 years","70-74","2011","2011",111,9607950,1.2,0.9,1.4,0.1
+,"70-74 years","70-74","2012","2012",134,10008039,1.3,1.1,1.6,0.1
+,"70-74 years","70-74","2013","2013",199,10608049,1.9,1.6,2.1,0.1
+,"70-74 years","70-74","2014","2014",245,11073024,2.2,1.9,2.5,0.1
+,"70-74 years","70-74","2015","2015",208,11483049,1.8,1.6,2.1,0.1
+,"70-74 years","70-74","2016","2016",313,11810247,2.7,2.4,2.9,0.1
+,"70-74 years","70-74","2017","2017",345,12847065,2.7,2.4,3.0,0.1
+,"70-74 years","70-74","2018","2018",424,13405423,3.2,2.9,3.5,0.2
+,"70-74 years","70-74","2019","2019",516,14028432,3.7,3.4,4.0,0.2
+,"70-74 years","70-74","2020","2020",605,14675731,4.1,3.8,4.5,0.2
+,"75-79 years","75-79","1999","1999",30,7342606,0.4,0.3,0.6,0.1
+,"75-79 years","75-79","2000","2000",18,7415813,Unreliable,0.1,0.4,0.1
+,"75-79 years","75-79","2001","2001",35,7455413,0.5,0.3,0.7,0.1
+,"75-79 years","75-79","2002","2002",40,7470461,0.5,0.4,0.7,0.1
+,"75-79 years","75-79","2003","2003",38,7497842,0.5,0.4,0.7,0.1
+,"75-79 years","75-79","2004","2004",51,7461399,0.7,0.5,0.9,0.1
+,"75-79 years","75-79","2005","2005",49,7463609,0.7,0.5,0.9,0.1
+,"75-79 years","75-79","2006","2006",45,7447034,0.6,0.4,0.8,0.1
+,"75-79 years","75-79","2007","2007",47,7400363,0.6,0.5,0.8,0.1
+,"75-79 years","75-79","2008","2008",51,7345743,0.7,0.5,0.9,0.1
+,"75-79 years","75-79","2009","2009",78,7295064,1.1,0.8,1.3,0.1
+,"75-79 years","75-79","2010","2010",57,7317795,0.8,0.6,1.0,0.1
+,"75-79 years","75-79","2011","2011",49,7388687,0.7,0.5,0.9,0.1
+,"75-79 years","75-79","2012","2012",87,7489583,1.2,0.9,1.4,0.1
+,"75-79 years","75-79","2013","2013",76,7677881,1.0,0.8,1.2,0.1
+,"75-79 years","75-79","2014","2014",97,7922324,1.2,1.0,1.5,0.1
+,"75-79 years","75-79","2015","2015",105,8123833,1.3,1.0,1.5,0.1
+,"75-79 years","75-79","2016","2016",111,8367895,1.3,1.1,1.6,0.1
+,"75-79 years","75-79","2017","2017",145,8741261,1.7,1.4,1.9,0.1
+,"75-79 years","75-79","2018","2018",156,9267066,1.7,1.4,1.9,0.1
+,"75-79 years","75-79","2019","2019",193,9652665,2.0,1.7,2.3,0.1
+,"75-79 years","75-79","2020","2020",177,9986833,1.8,1.5,2.0,0.1
+,"80-84 years","80-84","1999","1999",24,4882308,0.5,0.3,0.7,0.1
+,"80-84 years","80-84","2000","2000",18,4945367,Unreliable,0.2,0.6,0.1
+,"80-84 years","80-84","2001","2001",19,5138205,Unreliable,0.2,0.6,0.1
+,"80-84 years","80-84","2002","2002",20,5294403,0.4,0.2,0.6,0.1
+,"80-84 years","80-84","2003","2003",31,5398596,0.6,0.4,0.8,0.1
+,"80-84 years","80-84","2004","2004",28,5528504,0.5,0.3,0.7,0.1
+,"80-84 years","80-84","2005","2005",38,5611193,0.7,0.5,0.9,0.1
+,"80-84 years","80-84","2006","2006",55,5648117,1.0,0.7,1.3,0.1
+,"80-84 years","80-84","2007","2007",45,5687076,0.8,0.6,1.1,0.1
+,"80-84 years","80-84","2008","2008",45,5730359,0.8,0.6,1.1,0.1
+,"80-84 years","80-84","2009","2009",39,5727711,0.7,0.5,0.9,0.1
+,"80-84 years","80-84","2010","2010",46,5743327,0.8,0.6,1.1,0.1
+,"80-84 years","80-84","2011","2011",51,5786543,0.9,0.7,1.2,0.1
+,"80-84 years","80-84","2012","2012",40,5783051,0.7,0.5,0.9,0.1
+,"80-84 years","80-84","2013","2013",43,5768638,0.7,0.5,1.0,0.1
+,"80-84 years","80-84","2014","2014",44,5760366,0.8,0.6,1.0,0.1
+,"80-84 years","80-84","2015","2015",58,5799341,1.0,0.8,1.3,0.1
+,"80-84 years","80-84","2016","2016",61,5865639,1.0,0.8,1.3,0.1
+,"80-84 years","80-84","2017","2017",62,5965290,1.0,0.8,1.3,0.1
+,"80-84 years","80-84","2018","2018",66,6127308,1.1,0.8,1.4,0.1
+,"80-84 years","80-84","2019","2019",72,6317207,1.1,0.9,1.4,0.1
+,"80-84 years","80-84","2020","2020",77,6464714,1.2,0.9,1.5,0.1
+,"85-89 years","85-89","1999","1999",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2000","2000",11,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2001","2001",13,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2002","2002",16,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2003","2003",25,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2004","2004",12,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2005","2005",31,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2006","2006",25,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2007","2007",35,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2008","2008",20,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2009","2009",26,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2010","2010",41,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2011","2011",34,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2012","2012",32,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2013","2013",43,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2014","2014",44,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2015","2015",41,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2016","2016",39,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2017","2017",40,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2018","2018",32,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2019","2019",42,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85-89 years","85-89","2020","2020",44,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","1999","1999",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2000","2000",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2001","2001",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2002","2002",14,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2003","2003",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2004","2004",12,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2005","2005",12,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2006","2006",11,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2007","2007",16,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2008","2008",15,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2009","2009",12,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2010","2010",23,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2011","2011",12,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2012","2012",15,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2013","2013",14,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2014","2014",16,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2015","2015",12,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2016","2016",12,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2017","2017",26,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2018","2018",22,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2019","2019",26,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90-94 years","90-94","2020","2020",27,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2000","2000",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2001","2001",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2002","2002",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2004","2004",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2005","2005",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2006","2006",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2007","2007",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2008","2008",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2009","2009",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2010","2010",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2011","2011",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2012","2012",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2013","2013",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2014","2014",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2015","2015",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2016","2016",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2017","2017",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2018","2018",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2019","2019",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95-99 years","95-99","2020","2020",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"100+ years","100+","2002","2002",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"100+ years","100+","2005","2005",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"100+ years","100+","2010","2010",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"100+ years","100+","2012","2012",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"100+ years","100+","2019","2019",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","1999","1999",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2000","2000",10,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2001","2001",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2002","2002",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2003","2003",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2004","2004",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2005","2005",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2006","2006",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2007","2007",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2008","2008",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2009","2009",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2010","2010",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2011","2011",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2012","2012",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2013","2013",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2014","2014",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2015","2015",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2016","2016",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2017","2017",13,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2018","2018",11,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2019","2019",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","2020","2020",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+"---"
+"Dataset: Multiple Cause of Death, 1999-2020"
+"Query Parameters:"
+"Title: WONDER-5YrAge"
+"MCD - ICD-10 Codes: T40.0 (Opium); T40.1 (Heroin); T40.2 (Other opioids); T40.3 (Methadone); T40.4 (Other synthetic narcotics);"
+"T40.6 (Other and unspecified narcotics)"
+"UCD - ICD-10 Codes: X40 (Accidental poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics); X41"
+"(Accidental poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not"
+"elsewhere classified); X42 (Accidental poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not"
+"elsewhere classified); X43 (Accidental poisoning by and exposure to other drugs acting on the autonomic nervous system); X44"
+"(Accidental poisoning by and exposure to other and unspecified drugs, medicaments and biological substances); X60 (Intentional"
+"self-poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics); X61 (Intentional self-poisoning by and"
+"exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not elsewhere classified); X62"
+"(Intentional self-poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not elsewhere classified); X63"
+"(Intentional self-poisoning by and exposure to other drugs acting on the autonomic nervous system); X64 (Intentional"
+"self-poisoning by and exposure to other and unspecified drugs, medicaments and biological substances); X85 (Assault by drugs,"
+"medicaments and biological substances); Y10 (Poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics,"
+"undetermined intent); Y11 (Poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic"
+"drugs, not elsewhere classified, undetermined intent); Y12 (Poisoning by and exposure to narcotics and psychodysleptics"
+"[hallucinogens], not elsewhere classified, undetermined intent); Y13 (Poisoning by and exposure to other drugs acting on the"
+"autonomic nervous system, undetermined intent); Y14 (Poisoning by and exposure to other and unspecified drugs, medicaments and"
+"biological substances, undetermined intent)"
+"Group By: Five-Year Age Groups; Year"
+"Show Totals: Disabled"
+"Show Zero Values: False"
+"Show Suppressed: True"
+"Calculate Rates Per: 100,000"
+"Rate Options: Default intercensal populations for years 2001-2009 (except Infant Age Groups)"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/mcd.html for more information."
+"---"
+"Query Date: Oct 29, 2025 10:39:14 PM"
+"---"
+"Suggested Citation: Centers for Disease Control and Prevention, National Center for Health Statistics. National Vital Statistics"
+"System, Mortality 1999-2020 on CDC WONDER Online Database, released in 2021. Data are from the Multiple Cause of Death Files,"
+"1999-2020, as compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative"
+"Program. Accessed at http://wonder.cdc.gov/mcd-icd10.html on Oct 29, 2025 10:39:14 PM"
+"---"
+Messages:
+"1. Totals are not available for these results due to suppression constraints. More Information:"
+"http://wonder.cdc.gov/wonder/help/faq.html#Privacy."
+"2. Rows with zero Deaths are hidden. Use Quick Options above to show zero rows."
+"---"
+Caveats:
+"1. Population and rates are labeled 'Not Applicable' when they include a subset of ages 85-100+ because populations are not"
+"available for those ages. More information: http://wonder.cdc.gov/wonder/help/mcd.html#Ages 85-100."
+"2. As of April 3, 2017, the underlying cause of death has been revised for 125 deaths in 2014. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#2014-Revision."
+"3. Circumstances in Georgia for the years 2008 and 2009 have resulted in unusually high death counts for the ICD-10 cause of"
+"death code R99, ""Other ill-defined and unspecified causes of mortality."" Caution should be used in interpreting these data."
+"More information: http://wonder.cdc.gov/wonder/help/mcd.html#Georgia-Reporting-Anomalies."
+"4. Circumstances in New Jersey for the year 2009 have resulted in unusually high death counts for the ICD-10 cause of death code"
+"R99, ""Other ill-defined and unspecified causes of mortality"" and therefore unusually low death counts in other ICD-10 codes,"
+"most notably R95, ""Sudden Infant Death Syndrome"" and X40-X49, ""Unintentional poisoning."" Caution should be used in"
+"interpreting these data. More information: http://wonder.cdc.gov/wonder/help/mcd.html#New-Jersey-Reporting-Anomalies."
+"5. Circumstances in California resulted in unusually high death counts for the ICD-10 cause of death code R99, ""Other"
+"ill-defined and unspecified causes of mortality"" for deaths occurring in years 2000 and 2001. Caution should be used in"
+"interpreting these data. More information: http://wonder.cdc.gov/wonder/help/mcd.html#California-Reporting-Anomalies."
+"6. Data are Suppressed when the data meet the criteria for confidentiality constraints. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Assurance of Confidentiality."
+"7. Death rates are flagged as Unreliable when the rate is calculated with a numerator of 20 or less. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Unreliable."
+"8. Deaths of persons with Age ""Not Stated"" are included in ""All"" counts and rates, but are not distributed among age groups,"
+"so are not included in age-specific counts, age-specific rates or in any age-adjusted rates. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Not Stated."
+"9. The method used to calculate 95% confidence intervals is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Confidence-Intervals."
+"10. The method used to calculate standard errors is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Standard-Errors."
+"11. The population figures for year 2020 are bridged-race estimates of the July 1 resident population, from the Vintage 2020"
+"postcensal series released by NCHS on September 22, 2021. The population figures for year 2019 are bridged-race estimates of the"
+"July 1 resident population, from the Vintage 2019 postcensal series released by NCHS on July 9, 2020. The population figures for"
+"year 2018 are bridged-race estimates of the July 1 resident population, from the Vintage 2018 postcensal series released by NCHS"
+"on June 25, 2019. The population figures for year 2017 are bridged-race estimates of the July 1 resident population, from the"
+"Vintage 2017 postcensal series released by NCHS on June 27, 2018. The population figures for year 2016 are bridged-race"
+"estimates of the July 1 resident population, from the Vintage 2016 postcensal series released by NCHS on June 26, 2017. The"
+"population figures for year 2015 are bridged-race estimates of the July 1 resident population, from the Vintage 2015 postcensal"
+"series released by NCHS on June 28, 2016. The population figures for year 2014 are bridged-race estimates of the July 1 resident"
+"population, from the Vintage 2014 postcensal series released by NCHS on June 30, 2015. The population figures for year 2013 are"
+"bridged-race estimates of the July 1 resident population, from the Vintage 2013 postcensal series released by NCHS on June 26,"
+"2014. The population figures for year 2012 are bridged-race estimates of the July 1 resident population, from the Vintage 2012"
+"postcensal series released by NCHS on June 13, 2013. Population figures for 2011 are bridged-race estimates of the July 1"
+"resident population, from the county-level postcensal Vintage 2011 series released by NCHS on July 18, 2012. Population figures"
+"for 2010 are April 1 Census counts. The population figures for years 2001 - 2009, are bridged-race estimates of the July 1"
+"resident population, from the revised intercensal county-level 2000 - 2009 series released by NCHS on October 26, 2012."
+"Population figures for 2000 are April 1 Census counts. Population figures for 1999 are from the 1990-1999 intercensal series of"
+"July 1 estimates. Population figures for Infant Age Groups are the number of live births. <br/><b>Note:</b> Rates and population"
+"figures for years 2001 - 2009 differ slightly from previously published reports, due to use of the population estimates which"
+"were available at the time of release."
+"12. The population figures used in the calculation of death rates for the age group 'under 1 year' are the estimates of the"
+"resident population that is under one year of age. More information: http://wonder.cdc.gov/wonder/help/mcd.html#Age Group."
+"13. Changes to cause of death classification affect reporting trends. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#ICD-10 Changes."

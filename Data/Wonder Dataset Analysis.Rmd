@@ -3,12 +3,148 @@ title: "Wonder Dataset Creation"
 output: html_document
 ---
 
-```{r}
-#define a function to analyze missing data
+```{r message=FALSE}
 library(dplyr)
 library(ggplot2)
 library(stringr)
+library(readxl)
+library(forecast)
+library(lubridate)
+library(tseries)
+```
 
+```{r warning=FALSE}
+census_region <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-Census Region.csv") %>%
+  filter(Year != "NA")
+
+ggplot(census_region, aes(x = Year, y = Crude.Rate, color = Census.Region, group = Census.Region)) +
+  geom_line(linewidth = 0.75) +
+  geom_ribbon(aes(ymin = Crude.Rate.Lower.95..Confidence.Interval, ymax = Crude.Rate.Upper.95..Confidence.Interval, fill = Census.Region), alpha = 0.5, color = NA) +
+  theme_minimal() +
+  labs(
+    title = "Opioid Death Rate By Region Over Time",
+    x = "Year", y = "Rate per 100,000"
+  ) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(size = 15), 
+        legend.title = element_blank(),
+        legend.position = c(0.15, 0.85))
+```
+
+```{r warning=FALSE}
+census_division <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-Census Division.csv") %>%
+  filter(Year != "NA")
+
+ggplot(census_division, aes(x = Year, y = Crude.Rate, color = Census.Division, group = Census.Division)) +
+  geom_line(linewidth = 0.75) +
+  geom_ribbon(aes(ymin = Crude.Rate.Lower.95..Confidence.Interval, ymax = Crude.Rate.Upper.95..Confidence.Interval, fill = Census.Division), alpha = 0.5, color = NA) +
+  theme_minimal() +
+  labs(
+    title = "Opioid Death Rate By Division Over Time",
+    x = "Year", y = "Rate per 100,000"
+  ) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(size = 15), 
+        legend.title = element_blank(),
+        legend.position = c(0.15, 0.7))
+```
+
+```{r warning=FALSE}
+sex <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-Sex.csv") %>%
+  filter(Year != "NA")
+
+ggplot(sex, aes(x = Year, y = Crude.Rate, color = Sex, group = Sex)) +
+  geom_line(linewidth = 0.75) +
+  geom_ribbon(aes(ymin = Crude.Rate.Lower.95..Confidence.Interval, ymax = Crude.Rate.Upper.95..Confidence.Interval, fill = Sex), alpha = 0.5, color = NA) +
+  theme_minimal() +
+  labs(
+    title = "Opioid Death Rate By Sex Over Time",
+    x = "Year", y = "Rate per 100,000"
+  ) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(size = 15), 
+        legend.title = element_blank())
+```
+
+```{r warning=FALSE}
+age_order <- c(
+  "< 1 year", "1-4 years", "5-14 years", "15-24 years",
+  "25-34 years", "35-44 years", "45-54 years",
+  "55-64 years", "65-74 years", "75-84 years", "85+ years"
+)
+
+ten_year <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-10YrAge.csv") %>%
+  filter(! Ten.Year.Age.Groups.Code %in% c("1","1-4","NS"),
+         Year > 2003) %>%
+  mutate(Crude.Rate = as.numeric(Crude.Rate),
+         Crude.Lower = as.numeric(Crude.Rate.Lower.95..Confidence.Interval),
+         Crude.Upper = as.numeric(Crude.Rate.Upper.95..Confidence.Interval),
+         Ten.Year.Age.Groups = factor(Ten.Year.Age.Groups, levels = age_order))
+
+ggplot(ten_year, aes(x = Year, y = Crude.Rate, color = Ten.Year.Age.Groups, group = Ten.Year.Age.Groups)) +
+  geom_line(linewidth = 1) +
+  geom_ribbon(aes(ymin = as.numeric(Crude.Lower), ymax = as.numeric(Crude.Upper), fill = Ten.Year.Age.Groups), alpha = 0.5, color = NA) +
+  theme_minimal() +
+  labs(
+    title = "Opioid Death Rate By 10-year Age Group Over Time",
+    x = "Year", y = "Rate per 100,000") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(size = 15))
+```
+
+```{r warning=FALSE}
+age_order <- c("< 1 year","1-4 years","5-9 years","10-14 years","15-19 years","20-24 years","25-29 years","30-34 years","35-39 years","40-44 years","45-49 years","50-54 years","55-59 years","60-64 years ","65-69 years","70-74 years","75-79 years","80-84 years","85-89 years", "90-94 years", "95-99 years", "100+ years")
+
+five_year <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-5YrAge.csv") %>%
+  filter(! Five.Year.Age.Groups.Code %in% c("1","1-4","5-9","10-14","85-89","90-94","95-99", "100+","NS"),
+         Year > 2003) %>%
+  mutate(Crude.Rate = as.numeric(Crude.Rate),
+         Crude.Lower = as.numeric(Crude.Rate.Lower.95..Confidence.Interval),
+         Crude.Upper = as.numeric(Crude.Rate.Upper.95..Confidence.Interval),
+         Five.Year.Age.Groups = factor(Five.Year.Age.Groups, levels = age_order))
+
+ggplot(five_year, aes(x = Year, y = Crude.Rate, color = Five.Year.Age.Groups, group = Five.Year.Age.Groups)) +
+  geom_line(linewidth = 1) +
+  geom_ribbon(aes(ymin = as.numeric(Crude.Lower), ymax = as.numeric(Crude.Upper), fill = Five.Year.Age.Groups), alpha = 0.5, color = NA) +
+  theme_minimal() +
+  labs(
+    title = "Opioid Death Rate By 5-year Age Group Over Time",
+    x = "Year", y = "Rate per 100,000") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(size = 15))
+```
+
+```{r}
+year_month <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-YearMonth.csv") %>%
+  filter(Month != "NA" & Notes != "Total" & Year != "NA") %>%
+  mutate(Date = as.Date(paste0(Month.Code, "/01"), format = "%Y/%m/%d"))
+
+ggplot(year_month, aes(x = Date, y = Deaths)) +
+  geom_line(color = "#3b5b92", linewidth = 1) +
+  geom_point(size = 0.5, color = "#3b5b92") +
+  theme_minimal(base_size = 13) +
+  labs(
+    title = "Monthly Time Series of Opioid Deaths",
+    x = "Year",
+    y = "Number of Deaths"
+  )
+```
+```{r}
+ts_data <- ts(year_month$Deaths, start = c(year(min(year_month$Date)), month(min(year_month$Date))), frequency = 12)
+
+adf.test(ts_data)
+acf(ts_data, lag.max = 36, main = "ACF Plot: Checking for Seasonality")
+
+ts_diff_12 <- diff(ts_data, lag = 12)
+adf.test(ts_diff_12)
+acf(ts_diff_12, lag.max = 36, main = "ACF of Seasonally Differenced Data")
+
+adf.test(diff(ts_diff_12))
+acf(diff(ts_diff_12), lag.max=36)
+```
+
+```{r}
+#define a function to analyze missing data
 analyze_suppression <- function(data, sex_var = "sex", age_var = "age_group", geo_var = "geo", time_var = "time") {
 
   summary_df <- data %>%
@@ -84,25 +220,25 @@ analyze_suppression <- function(data, sex_var = "sex", age_var = "age_group", ge
 ```
 
 ```{r}
-dataset_1 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/Data/WONDER-SEX-5Yr-Cenus Division.csv")
+dataset_1 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-SEX-5Yr-Cenus Division.csv")
 
 analyze_suppression(dataset_1, "Sex", "Five.Year.Age.Groups", "Census.Division", "Month.Code")
 ```
 
 ```{r}
-dataset_2 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/Data/WONDER-SEX-5Yr-Cenus Region.csv")
+dataset_2 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-SEX-5Yr-Cenus Region.csv")
 
 analyze_suppression(dataset_2, "Sex", "Five.Year.Age.Groups", "Census.Region", "Month.Code")
 ```
 
 ```{r}
-dataset_3 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/Data/WONDER-SEX-5Yr-State.csv")
+dataset_3 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-SEX-10Yr-Cenus Division.csv")
 
-analyze_suppression(dataset_3, "Sex", "Five.Year.Age.Groups", "State", "Month.Code")
+analyze_suppression(dataset_3, "Sex", "Ten.Year.Age.Groups", "Census.Division", "Month.Code")
 ```
 
 ```{r}
-dataset_4 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/Data/WONDER-SEX-10Yr-Cenus Division.csv")
+dataset_4 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-SEX-10Yr-Cenus Region.csv")
 
-analyze_suppression(dataset_4, "Sex", "Ten.Year.Age.Groups", "Census.Division", "Month.Code")
+analyze_suppression(dataset_4, "Sex", "Ten.Year.Age.Groups", "Census.Region", "Month.Code")
 ```
