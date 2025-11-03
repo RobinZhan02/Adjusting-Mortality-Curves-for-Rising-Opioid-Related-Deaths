@@ -1,0 +1,43 @@
+---
+title: "Wonder Time Series"
+output: html_document
+---
+
+```{r message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(readxl)
+library(forecast)
+library(lubridate)
+library(tseries)
+```
+
+```{r}
+year_month <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-YearMonth.csv") %>%
+  filter(Month != "NA" & Notes != "Total" & Year != "NA") %>%
+  mutate(Date = as.Date(paste0(Month.Code, "/01"), format = "%Y/%m/%d"))
+
+ggplot(year_month, aes(x = Date, y = Deaths)) +
+  geom_line(color = "#3b5b92", linewidth = 1) +
+  geom_point(size = 0.5, color = "#3b5b92") +
+  theme_minimal(base_size = 13) +
+  labs(
+    title = "Monthly Time Series of Opioid Deaths",
+    x = "Year",
+    y = "Number of Deaths"
+  )
+```
+```{r}
+ts_data <- ts(year_month$Deaths, start = c(year(min(year_month$Date)), month(min(year_month$Date))), frequency = 12)
+
+adf.test(ts_data)
+acf(ts_data, lag.max = 36, main = "ACF Plot: Checking for Seasonality")
+
+ts_diff_12 <- diff(ts_data, lag = 12)
+adf.test(ts_diff_12)
+acf(ts_diff_12, lag.max = 36, main = "ACF of Seasonally Differenced Data")
+
+adf.test(diff(ts_diff_12))
+acf(diff(ts_diff_12), lag.max=36)
+```
