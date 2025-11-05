@@ -90,25 +90,25 @@ analyze_suppression <- function(data, sex_var = "sex", age_var = "age_group", ge
 ```
 
 ```{r}
-dataset_1 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-SEX-5Yr-Cenus Division.csv")
+dataset_1 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/missing data/WONDER-SEX-5Yr-Cenus Division.csv")
 
 analyze_suppression(dataset_1, "Sex", "Five.Year.Age.Groups", "Census.Division", "Month.Code")
 ```
 
 ```{r}
-dataset_2 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-SEX-5Yr-Cenus Region.csv")
+dataset_2 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/missing data/WONDER-SEX-5Yr-Cenus Region.csv")
 
 analyze_suppression(dataset_2, "Sex", "Five.Year.Age.Groups", "Census.Region", "Month.Code")
 ```
 
 ```{r}
-dataset_3 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-SEX-10Yr-Cenus Division.csv")
+dataset_3 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/missing data/WONDER-SEX-10Yr-Cenus Division.csv")
 
 analyze_suppression(dataset_3, "Sex", "Ten.Year.Age.Groups", "Census.Division", "Month.Code")
 ```
 
 ```{r}
-dataset_4 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-SEX-10Yr-Cenus Region.csv")
+dataset_4 <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/missing data/WONDER-SEX-10Yr-Cenus Region.csv")
 
 analyze_suppression(dataset_4, "Sex", "Ten.Year.Age.Groups", "Census.Region", "Month.Code")
 ```

@@ -14,7 +14,7 @@ library(tseries)
 ```
 
 ```{r warning=FALSE}
-census_region <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-Census Region.csv") %>%
+census_region <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/eda/WONDER-Census Region.csv") %>%
   filter(Year != "NA")
 
 ggplot(census_region, aes(x = Year, y = Crude.Rate, color = Census.Region, group = Census.Region)) +
@@ -32,7 +32,7 @@ ggplot(census_region, aes(x = Year, y = Crude.Rate, color = Census.Region, group
 ```
 
 ```{r warning=FALSE}
-census_division <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-Census Division.csv") %>%
+census_division <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/eda/WONDER-Census Division.csv") %>%
   filter(Year != "NA")
 
 ggplot(census_division, aes(x = Year, y = Crude.Rate, color = Census.Division, group = Census.Division)) +
@@ -50,7 +50,7 @@ ggplot(census_division, aes(x = Year, y = Crude.Rate, color = Census.Division, g
 ```
 
 ```{r warning=FALSE}
-sex <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-Sex.csv") %>%
+sex <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/eda/WONDER-Sex.csv") %>%
   filter(Year != "NA")
 
 ggplot(sex, aes(x = Year, y = Crude.Rate, color = Sex, group = Sex)) +
@@ -73,7 +73,7 @@ age_order <- c(
   "55-64 years", "65-74 years", "75-84 years", "85+ years"
 )
 
-ten_year <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-10YrAge.csv") %>%
+ten_year <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/eda/WONDER-10YrAge.csv") %>%
   filter(! Ten.Year.Age.Groups.Code %in% c("1","1-4","NS"),
          Year > 2003) %>%
   mutate(Crude.Rate = as.numeric(Crude.Rate),
@@ -95,7 +95,7 @@ ggplot(ten_year, aes(x = Year, y = Crude.Rate, color = Ten.Year.Age.Groups, grou
 ```{r warning=FALSE}
 age_order <- c("< 1 year","1-4 years","5-9 years","10-14 years","15-19 years","20-24 years","25-29 years","30-34 years","35-39 years","40-44 years","45-49 years","50-54 years","55-59 years","60-64 years ","65-69 years","70-74 years","75-79 years","80-84 years","85-89 years", "90-94 years", "95-99 years", "100+ years")
 
-five_year <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/WONDER-5YrAge.csv") %>%
+five_year <- read.csv("~/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/data/eda/WONDER-5YrAge.csv") %>%
   filter(! Five.Year.Age.Groups.Code %in% c("1","1-4","5-9","10-14","85-89","90-94","95-99", "100+","NS"),
          Year > 2003) %>%
   mutate(Crude.Rate = as.numeric(Crude.Rate),
