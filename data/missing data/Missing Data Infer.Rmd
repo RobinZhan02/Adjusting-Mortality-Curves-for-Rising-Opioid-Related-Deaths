@@ -5,8 +5,7 @@ output: html_document
 
 ```{r}
 rm(list=ls());gc()
-setwd("D:/UCSB/PSTAT296/Adjusting-Mortality-Curves-for-Rising-Opioid-Related-Deaths/Data/missing data")
-
+#Please Set the wd to this folder
 library(tidyverse)
 library(data.table)
 library(lubridate) 
