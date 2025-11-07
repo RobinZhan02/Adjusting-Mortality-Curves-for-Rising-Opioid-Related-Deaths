@@ -14,7 +14,7 @@ library(tseries)
 ```
 
 ```{r}
-year_month <- read.csv("../data/time series/WONDER-YearMonth.csv") %>%
+year_month <- read.csv("../data/time_series/WONDER-YearMonth.csv") %>%
   filter(Month != "NA" & Notes != "Total" & Year != "NA") %>%
   mutate(Date = as.Date(paste0(Month.Code, "/01"), format = "%Y/%m/%d"))
 

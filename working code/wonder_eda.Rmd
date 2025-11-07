@@ -1,7 +1,13 @@
 ---
-title: "Wonder EDA"
+title: "Wonder EDA Final"
+author: "PSTAT 296A"
+date: "`r Sys.Date()`"
 output: html_document
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ```{r message=FALSE}
 library(dplyr)
@@ -13,204 +19,226 @@ library(lubridate)
 library(tseries)
 ```
 
-```{r warning=FALSE}
-census_region <- read.csv("../data/eda/WONDER-Census Region.csv") %>%
-  filter(Year != "NA")
+## Distribution of Missing Data
 
-ggplot(census_region, aes(x = Year, y = Crude.Rate, color = Census.Region, group = Census.Region)) +
-  geom_line(linewidth = 0.75) +
-  geom_ribbon(aes(ymin = Crude.Rate.Lower.95..Confidence.Interval, ymax = Crude.Rate.Upper.95..Confidence.Interval, fill = Census.Region), alpha = 0.5, color = NA) +
-  theme_minimal() +
-  labs(
-    title = "Opioid Death Rate By Region Over Time",
-    x = "Year", y = "Rate per 100,000"
-  ) +
-  theme(legend.position = "bottom") +
-  theme(plot.title = element_text(size = 15), 
-        legend.title = element_blank(),
-        legend.position = c(0.15, 0.85))
+- Missing data distribution for each of the 4 datasets
+- Missing data comparison (before vs. after inferred)
+
+# Exploratory Data Analysis
+
+## Census Region
+
+```{r}
+census_region <- read.csv("../data/wonder_opioid/Census-Region.csv") %>%
+  filter(Year != 'NA')
 ```
 
-```{r warning=FALSE}
-census_division <- read.csv("../data/eda/WONDER-Census Division.csv") %>%
-  filter(Year != "NA")
-
-ggplot(census_division, aes(x = Year, y = Crude.Rate, color = Census.Division, group = Census.Division)) +
+```{r}
+ggplot(census_region, aes(x = Year, y = Age.Adjusted.Rate, color = Census.Region, group = Census.Region)) +
   geom_line(linewidth = 0.75) +
-  geom_ribbon(aes(ymin = Crude.Rate.Lower.95..Confidence.Interval, ymax = Crude.Rate.Upper.95..Confidence.Interval, fill = Census.Division), alpha = 0.5, color = NA) +
+  geom_ribbon(aes(ymin = Age.Adjusted.Rate.Lower.95..Confidence.Interval, 
+                  ymax = Age.Adjusted.Rate.Upper.95..Confidence.Interval, 
+                  fill = Census.Region), alpha = 0.5, color = NA) +
   theme_minimal() +
   labs(
-    title = "Opioid Death Rate By Division Over Time",
-    x = "Year", y = "Rate per 100,000"
-  ) +
-  theme(legend.position = "bottom") +
-  theme(plot.title = element_text(size = 15), 
+    title = "Opioid Death Rate By Census Region Over Time",
+    x = "Year", y = "Adjusted Rate per 100,000",
+    caption = "Data Source: CDC WONDER Online Database") +
+  theme(plot.title = element_text(size = 18), 
         legend.title = element_blank(),
-        legend.position = c(0.15, 0.7))
+        legend.position = c(0.15, 0.85),
+        plot.caption = element_text(hjust = 0.5))
 ```
 
-```{r warning=FALSE}
-sex <- read.csv("../data/eda/WONDER-Sex.csv") %>%
-  filter(Year != "NA")
+## Census Division
 
-ggplot(sex, aes(x = Year, y = Crude.Rate, color = Sex, group = Sex)) +
+```{r}
+census_division <- read.csv("../data/wonder_opioid/Census-Division.csv") %>%
+  filter(Year != 'NA')
+```
+
+```{r, fig.width=12, fig.height=6}
+custom_colors <- c(
+  "Division 1: New England" = "#F59AAF", "Division 2: Middle Atlantic" = "#E75480",
+  "Division 3: East North Central" = "#7BC67E", "Division 4: West North Central" = "#64C43B",
+  "Division 5: South Atlantic" = "#82CDED", "Division 6: East South Central" = "#5EBEEB", "Division 7: West South Central" = "#3AACE0",
+  "Division 8: Mountain" = "#B596EB", "Division 9: Pacific" = "#9B71E3"
+)
+
+ggplot(census_division, aes(x = Year, y = Age.Adjusted.Rate, color = Census.Division, group = Census.Division)) +
   geom_line(linewidth = 0.75) +
-  geom_ribbon(aes(ymin = Crude.Rate.Lower.95..Confidence.Interval, ymax = Crude.Rate.Upper.95..Confidence.Interval, fill = Sex), alpha = 0.5, color = NA) +
+  geom_ribbon(aes(ymin = Age.Adjusted.Rate.Lower.95..Confidence.Interval, 
+                  ymax = Age.Adjusted.Rate.Upper.95..Confidence.Interval, 
+                  fill = Census.Division), alpha = 0.5, color = NA) +
+  scale_color_manual(values = custom_colors) + 
+  scale_fill_manual(values = custom_colors) +
+  theme_minimal() +
+  labs(
+    title = "Opioid Death Rate By Census Division Over Time",
+    x = "Year", y = "Adjusted Rate per 100,000",
+    caption = "Data Source: CDC WONDER Online Database") +
+  theme(plot.title = element_text(size = 18), 
+        legend.title = element_blank(),
+        legend.position = "right",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+## Sex
+
+```{r}
+sex <- read.csv("../data/wonder_opioid/Sex.csv") %>%
+  filter(Year != 'NA')
+```
+
+```{r}
+ggplot(sex, aes(x = Year, y = Age.Adjusted.Rate, color = Sex, group = Sex)) +
+  geom_line(linewidth = 0.75) +
+  geom_ribbon(aes(ymin = Age.Adjusted.Rate.Lower.95..Confidence.Interval, 
+                  ymax = Age.Adjusted.Rate.Upper.95..Confidence.Interval, 
+                  fill = Sex), alpha = 0.5, color = NA) +
   theme_minimal() +
   labs(
     title = "Opioid Death Rate By Sex Over Time",
-    x = "Year", y = "Rate per 100,000"
-  ) +
-  theme(legend.position = "bottom") +
-  theme(plot.title = element_text(size = 15), 
-        legend.title = element_blank())
+    x = "Year", y = "Adjusted Rate per 100,000",
+    caption = "Data Source: CDC WONDER Online Database") +
+  theme(plot.title = element_text(size = 18), 
+        legend.title = element_blank(),
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0.5))
 ```
 
-```{r warning=FALSE}
-age_order <- c(
-  "< 1 year", "1-4 years", "5-14 years", "15-24 years",
-  "25-34 years", "35-44 years", "45-54 years",
-  "55-64 years", "65-74 years", "75-84 years", "85+ years"
-)
+## Race
 
-ten_year <- read.csv("../data/eda/WONDER-10YrAge.csv") %>%
-  filter(! Ten.Year.Age.Groups.Code %in% c("1","1-4","NS"),
-         Year > 2003) %>%
-  mutate(Crude.Rate = as.numeric(Crude.Rate),
-         Crude.Lower = as.numeric(Crude.Rate.Lower.95..Confidence.Interval),
-         Crude.Upper = as.numeric(Crude.Rate.Upper.95..Confidence.Interval),
-         Ten.Year.Age.Groups = factor(Ten.Year.Age.Groups, levels = age_order))
+```{r}
+race <- read.csv("../data/wonder_opioid/Race.csv") %>%
+  filter(Year != 'NA')
+```
 
-ggplot(ten_year, aes(x = Year, y = Crude.Rate, color = Ten.Year.Age.Groups, group = Ten.Year.Age.Groups)) +
-  geom_line(linewidth = 1) +
-  geom_ribbon(aes(ymin = as.numeric(Crude.Lower), ymax = as.numeric(Crude.Upper), fill = Ten.Year.Age.Groups), alpha = 0.5, color = NA) +
+```{r}
+ggplot(race, aes(x = Year, y = Age.Adjusted.Rate, color = Race, group = Race)) +
+  geom_line(linewidth = 0.75) +
+  geom_ribbon(aes(ymin = Age.Adjusted.Rate.Lower.95..Confidence.Interval, 
+                  ymax = Age.Adjusted.Rate.Upper.95..Confidence.Interval, 
+                  fill = Race), alpha = 0.5, color = NA) +
   theme_minimal() +
   labs(
-    title = "Opioid Death Rate By 10-year Age Group Over Time",
-    x = "Year", y = "Rate per 100,000") +
-  theme(legend.position = "right") +
-  theme(plot.title = element_text(size = 15))
+    title = "Opioid Death Rate By Race Over Time",
+    x = "Year", y = "Adjusted Rate per 100,000",
+    caption = "Data Source: CDC WONDER Online Database") +
+  theme(plot.title = element_text(size = 18), 
+        legend.title = element_blank(),
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0.5))
 ```
 
-```{r warning=FALSE}
-age_order <- c("< 1 year","1-4 years","5-9 years","10-14 years","15-19 years","20-24 years","25-29 years","30-34 years","35-39 years","40-44 years","45-49 years","50-54 years","55-59 years","60-64 years ","65-69 years","70-74 years","75-79 years","80-84 years","85-89 years", "90-94 years", "95-99 years", "100+ years")
+## Five Year Age Group
 
-five_year <- read.csv("../data/eda/WONDER-5YrAge.csv") %>%
-  filter(! Five.Year.Age.Groups.Code %in% c("1","1-4","5-9","10-14","85-89","90-94","95-99", "100+","NS"),
-         Year > 2003) %>%
+```{r}
+age_order <- c("< 1 year","1-4 years","5-9 years","10-14 years","15-19 years","20-24 years","25-29 years","30-34 years","35-39 years","40-44 years","45-49 years","50-54 years","55-59 years","60-64 years ","65-69 years","70-74 years","75-79 years","80-84 years","85-89 years", "90-94 years", "95-99 years", "100+ years")
+five_year <- read.csv("../data/wonder_opioid/Five-Year-Age-Group.csv") %>%
+  filter(!Year %in% c(NA,1999),
+         !Crude.Rate %in% c("Unreliable","Suppressed","Not Applicable"),
+         !Five.Year.Age.Groups %in% c("< 1 year","1-4 years","5-9 years","10-14 years","80-84 years","85-89 years", "90-94 years", "95-99 years", "100+ years",NA)) %>%
+  filter(!Crude.Rate %in% c("Unreliable","Suppressed","Not Applicable")) %>%
   mutate(Crude.Rate = as.numeric(Crude.Rate),
          Crude.Lower = as.numeric(Crude.Rate.Lower.95..Confidence.Interval),
          Crude.Upper = as.numeric(Crude.Rate.Upper.95..Confidence.Interval),
          Five.Year.Age.Groups = factor(Five.Year.Age.Groups, levels = age_order))
+```
 
+```{r}
 ggplot(five_year, aes(x = Year, y = Crude.Rate, color = Five.Year.Age.Groups, group = Five.Year.Age.Groups)) +
-  geom_line(linewidth = 1) +
-  geom_ribbon(aes(ymin = as.numeric(Crude.Lower), ymax = as.numeric(Crude.Upper), fill = Five.Year.Age.Groups), alpha = 0.5, color = NA) +
+  geom_line(linewidth = 0.75) +
+  geom_ribbon(aes(ymin = Crude.Lower, 
+                  ymax = Crude.Upper, 
+                  fill = Five.Year.Age.Groups), alpha = 0.5, color = NA) +
   theme_minimal() +
   labs(
-    title = "Opioid Death Rate By 5-year Age Group Over Time",
-    x = "Year", y = "Rate per 100,000") +
-  theme(legend.position = "right") +
-  theme(plot.title = element_text(size = 15))
+    title = "Opioid Death Rate By Five-Year Age Groups Over Time",
+    x = "Year", y = "Crude Rate per 100,000",
+    caption = "Data Source: CDC WONDER Online Database") +
+  theme(plot.title = element_text(size = 18), 
+        legend.title = element_blank(),
+        legend.position = "right",
+        plot.caption = element_text(hjust = 0.5))
 ```
 
+## Ten Year Age Group
 
 ```{r}
-#define a function to analyze missing data
-analyze_suppression <- function(data, sex_var = "sex", age_var = "age_group", geo_var = "geo", time_var = "time") {
-
-  summary_df <- data %>%
-    mutate(is_suppressed = Deaths == "Suppressed") %>%
-    group_by(across(all_of(c(sex_var, age_var, geo_var, time_var)))) %>%
-    summarise(
-      n_total = n(),
-      n_suppressed = sum(is_suppressed, na.rm = TRUE),
-      pct_suppressed = 100 * n_suppressed / n_total,
-      .groups = "drop"
-    )
-  
-  age_levels <- summary_df %>%
-    distinct(!!sym(age_var)) %>%
-    mutate(
-      num_start = as.numeric(str_extract(!!sym(age_var), "\\d+")),
-      num_start = ifelse(grepl("^< ?1", !!sym(age_var)), -1, num_start)
-    ) %>%
-    arrange(num_start) %>%
-    pull(!!sym(age_var))
-  
-  summary_df <- summary_df %>%
-    mutate(
-      !!age_var := factor(.data[[age_var]], levels = age_levels),
-      !!geo_var := factor(.data[[geo_var]], levels = sort(unique(.data[[geo_var]])))
-    )
-  
-  heatmap_plot <- ggplot(summary_df,
-                         aes(x = .data[[geo_var]],
-                             y = .data[[age_var]],
-                             fill = pct_suppressed)) +
-    geom_tile(color = "white", linewidth = 0.2) +
-    scale_fill_gradient(
-      low = "lightgreen", high = "lightpink",
-      name = "% Suppressed"
-    ) +
-    facet_wrap(as.formula(paste("~", sex_var))) +
-    theme_minimal(base_size = 12) +
-    labs(
-      title = "Suppression Heatmap by Sex, Age, and Geography",
-      x = "Geography",
-      y = "Age Group"
-    ) +
-    theme(
-      axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
-      axis.text.y = element_text(size = 8),
-      legend.position = "bottom",
-      panel.grid = element_blank()
-    )
-  
-  time_df <- summary_df %>%
-    group_by(across(all_of(time_var))) %>%
-    summarise(pct_suppressed = mean(pct_suppressed, na.rm = TRUE), .groups = "drop") %>%
-    arrange(.data[[time_var]])
-  
-  line_plot <- ggplot(time_df, aes(x = .data[[time_var]], y = pct_suppressed)) +
-    geom_line(color = "#4c5fd7", linewidth = 1) +
-    geom_point(color = "#4c5fd7", size = 1.5) +
-    theme_minimal(base_size = 12) +
-    labs(
-      title = "Overall Suppression Over Time (Monthly)",
-      x = "Time (YYYY/MM)",
-      y = "% Suppressed"
-    ) +
-    theme(
-      axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 2),
-      panel.grid.minor = element_blank()
-    )
-  
-  return(list(summary = summary_df, heatmap = heatmap_plot, line = line_plot))
-}
-
+age_order <- c("< 1 year", "1-4 years", "5-14 years", "15-24 years","25-34 years", "35-44 years", "45-54 years","55-64 years", "65-74 years", "75-84 years", "85+ years"
+)
+ten_year <- read.csv("../data/wonder_opioid/Ten-Year-Age-Group.csv") %>%
+  filter(!Crude.Rate %in% c("Unreliable","Suppressed","Not Applicable"),
+         !Ten.Year.Age.Groups %in% c("< 1 year","1-4 years","5-14 years","85+ years", NA),
+         Year != "NA") %>%
+  filter(!Crude.Rate %in% c("Unreliable","Suppressed","Not Applicable")) %>%
+  mutate(Crude.Rate = as.numeric(Crude.Rate),
+         Crude.Lower = as.numeric(Crude.Rate.Lower.95..Confidence.Interval),
+         Crude.Upper = as.numeric(Crude.Rate.Upper.95..Confidence.Interval),
+         Ten.Year.Age.Groups = factor(Ten.Year.Age.Groups, levels = age_order))
 ```
 
 ```{r}
-dataset_1 <- read.csv("../data/missing data/WONDER-SEX-5Yr-Cenus Division.csv")
+ggplot(ten_year, aes(x = Year, y = Crude.Rate, color = Ten.Year.Age.Groups, group = Ten.Year.Age.Groups)) +
+  geom_line(linewidth = 0.75) +
+  geom_ribbon(aes(ymin = Crude.Lower, 
+                  ymax = Crude.Upper, 
+                  fill = Ten.Year.Age.Groups), alpha = 0.5, color = NA) +
+  theme_minimal() +
+  labs(
+    title = "Opioid Death Rate By Ten-Year Age Groups Over Time",
+    x = "Year", y = "Crude Rate per 100,000",
+    caption = "Data Source: CDC WONDER Online Database") +
+  theme(plot.title = element_text(size = 18), 
+        legend.title = element_blank(),
+        legend.position = "right",
+        plot.caption = element_text(hjust = 0.5))
+```
 
-analyze_suppression(dataset_1, "Sex", "Five.Year.Age.Groups", "Census.Division", "Month.Code")
+## Census Division x Sex
+
+```{r}
+division_sex <- read.csv("../data/wonder_opioid/Census-Division-Sex.csv") %>%
+  filter(Year != 'NA')
 ```
 
 ```{r}
-dataset_2 <- read.csv("../data/missing data/WONDER-SEX-5Yr-Cenus Region.csv")
+ggplot(division_sex, aes(x = Year, y = Age.Adjusted.Rate, color = Census.Division, group = Census.Division)) +
+  geom_line(linewidth = 1) +
+  facet_wrap(~ Sex, ncol = 3) +
+  theme_minimal() +
+  labs(title = "Opioid Deaths by Census Division and Sex",
+       x = "Year", y = "Age Adjusted Rate per 100,000",
+       caption = "Data Source: CDC WONDER Online Database") +
+  theme(legend.position = "bottom",
+        legend.key.size = unit(0.4, "lines"),
+        legend.title = element_blank(),
+        plot.caption = element_text(hjust = 0.5),
+        plot.title = element_text(size = 18)) + 
+  guides(color = guide_legend(nrow = 3))
+```
 
-analyze_suppression(dataset_2, "Sex", "Five.Year.Age.Groups", "Census.Region", "Month.Code")
+## Ten-Year vs. Region
+
+```{r}
+ten_year_region <- read.csv("../data/wonder_opioid/Ten-Year-Region.csv") %>%
+  filter(Year != 'NA',
+         !Crude.Rate %in% c("Unreliable","Suppressed","Not Applicable"),
+         !Ten.Year.Age.Groups %in% c("1-4 years", "5-14 years", "75-84 years", "85+ years"))
 ```
 
 ```{r}
-dataset_3 <- read.csv("../data/missing data/WONDER-SEX-10Yr-Cenus Division.csv")
-
-analyze_suppression(dataset_3, "Sex", "Ten.Year.Age.Groups", "Census.Division", "Month.Code")
-```
-
-```{r}
-dataset_4 <- read.csv("../data/missing data/WONDER-SEX-10Yr-Cenus Region.csv")
-
-analyze_suppression(dataset_4, "Sex", "Ten.Year.Age.Groups", "Census.Region", "Month.Code")
+ggplot(ten_year_region, aes(x = Year, y = as.numeric(Crude.Rate), color = Census.Region, group = Census.Region)) +
+  geom_line(linewidth = 1) +
+  facet_wrap(~ Ten.Year.Age.Groups, ncol = 3) +
+  theme_minimal() +
+  labs(title = "Opioid Deaths by Census Region and Ten Year Age Group",
+       x = "Year", y = "Crude Rate per 100,000",
+       caption = "Data Source: CDC WONDER Online Database") +
+  theme(legend.position = "bottom",
+        legend.key.size = unit(0.4, "lines"),
+        legend.title = element_blank(),
+        plot.caption = element_text(hjust = 0.5),
+        plot.title = element_text(size = 18))
 ```
