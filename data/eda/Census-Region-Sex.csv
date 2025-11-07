@@ -1,0 +1,275 @@
+"Notes","Census Region","Census Region Code","Sex","Sex Code","Year","Year Code",Deaths,Population,Crude Rate,Crude Rate Lower 95% Confidence Interval,Crude Rate Upper 95% Confidence Interval,Crude Rate Standard Error,Age Adjusted Rate,Age Adjusted Rate Lower 95% Confidence Interval,Age Adjusted Rate Upper 95% Confidence Interval,Age Adjusted Rate Standard Error
+,"Census Region 1: Northeast","CENS-R1","Female","F","1999","1999",463,27572096,1.7,1.5,1.8,0.1,1.7,1.5,1.8,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2000","2000",395,27697051,1.4,1.3,1.6,0.1,1.4,1.3,1.6,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2001","2001",509,27842388,1.8,1.7,2.0,0.1,1.8,1.7,2.0,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2002","2002",619,27939451,2.2,2.0,2.4,0.1,2.2,2.1,2.4,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2003","2003",647,28018942,2.3,2.1,2.5,0.1,2.3,2.2,2.5,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2004","2004",615,28051114,2.2,2.0,2.4,0.1,2.2,2.0,2.4,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2005","2005",758,28047433,2.7,2.5,2.9,0.1,2.7,2.5,2.9,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2006","2006",858,28073026,3.1,2.9,3.3,0.1,3.0,2.8,3.2,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2007","2007",957,28128196,3.4,3.2,3.6,0.1,3.3,3.1,3.5,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2008","2008",1009,28231639,3.6,3.4,3.8,0.1,3.5,3.3,3.7,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2009","2009",911,28359249,3.2,3.0,3.4,0.1,3.2,3.0,3.4,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2010","2010",1023,28447832,3.6,3.4,3.8,0.1,3.6,3.3,3.8,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2011","2011",1249,28522670,4.4,4.1,4.6,0.1,4.3,4.1,4.6,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2012","2012",1302,28628154,4.5,4.3,4.8,0.1,4.5,4.3,4.8,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2013","2013",1592,28699060,5.5,5.3,5.8,0.1,5.5,5.2,5.8,0.1
+,"Census Region 1: Northeast","CENS-R1","Female","F","2014","2014",1828,28802978,6.3,6.1,6.6,0.1,6.4,6.1,6.7,0.2
+,"Census Region 1: Northeast","CENS-R1","Female","F","2015","2015",2093,28858635,7.3,6.9,7.6,0.2,7.3,7.0,7.6,0.2
+,"Census Region 1: Northeast","CENS-R1","Female","F","2016","2016",2939,28806949,10.2,9.8,10.6,0.2,10.4,10.0,10.8,0.2
+,"Census Region 1: Northeast","CENS-R1","Female","F","2017","2017",3085,28940275,10.7,10.3,11.0,0.2,10.9,10.5,11.3,0.2
+,"Census Region 1: Northeast","CENS-R1","Female","F","2018","2018",3439,28750649,12.0,11.6,12.4,0.2,12.3,11.8,12.7,0.2
+,"Census Region 1: Northeast","CENS-R1","Female","F","2019","2019",3433,28679128,12.0,11.6,12.4,0.2,12.3,11.9,12.7,0.2
+,"Census Region 1: Northeast","CENS-R1","Female","F","2020","2020",4076,28606350,14.2,13.8,14.7,0.2,14.7,14.3,15.2,0.2
+"Total","Census Region 1: Northeast","CENS-R1","Female","F",,,33800,623703265,5.4,5.4,5.5,0.0,5.4,5.4,5.5,0.0
+,"Census Region 1: Northeast","CENS-R1","Male","M","1999","1999",1395,25771679,5.4,5.1,5.7,0.1,5.3,5.0,5.6,0.1
+,"Census Region 1: Northeast","CENS-R1","Male","M","2000","2000",1396,25897327,5.4,5.1,5.7,0.1,5.3,5.0,5.5,0.1
+,"Census Region 1: Northeast","CENS-R1","Male","M","2001","2001",1617,26073134,6.2,5.9,6.5,0.2,6.1,5.8,6.4,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2002","2002",1702,26204464,6.5,6.2,6.8,0.2,6.4,6.1,6.7,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2003","2003",1921,26315511,7.3,7.0,7.6,0.2,7.2,6.9,7.5,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2004","2004",1603,26372419,6.1,5.8,6.4,0.2,6.0,5.7,6.3,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2005","2005",1837,26403797,7.0,6.6,7.3,0.2,6.8,6.5,7.2,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2006","2006",2209,26449633,8.4,8.0,8.7,0.2,8.2,7.9,8.6,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2007","2007",2182,26525166,8.2,7.9,8.6,0.2,8.1,7.8,8.5,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2008","2008",2264,26644287,8.5,8.1,8.8,0.2,8.3,8.0,8.7,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2009","2009",2071,26773852,7.7,7.4,8.1,0.2,7.6,7.3,7.9,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2010","2010",2185,26869408,8.1,7.8,8.5,0.2,8.0,7.7,8.4,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2011","2011",2613,26998928,9.7,9.3,10.0,0.2,9.6,9.2,10.0,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2012","2012",2977,27132937,11.0,10.6,11.4,0.2,10.9,10.5,11.3,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2013","2013",3591,27244013,13.2,12.7,13.6,0.2,13.1,12.7,13.5,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2014","2014",4133,27349355,15.1,14.7,15.6,0.2,15.1,14.7,15.6,0.2
+,"Census Region 1: Northeast","CENS-R1","Male","M","2015","2015",5483,27425256,20.0,19.5,20.5,0.3,20.1,19.6,20.7,0.3
+,"Census Region 1: Northeast","CENS-R1","Male","M","2016","2016",7677,27402561,28.0,27.4,28.6,0.3,28.2,27.6,28.9,0.3
+,"Census Region 1: Northeast","CENS-R1","Male","M","2017","2017",8699,27530306,31.6,30.9,32.3,0.3,31.9,31.2,32.5,0.3
+,"Census Region 1: Northeast","CENS-R1","Male","M","2018","2018",9028,27360430,33.0,32.3,33.7,0.3,33.5,32.8,34.2,0.4
+,"Census Region 1: Northeast","CENS-R1","Male","M","2019","2019",9153,27303675,33.5,32.8,34.2,0.4,33.8,33.1,34.5,0.4
+,"Census Region 1: Northeast","CENS-R1","Male","M","2020","2020",11166,27243519,41.0,40.2,41.7,0.4,41.3,40.6,42.1,0.4
+"Total","Census Region 1: Northeast","CENS-R1","Male","M",,,86902,589291657,14.7,14.6,14.8,0.1,14.6,14.5,14.7,0.0
+"Total","Census Region 1: Northeast","CENS-R1",,,,,120702,1212994922,10.0,9.9,10.0,0.0,10.0,9.9,10.0,0.0
+,"Census Region 2: Midwest","CENS-R2","Female","F","1999","1999",274,32715025,0.8,0.7,0.9,0.1,0.9,0.8,1.0,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2000","2000",371,32837338,1.1,1.0,1.2,0.1,1.2,1.0,1.3,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2001","2001",481,33007638,1.5,1.3,1.6,0.1,1.5,1.4,1.6,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2002","2002",597,33113669,1.8,1.7,1.9,0.1,1.8,1.7,2.0,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2003","2003",612,33227950,1.8,1.7,2.0,0.1,1.9,1.7,2.0,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2004","2004",782,33337854,2.3,2.2,2.5,0.1,2.4,2.2,2.5,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2005","2005",935,33436821,2.8,2.6,3.0,0.1,2.9,2.7,3.1,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2006","2006",1088,33563609,3.2,3.0,3.4,0.1,3.3,3.1,3.5,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2007","2007",1148,33693407,3.4,3.2,3.6,0.1,3.5,3.3,3.7,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2008","2008",1338,33803053,4.0,3.7,4.2,0.1,4.0,3.8,4.2,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2009","2009",1411,33914007,4.2,3.9,4.4,0.1,4.2,4.0,4.4,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2010","2010",1624,33999441,4.8,4.5,5.0,0.1,4.8,4.6,5.1,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2011","2011",1745,34099017,5.1,4.9,5.4,0.1,5.2,5.0,5.5,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2012","2012",1816,34163115,5.3,5.1,5.6,0.1,5.4,5.2,5.7,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2013","2013",2025,34257226,5.9,5.7,6.2,0.1,6.1,5.8,6.3,0.1
+,"Census Region 2: Midwest","CENS-R2","Female","F","2014","2014",2406,34350178,7.0,6.7,7.3,0.1,7.2,6.9,7.5,0.2
+,"Census Region 2: Midwest","CENS-R2","Female","F","2015","2015",2736,34412200,8.0,7.7,8.2,0.2,8.3,8.0,8.6,0.2
+,"Census Region 2: Midwest","CENS-R2","Female","F","2016","2016",3446,34407750,10.0,9.7,10.3,0.2,10.4,10.0,10.8,0.2
+,"Census Region 2: Midwest","CENS-R2","Female","F","2017","2017",4104,34520027,11.9,11.5,12.3,0.2,12.5,12.1,12.9,0.2
+,"Census Region 2: Midwest","CENS-R2","Female","F","2018","2018",3682,34580567,10.6,10.3,11.0,0.2,11.3,10.9,11.7,0.2
+,"Census Region 2: Midwest","CENS-R2","Female","F","2019","2019",3715,34587304,10.7,10.4,11.1,0.2,11.3,10.9,11.7,0.2
+,"Census Region 2: Midwest","CENS-R2","Female","F","2020","2020",4653,34581450,13.5,13.1,13.8,0.2,14.4,13.9,14.8,0.2
+"Total","Census Region 2: Midwest","CENS-R2","Female","F",,,40989,744608646,5.5,5.5,5.6,0.0,5.7,5.6,5.7,0.0
+,"Census Region 2: Midwest","CENS-R2","Male","M","1999","1999",832,31385036,2.7,2.5,2.8,0.1,2.6,2.5,2.8,0.1
+,"Census Region 2: Midwest","CENS-R2","Male","M","2000","2000",1024,31555438,3.2,3.0,3.4,0.1,3.2,3.0,3.4,0.1
+,"Census Region 2: Midwest","CENS-R2","Male","M","2001","2001",1129,31768893,3.6,3.3,3.8,0.1,3.5,3.3,3.7,0.1
+,"Census Region 2: Midwest","CENS-R2","Male","M","2002","2002",1308,31904624,4.1,3.9,4.3,0.1,4.1,3.8,4.3,0.1
+,"Census Region 2: Midwest","CENS-R2","Male","M","2003","2003",1315,32049004,4.1,3.9,4.3,0.1,4.1,3.9,4.3,0.1
+,"Census Region 2: Midwest","CENS-R2","Male","M","2004","2004",1621,32194451,5.0,4.8,5.3,0.1,5.0,4.8,5.3,0.1
+,"Census Region 2: Midwest","CENS-R2","Male","M","2005","2005",1823,32315051,5.6,5.4,5.9,0.1,5.6,5.3,5.8,0.1
+,"Census Region 2: Midwest","CENS-R2","Male","M","2006","2006",2355,32464946,7.3,7.0,7.5,0.1,7.3,7.0,7.5,0.2
+,"Census Region 2: Midwest","CENS-R2","Male","M","2007","2007",2236,32600282,6.9,6.6,7.1,0.1,6.8,6.6,7.1,0.1
+,"Census Region 2: Midwest","CENS-R2","Male","M","2008","2008",2662,32720882,8.1,7.8,8.4,0.2,8.2,7.9,8.5,0.2
+,"Census Region 2: Midwest","CENS-R2","Male","M","2009","2009",2796,32834430,8.5,8.2,8.8,0.2,8.5,8.2,8.9,0.2
+,"Census Region 2: Midwest","CENS-R2","Male","M","2010","2010",2959,32927560,9.0,8.7,9.3,0.2,9.1,8.7,9.4,0.2
+,"Census Region 2: Midwest","CENS-R2","Male","M","2011","2011",3245,33059818,9.8,9.5,10.2,0.2,9.9,9.5,10.2,0.2
+,"Census Region 2: Midwest","CENS-R2","Male","M","2012","2012",3490,33153182,10.5,10.2,10.9,0.2,10.7,10.4,11.1,0.2
+,"Census Region 2: Midwest","CENS-R2","Male","M","2013","2013",3893,33290664,11.7,11.3,12.1,0.2,11.9,11.5,12.2,0.2
+,"Census Region 2: Midwest","CENS-R2","Male","M","2014","2014",4511,33394930,13.5,13.1,13.9,0.2,13.8,13.4,14.2,0.2
+,"Census Region 2: Midwest","CENS-R2","Male","M","2015","2015",5275,33495203,15.7,15.3,16.2,0.2,16.1,15.7,16.6,0.2
+,"Census Region 2: Midwest","CENS-R2","Male","M","2016","2016",7315,33533679,21.8,21.3,22.3,0.3,22.6,22.1,23.1,0.3
+,"Census Region 2: Midwest","CENS-R2","Male","M","2017","2017",8379,33659324,24.9,24.4,25.4,0.3,25.7,25.1,26.3,0.3
+,"Census Region 2: Midwest","CENS-R2","Male","M","2018","2018",7586,33728177,22.5,22.0,23.0,0.3,23.2,22.6,23.7,0.3
+,"Census Region 2: Midwest","CENS-R2","Male","M","2019","2019",7946,33741700,23.5,23.0,24.1,0.3,24.3,23.8,24.8,0.3
+,"Census Region 2: Midwest","CENS-R2","Male","M","2020","2020",10757,33735294,31.9,31.3,32.5,0.3,33.0,32.4,33.6,0.3
+"Total","Census Region 2: Midwest","CENS-R2","Male","M",,,84457,721512568,11.7,11.6,11.8,0.0,11.8,11.7,11.9,0.0
+"Total","Census Region 2: Midwest","CENS-R2",,,,,125446,1466121214,8.6,8.5,8.6,0.0,8.7,8.7,8.8,0.0
+,"Census Region 3: South","CENS-R3","Female","F","1999","1999",588,50680024,1.2,1.1,1.3,0.0,1.2,1.1,1.3,0.0
+,"Census Region 3: South","CENS-R3","Female","F","2000","2000",814,51179500,1.6,1.5,1.7,0.1,1.6,1.5,1.7,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2001","2001",1122,51972624,2.2,2.0,2.3,0.1,2.2,2.0,2.3,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2002","2002",1413,52632821,2.7,2.5,2.8,0.1,2.7,2.5,2.8,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2003","2003",1677,53288587,3.1,3.0,3.3,0.1,3.2,3.0,3.3,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2004","2004",1945,54016158,3.6,3.4,3.8,0.1,3.6,3.5,3.8,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2005","2005",1999,54827816,3.6,3.5,3.8,0.1,3.7,3.5,3.8,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2006","2006",2355,55627404,4.2,4.1,4.4,0.1,4.2,4.1,4.4,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2007","2007",2722,56446435,4.8,4.6,5.0,0.1,4.8,4.6,5.0,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2008","2008",2601,57212530,4.5,4.4,4.7,0.1,4.6,4.4,4.7,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2009","2009",2917,57905989,5.0,4.9,5.2,0.1,5.0,4.8,5.2,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2010","2010",3095,58421063,5.3,5.1,5.5,0.1,5.3,5.1,5.5,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2011","2011",3279,59150147,5.5,5.4,5.7,0.1,5.6,5.4,5.8,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2012","2012",3280,59745106,5.5,5.3,5.7,0.1,5.5,5.3,5.7,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2013","2013",3361,60306735,5.6,5.4,5.8,0.1,5.6,5.4,5.8,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2014","2014",3788,61053158,6.2,6.0,6.4,0.1,6.2,6.0,6.4,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2015","2015",4343,61782945,7.0,6.8,7.2,0.1,7.1,6.9,7.3,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2016","2016",5221,62380925,8.4,8.1,8.6,0.1,8.5,8.3,8.7,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2017","2017",5831,63042096,9.2,9.0,9.5,0.1,9.4,9.2,9.7,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2018","2018",5431,63613086,8.5,8.3,8.8,0.1,8.7,8.5,8.9,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2019","2019",5620,64050066,8.8,8.5,9.0,0.1,8.9,8.7,9.2,0.1
+,"Census Region 3: South","CENS-R3","Female","F","2020","2020",7885,64626584,12.2,11.9,12.5,0.1,12.6,12.3,12.9,0.1
+"Total","Census Region 3: South","CENS-R3","Female","F",,,71287,1273961799,5.6,5.6,5.6,0.0,5.6,5.6,5.7,0.0
+,"Census Region 3: South","CENS-R3","Male","M","1999","1999",1574,48484436,3.2,3.1,3.4,0.1,3.2,3.1,3.4,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2000","2000",1908,49057320,3.9,3.7,4.1,0.1,3.8,3.7,4.0,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2001","2001",2540,49876951,5.1,4.9,5.3,0.1,5.0,4.8,5.2,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2002","2002",2910,50517966,5.8,5.6,6.0,0.1,5.7,5.5,5.9,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2003","2003",3263,51091601,6.4,6.2,6.6,0.1,6.4,6.1,6.6,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2004","2004",3514,51867819,6.8,6.6,7.0,0.1,6.7,6.5,7.0,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2005","2005",3604,52651955,6.8,6.6,7.1,0.1,6.8,6.6,7.0,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2006","2006",4233,53449529,7.9,7.7,8.2,0.1,7.9,7.6,8.1,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2007","2007",4548,54242307,8.4,8.1,8.6,0.1,8.4,8.1,8.6,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2008","2008",4632,54972400,8.4,8.2,8.7,0.1,8.4,8.1,8.6,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2009","2009",4912,55642626,8.8,8.6,9.1,0.1,8.8,8.6,9.1,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2010","2010",5102,56134681,9.1,8.8,9.3,0.1,9.1,8.8,9.3,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2011","2011",5235,56896589,9.2,9.0,9.5,0.1,9.3,9.0,9.5,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2012","2012",5108,57512115,8.9,8.6,9.1,0.1,8.9,8.7,9.2,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2013","2013",5259,58076718,9.1,8.8,9.3,0.1,9.1,8.8,9.3,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2014","2014",6286,58718776,10.7,10.4,11.0,0.1,10.8,10.5,11.1,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2015","2015",7404,59399902,12.5,12.2,12.7,0.1,12.6,12.3,12.9,0.1
+,"Census Region 3: South","CENS-R3","Male","M","2016","2016",9708,59938649,16.2,15.9,16.5,0.2,16.4,16.1,16.8,0.2
+,"Census Region 3: South","CENS-R3","Male","M","2017","2017",11168,60616528,18.4,18.1,18.8,0.2,18.8,18.4,19.1,0.2
+,"Census Region 3: South","CENS-R3","Male","M","2018","2018",10982,61140862,18.0,17.6,18.3,0.2,18.3,18.0,18.7,0.2
+,"Census Region 3: South","CENS-R3","Male","M","2019","2019",12124,61530382,19.7,19.4,20.1,0.2,20.1,19.8,20.5,0.2
+,"Census Region 3: South","CENS-R3","Male","M","2020","2020",17996,62036170,29.0,28.6,29.4,0.2,29.8,29.4,30.2,0.2
+"Total","Census Region 3: South","CENS-R3","Male","M",,,134010,1223856282,10.9,10.9,11.0,0.0,11.0,10.9,11.1,0.0
+"Total","Census Region 3: South","CENS-R3",,,,,205297,2497818081,8.2,8.2,8.3,0.0,8.3,8.3,8.3,0.0
+,"Census Region 4: West","CENS-R4","Female","F","1999","1999",732,31270150,2.3,2.2,2.5,0.1,2.4,2.2,2.5,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2000","2000",684,31654454,2.2,2.0,2.3,0.1,2.2,2.0,2.3,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2001","2001",655,32254813,2.0,1.9,2.2,0.1,2.0,1.9,2.2,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2002","2002",1131,32708693,3.5,3.3,3.7,0.1,3.5,3.3,3.7,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2003","2003",1202,33143557,3.6,3.4,3.8,0.1,3.6,3.4,3.8,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2004","2004",1301,33572160,3.9,3.7,4.1,0.1,3.9,3.7,4.1,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2005","2005",1469,34007451,4.3,4.1,4.5,0.1,4.3,4.1,4.5,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2006","2006",1644,34468608,4.8,4.5,5.0,0.1,4.7,4.5,5.0,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2007","2007",1754,34898315,5.0,4.8,5.3,0.1,5.0,4.7,5.2,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2008","2008",1871,35356793,5.3,5.1,5.5,0.1,5.2,4.9,5.4,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2009","2009",2048,35784830,5.7,5.5,6.0,0.1,5.6,5.3,5.8,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2010","2010",1992,36095876,5.5,5.3,5.8,0.1,5.4,5.2,5.6,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2011","2011",2052,36529264,5.6,5.4,5.9,0.1,5.5,5.3,5.8,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2012","2012",2034,36885598,5.5,5.3,5.8,0.1,5.4,5.1,5.6,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2013","2013",2077,37214216,5.6,5.3,5.8,0.1,5.5,5.2,5.7,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2014","2014",2205,37714255,5.8,5.6,6.1,0.1,5.6,5.4,5.9,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2015","2015",2248,38135743,5.9,5.7,6.1,0.1,5.7,5.5,6.0,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2016","2016",2145,38452966,5.6,5.3,5.8,0.1,5.4,5.1,5.6,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2017","2017",2243,38808661,5.8,5.5,6.0,0.1,5.5,5.3,5.8,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2018","2018",2172,39094453,5.6,5.3,5.8,0.1,5.4,5.1,5.6,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2019","2019",2457,39265701,6.3,6.0,6.5,0.1,6.1,5.8,6.3,0.1
+,"Census Region 4: West","CENS-R4","Female","F","2020","2020",3356,39413537,8.5,8.2,8.8,0.1,8.5,8.2,8.8,0.1
+"Total","Census Region 4: West","CENS-R4","Female","F",,,39472,786730094,5.0,5.0,5.1,0.0,5.0,4.9,5.0,0.0
+,"Census Region 4: West","CENS-R4","Male","M","1999","1999",2192,31161722,7.0,6.7,7.3,0.2,7.0,6.7,7.3,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2000","2000",1815,31543478,5.8,5.5,6.0,0.1,5.7,5.5,6.0,0.1
+,"Census Region 4: West","CENS-R4","Male","M","2001","2001",1443,32172514,4.5,4.3,4.7,0.1,4.5,4.2,4.7,0.1
+,"Census Region 4: West","CENS-R4","Male","M","2002","2002",2240,32603505,6.9,6.6,7.2,0.1,6.9,6.6,7.2,0.1
+,"Census Region 4: West","CENS-R4","Male","M","2003","2003",2303,32972781,7.0,6.7,7.3,0.1,7.0,6.7,7.2,0.1
+,"Census Region 4: West","CENS-R4","Male","M","2004","2004",2375,33393323,7.1,6.8,7.4,0.1,7.0,6.8,7.3,0.1
+,"Census Region 4: West","CENS-R4","Male","M","2005","2005",2493,33826275,7.4,7.1,7.7,0.1,7.3,7.0,7.6,0.1
+,"Census Region 4: West","CENS-R4","Male","M","2006","2006",2803,34283157,8.2,7.9,8.5,0.2,8.0,7.7,8.3,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2007","2007",2969,34697099,8.6,8.2,8.9,0.2,8.4,8.1,8.7,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2008","2008",3205,35152382,9.1,8.8,9.4,0.2,8.9,8.6,9.3,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2009","2009",3356,35556546,9.4,9.1,9.8,0.2,9.2,8.9,9.6,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2010","2010",3109,35849677,8.7,8.4,9.0,0.2,8.4,8.1,8.7,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2011","2011",3366,36335484,9.3,9.0,9.6,0.2,9.0,8.7,9.4,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2012","2012",3159,36693833,8.6,8.3,8.9,0.2,8.4,8.1,8.7,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2013","2013",3254,37040207,8.8,8.5,9.1,0.2,8.6,8.3,8.9,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2014","2014",3490,37473426,9.3,9.0,9.6,0.2,9.1,8.8,9.4,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2015","2015",3509,37908936,9.3,9.0,9.6,0.2,9.0,8.7,9.3,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2016","2016",3798,38204034,9.9,9.6,10.3,0.2,9.7,9.4,10.0,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2017","2017",4091,38601961,10.6,10.3,10.9,0.2,10.3,10.0,10.6,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2018","2018",4482,38899210,11.5,11.2,11.9,0.2,11.2,10.9,11.5,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2019","2019",5412,39081567,13.8,13.5,14.2,0.2,13.5,13.2,13.9,0.2
+,"Census Region 4: West","CENS-R4","Male","M","2020","2020",8741,39241219,22.3,21.8,22.7,0.2,21.9,21.5,22.4,0.2
+"Total","Census Region 4: West","CENS-R4","Male","M",,,73605,782692336,9.4,9.3,9.5,0.0,9.3,9.2,9.4,0.0
+"Total","Census Region 4: West","CENS-R4",,,,,113077,1569422430,7.2,7.2,7.2,0.0,7.2,7.1,7.2,0.0
+"Total",,,,,,,564522,6746356647,8.4,8.3,8.4,0.0,8.4,8.4,8.4,0.0
+"---"
+"Dataset: Multiple Cause of Death, 1999-2020"
+"Query Parameters:"
+"Title: Census-Region-Sex"
+"MCD - ICD-10 Codes: T40.0 (Opium); T40.1 (Heroin); T40.2 (Other opioids); T40.3 (Methadone); T40.4 (Other synthetic narcotics);"
+"T40.6 (Other and unspecified narcotics)"
+"UCD - ICD-10 Codes: X40 (Accidental poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics); X41"
+"(Accidental poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not"
+"elsewhere classified); X42 (Accidental poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not"
+"elsewhere classified); X43 (Accidental poisoning by and exposure to other drugs acting on the autonomic nervous system); X44"
+"(Accidental poisoning by and exposure to other and unspecified drugs, medicaments and biological substances); X60 (Intentional"
+"self-poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics); X61 (Intentional self-poisoning by and"
+"exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not elsewhere classified); X62"
+"(Intentional self-poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not elsewhere classified); X63"
+"(Intentional self-poisoning by and exposure to other drugs acting on the autonomic nervous system); X64 (Intentional"
+"self-poisoning by and exposure to other and unspecified drugs, medicaments and biological substances); X85 (Assault by drugs,"
+"medicaments and biological substances); Y10 (Poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics,"
+"undetermined intent); Y11 (Poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic"
+"drugs, not elsewhere classified, undetermined intent); Y12 (Poisoning by and exposure to narcotics and psychodysleptics"
+"[hallucinogens], not elsewhere classified, undetermined intent); Y13 (Poisoning by and exposure to other drugs acting on the"
+"autonomic nervous system, undetermined intent); Y14 (Poisoning by and exposure to other and unspecified drugs, medicaments and"
+"biological substances, undetermined intent)"
+"Group By: Census Region; Sex; Year"
+"Show Totals: True"
+"Show Zero Values: True"
+"Show Suppressed: True"
+"Standard Population: 2000 U.S. Std. Population"
+"Calculate Rates Per: 100,000"
+"Rate Options: Default intercensal populations for years 2001-2009 (except Infant Age Groups)"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/mcd.html for more information."
+"---"
+"Query Date: Nov 7, 2025 10:52:39 AM"
+"---"
+"Suggested Citation: Centers for Disease Control and Prevention, National Center for Health Statistics. National Vital Statistics"
+"System, Mortality 1999-2020 on CDC WONDER Online Database, released in 2021. Data are from the Multiple Cause of Death Files,"
+"1999-2020, as compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative"
+"Program. Accessed at http://wonder.cdc.gov/mcd-icd10.html on Nov 7, 2025 10:52:39 AM"
+"---"
+Caveats:
+"1. As of April 3, 2017, the underlying cause of death has been revised for 125 deaths in 2014. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#2014-Revision."
+"2. Circumstances in Georgia for the years 2008 and 2009 have resulted in unusually high death counts for the ICD-10 cause of"
+"death code R99, ""Other ill-defined and unspecified causes of mortality."" Caution should be used in interpreting these data."
+"More information: http://wonder.cdc.gov/wonder/help/mcd.html#Georgia-Reporting-Anomalies."
+"3. Circumstances in New Jersey for the year 2009 have resulted in unusually high death counts for the ICD-10 cause of death code"
+"R99, ""Other ill-defined and unspecified causes of mortality"" and therefore unusually low death counts in other ICD-10 codes,"
+"most notably R95, ""Sudden Infant Death Syndrome"" and X40-X49, ""Unintentional poisoning."" Caution should be used in"
+"interpreting these data. More information: http://wonder.cdc.gov/wonder/help/mcd.html#New-Jersey-Reporting-Anomalies."
+"4. Circumstances in California resulted in unusually high death counts for the ICD-10 cause of death code R99, ""Other"
+"ill-defined and unspecified causes of mortality"" for deaths occurring in years 2000 and 2001. Caution should be used in"
+"interpreting these data. More information: http://wonder.cdc.gov/wonder/help/mcd.html#California-Reporting-Anomalies."
+"5. The populations used to calculate standard age-adjusted rates are documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#2000 Standard Population."
+"6. The method used to calculate age-adjusted rates is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Age-Adjusted Rates."
+"7. Deaths for persons of unknown age are included in counts and crude rates, but are not included in age-adjusted rates."
+"8. The method used to calculate 95% confidence intervals is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Confidence-Intervals."
+"9. The method used to calculate standard errors is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Standard-Errors."
+"10. The population figures for year 2020 are bridged-race estimates of the July 1 resident population, from the Vintage 2020"
+"postcensal series released by NCHS on September 22, 2021. The population figures for year 2019 are bridged-race estimates of the"
+"July 1 resident population, from the Vintage 2019 postcensal series released by NCHS on July 9, 2020. The population figures for"
+"year 2018 are bridged-race estimates of the July 1 resident population, from the Vintage 2018 postcensal series released by NCHS"
+"on June 25, 2019. The population figures for year 2017 are bridged-race estimates of the July 1 resident population, from the"
+"Vintage 2017 postcensal series released by NCHS on June 27, 2018. The population figures for year 2016 are bridged-race"
+"estimates of the July 1 resident population, from the Vintage 2016 postcensal series released by NCHS on June 26, 2017. The"
+"population figures for year 2015 are bridged-race estimates of the July 1 resident population, from the Vintage 2015 postcensal"
+"series released by NCHS on June 28, 2016. The population figures for year 2014 are bridged-race estimates of the July 1 resident"
+"population, from the Vintage 2014 postcensal series released by NCHS on June 30, 2015. The population figures for year 2013 are"
+"bridged-race estimates of the July 1 resident population, from the Vintage 2013 postcensal series released by NCHS on June 26,"
+"2014. The population figures for year 2012 are bridged-race estimates of the July 1 resident population, from the Vintage 2012"
+"postcensal series released by NCHS on June 13, 2013. Population figures for 2011 are bridged-race estimates of the July 1"
+"resident population, from the county-level postcensal Vintage 2011 series released by NCHS on July 18, 2012. Population figures"
+"for 2010 are April 1 Census counts. The population figures for years 2001 - 2009, are bridged-race estimates of the July 1"
+"resident population, from the revised intercensal county-level 2000 - 2009 series released by NCHS on October 26, 2012."
+"Population figures for 2000 are April 1 Census counts. Population figures for 1999 are from the 1990-1999 intercensal series of"
+"July 1 estimates. Population figures for Infant Age Groups are the number of live births. <br/><b>Note:</b> Rates and population"
+"figures for years 2001 - 2009 differ slightly from previously published reports, due to use of the population estimates which"
+"were available at the time of release."
+"11. The population figures used in the calculation of death rates for the age group 'under 1 year' are the estimates of the"
+"resident population that is under one year of age. More information: http://wonder.cdc.gov/wonder/help/mcd.html#Age Group."
+"12. Changes to cause of death classification affect reporting trends. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#ICD-10 Changes."

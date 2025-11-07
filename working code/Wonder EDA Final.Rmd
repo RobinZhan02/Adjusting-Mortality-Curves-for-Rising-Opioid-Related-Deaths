@@ -1,0 +1,244 @@
+---
+title: "Wonder EDA Final"
+author: "PSTAT 296A"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(readxl)
+library(forecast)
+library(lubridate)
+library(tseries)
+```
+
+## Distribution of Missing Data
+
+- Missing data distribution for each of the 4 datasets
+- Missing data comparison (before vs. after inferred)
+
+# Exploratory Data Analysis
+
+## Census Region
+
+```{r}
+census_region <- read.csv("../data/eda/Census-Region.csv") %>%
+  filter(Year != 'NA')
+```
+
+```{r}
+ggplot(census_region, aes(x = Year, y = Age.Adjusted.Rate, color = Census.Region, group = Census.Region)) +
+  geom_line(linewidth = 0.75) +
+  geom_ribbon(aes(ymin = Age.Adjusted.Rate.Lower.95..Confidence.Interval, 
+                  ymax = Age.Adjusted.Rate.Upper.95..Confidence.Interval, 
+                  fill = Census.Region), alpha = 0.5, color = NA) +
+  theme_minimal() +
+  labs(
+    title = "Opioid Death Rate By Census Region Over Time",
+    x = "Year", y = "Adjusted Rate per 100,000",
+    caption = "Data Source: CDC WONDER Online Database") +
+  theme(plot.title = element_text(size = 18), 
+        legend.title = element_blank(),
+        legend.position = c(0.15, 0.85),
+        plot.caption = element_text(hjust = 0.5))
+```
+
+## Census Division
+
+```{r}
+census_division <- read.csv("../data/eda/Census-Division.csv") %>%
+  filter(Year != 'NA')
+```
+
+```{r, fig.width=12, fig.height=6}
+custom_colors <- c(
+  "Division 1: New England" = "#F59AAF", "Division 2: Middle Atlantic" = "#E75480",
+  "Division 3: East North Central" = "#7BC67E", "Division 4: West North Central" = "#64C43B",
+  "Division 5: South Atlantic" = "#82CDED", "Division 6: East South Central" = "#5EBEEB", "Division 7: West South Central" = "#3AACE0",
+  "Division 8: Mountain" = "#B596EB", "Division 9: Pacific" = "#9B71E3"
+)
+
+ggplot(census_division, aes(x = Year, y = Age.Adjusted.Rate, color = Census.Division, group = Census.Division)) +
+  geom_line(linewidth = 0.75) +
+  geom_ribbon(aes(ymin = Age.Adjusted.Rate.Lower.95..Confidence.Interval, 
+                  ymax = Age.Adjusted.Rate.Upper.95..Confidence.Interval, 
+                  fill = Census.Division), alpha = 0.5, color = NA) +
+  scale_color_manual(values = custom_colors) + 
+  scale_fill_manual(values = custom_colors) +
+  theme_minimal() +
+  labs(
+    title = "Opioid Death Rate By Census Division Over Time",
+    x = "Year", y = "Adjusted Rate per 100,000",
+    caption = "Data Source: CDC WONDER Online Database") +
+  theme(plot.title = element_text(size = 18), 
+        legend.title = element_blank(),
+        legend.position = "right",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+## Sex
+
+```{r}
+sex <- read.csv("../data/eda/Sex.csv") %>%
+  filter(Year != 'NA')
+```
+
+```{r}
+ggplot(sex, aes(x = Year, y = Age.Adjusted.Rate, color = Sex, group = Sex)) +
+  geom_line(linewidth = 0.75) +
+  geom_ribbon(aes(ymin = Age.Adjusted.Rate.Lower.95..Confidence.Interval, 
+                  ymax = Age.Adjusted.Rate.Upper.95..Confidence.Interval, 
+                  fill = Sex), alpha = 0.5, color = NA) +
+  theme_minimal() +
+  labs(
+    title = "Opioid Death Rate By Sex Over Time",
+    x = "Year", y = "Adjusted Rate per 100,000",
+    caption = "Data Source: CDC WONDER Online Database") +
+  theme(plot.title = element_text(size = 18), 
+        legend.title = element_blank(),
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+## Race
+
+```{r}
+race <- read.csv("../data/eda/Race.csv") %>%
+  filter(Year != 'NA')
+```
+
+```{r}
+ggplot(race, aes(x = Year, y = Age.Adjusted.Rate, color = Race, group = Race)) +
+  geom_line(linewidth = 0.75) +
+  geom_ribbon(aes(ymin = Age.Adjusted.Rate.Lower.95..Confidence.Interval, 
+                  ymax = Age.Adjusted.Rate.Upper.95..Confidence.Interval, 
+                  fill = Race), alpha = 0.5, color = NA) +
+  theme_minimal() +
+  labs(
+    title = "Opioid Death Rate By Race Over Time",
+    x = "Year", y = "Adjusted Rate per 100,000",
+    caption = "Data Source: CDC WONDER Online Database") +
+  theme(plot.title = element_text(size = 18), 
+        legend.title = element_blank(),
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+## Five Year Age Group
+
+```{r}
+age_order <- c("< 1 year","1-4 years","5-9 years","10-14 years","15-19 years","20-24 years","25-29 years","30-34 years","35-39 years","40-44 years","45-49 years","50-54 years","55-59 years","60-64 years ","65-69 years","70-74 years","75-79 years","80-84 years","85-89 years", "90-94 years", "95-99 years", "100+ years")
+five_year <- read.csv("../data/eda/Five-Year-Age-Group.csv") %>%
+  filter(!Year %in% c(NA,1999),
+         !Crude.Rate %in% c("Unreliable","Suppressed","Not Applicable"),
+         !Five.Year.Age.Groups %in% c("< 1 year","1-4 years","5-9 years","10-14 years","80-84 years","85-89 years", "90-94 years", "95-99 years", "100+ years",NA)) %>%
+  filter(!Crude.Rate %in% c("Unreliable","Suppressed","Not Applicable")) %>%
+  mutate(Crude.Rate = as.numeric(Crude.Rate),
+         Crude.Lower = as.numeric(Crude.Rate.Lower.95..Confidence.Interval),
+         Crude.Upper = as.numeric(Crude.Rate.Upper.95..Confidence.Interval),
+         Five.Year.Age.Groups = factor(Five.Year.Age.Groups, levels = age_order))
+```
+
+```{r}
+ggplot(five_year, aes(x = Year, y = Crude.Rate, color = Five.Year.Age.Groups, group = Five.Year.Age.Groups)) +
+  geom_line(linewidth = 0.75) +
+  geom_ribbon(aes(ymin = Crude.Lower, 
+                  ymax = Crude.Upper, 
+                  fill = Five.Year.Age.Groups), alpha = 0.5, color = NA) +
+  theme_minimal() +
+  labs(
+    title = "Opioid Death Rate By Five-Year Age Groups Over Time",
+    x = "Year", y = "Crude Rate per 100,000",
+    caption = "Data Source: CDC WONDER Online Database") +
+  theme(plot.title = element_text(size = 18), 
+        legend.title = element_blank(),
+        legend.position = "right",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+## Ten Year Age Group
+
+```{r}
+age_order <- c("< 1 year", "1-4 years", "5-14 years", "15-24 years","25-34 years", "35-44 years", "45-54 years","55-64 years", "65-74 years", "75-84 years", "85+ years"
+)
+ten_year <- read.csv("../data/eda/Ten-Year-Age-Group.csv") %>%
+  filter(!Crude.Rate %in% c("Unreliable","Suppressed","Not Applicable"),
+         !Ten.Year.Age.Groups %in% c("< 1 year","1-4 years","5-14 years","85+ years", NA),
+         Year != "NA") %>%
+  filter(!Crude.Rate %in% c("Unreliable","Suppressed","Not Applicable")) %>%
+  mutate(Crude.Rate = as.numeric(Crude.Rate),
+         Crude.Lower = as.numeric(Crude.Rate.Lower.95..Confidence.Interval),
+         Crude.Upper = as.numeric(Crude.Rate.Upper.95..Confidence.Interval),
+         Ten.Year.Age.Groups = factor(Ten.Year.Age.Groups, levels = age_order))
+```
+
+```{r}
+ggplot(ten_year, aes(x = Year, y = Crude.Rate, color = Ten.Year.Age.Groups, group = Ten.Year.Age.Groups)) +
+  geom_line(linewidth = 0.75) +
+  geom_ribbon(aes(ymin = Crude.Lower, 
+                  ymax = Crude.Upper, 
+                  fill = Ten.Year.Age.Groups), alpha = 0.5, color = NA) +
+  theme_minimal() +
+  labs(
+    title = "Opioid Death Rate By Ten-Year Age Groups Over Time",
+    x = "Year", y = "Crude Rate per 100,000",
+    caption = "Data Source: CDC WONDER Online Database") +
+  theme(plot.title = element_text(size = 18), 
+        legend.title = element_blank(),
+        legend.position = "right",
+        plot.caption = element_text(hjust = 0.5))
+```
+
+## Census Division x Sex
+
+```{r}
+division_sex <- read.csv("../data/eda/Census-Division-Sex.csv") %>%
+  filter(Year != 'NA')
+```
+
+```{r}
+ggplot(division_sex, aes(x = Year, y = Age.Adjusted.Rate, color = Census.Division, group = Census.Division)) +
+  geom_line(linewidth = 1) +
+  facet_wrap(~ Sex, ncol = 3) +
+  theme_minimal() +
+  labs(title = "Opioid Deaths by Census Division and Sex",
+       x = "Year", y = "Age Adjusted Rate per 100,000",
+       caption = "Data Source: CDC WONDER Online Database") +
+  theme(legend.position = "bottom",
+        legend.key.size = unit(0.4, "lines"),
+        legend.title = element_blank(),
+        plot.caption = element_text(hjust = 0.5),
+        plot.title = element_text(size = 18)) + 
+  guides(color = guide_legend(nrow = 3))
+```
+
+## Ten-Year vs. Region
+
+```{r}
+ten_year_region <- read.csv("../data/eda/Ten-Year-Region.csv") %>%
+  filter(Year != 'NA',
+         !Crude.Rate %in% c("Unreliable","Suppressed","Not Applicable"),
+         !Ten.Year.Age.Groups %in% c("1-4 years", "5-14 years", "75-84 years", "85+ years"))
+```
+
+```{r}
+ggplot(ten_year_region, aes(x = Year, y = as.numeric(Crude.Rate), color = Census.Region, group = Census.Region)) +
+  geom_line(linewidth = 1) +
+  facet_wrap(~ Ten.Year.Age.Groups, ncol = 3) +
+  theme_minimal() +
+  labs(title = "Opioid Deaths by Census Region and Ten Year Age Group",
+       x = "Year", y = "Crude Rate per 100,000",
+       caption = "Data Source: CDC WONDER Online Database") +
+  theme(legend.position = "bottom",
+        legend.key.size = unit(0.4, "lines"),
+        legend.title = element_blank(),
+        plot.caption = element_text(hjust = 0.5),
+        plot.title = element_text(size = 18))
+```

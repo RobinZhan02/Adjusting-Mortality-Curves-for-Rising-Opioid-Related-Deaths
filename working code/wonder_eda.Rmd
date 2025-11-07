@@ -113,3 +113,104 @@ ggplot(five_year, aes(x = Year, y = Crude.Rate, color = Five.Year.Age.Groups, gr
   theme(legend.position = "right") +
   theme(plot.title = element_text(size = 15))
 ```
+
+
+```{r}
+#define a function to analyze missing data
+analyze_suppression <- function(data, sex_var = "sex", age_var = "age_group", geo_var = "geo", time_var = "time") {
+
+  summary_df <- data %>%
+    mutate(is_suppressed = Deaths == "Suppressed") %>%
+    group_by(across(all_of(c(sex_var, age_var, geo_var, time_var)))) %>%
+    summarise(
+      n_total = n(),
+      n_suppressed = sum(is_suppressed, na.rm = TRUE),
+      pct_suppressed = 100 * n_suppressed / n_total,
+      .groups = "drop"
+    )
+  
+  age_levels <- summary_df %>%
+    distinct(!!sym(age_var)) %>%
+    mutate(
+      num_start = as.numeric(str_extract(!!sym(age_var), "\\d+")),
+      num_start = ifelse(grepl("^< ?1", !!sym(age_var)), -1, num_start)
+    ) %>%
+    arrange(num_start) %>%
+    pull(!!sym(age_var))
+  
+  summary_df <- summary_df %>%
+    mutate(
+      !!age_var := factor(.data[[age_var]], levels = age_levels),
+      !!geo_var := factor(.data[[geo_var]], levels = sort(unique(.data[[geo_var]])))
+    )
+  
+  heatmap_plot <- ggplot(summary_df,
+                         aes(x = .data[[geo_var]],
+                             y = .data[[age_var]],
+                             fill = pct_suppressed)) +
+    geom_tile(color = "white", linewidth = 0.2) +
+    scale_fill_gradient(
+      low = "lightgreen", high = "lightpink",
+      name = "% Suppressed"
+    ) +
+    facet_wrap(as.formula(paste("~", sex_var))) +
+    theme_minimal(base_size = 12) +
+    labs(
+      title = "Suppression Heatmap by Sex, Age, and Geography",
+      x = "Geography",
+      y = "Age Group"
+    ) +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+      axis.text.y = element_text(size = 8),
+      legend.position = "bottom",
+      panel.grid = element_blank()
+    )
+  
+  time_df <- summary_df %>%
+    group_by(across(all_of(time_var))) %>%
+    summarise(pct_suppressed = mean(pct_suppressed, na.rm = TRUE), .groups = "drop") %>%
+    arrange(.data[[time_var]])
+  
+  line_plot <- ggplot(time_df, aes(x = .data[[time_var]], y = pct_suppressed)) +
+    geom_line(color = "#4c5fd7", linewidth = 1) +
+    geom_point(color = "#4c5fd7", size = 1.5) +
+    theme_minimal(base_size = 12) +
+    labs(
+      title = "Overall Suppression Over Time (Monthly)",
+      x = "Time (YYYY/MM)",
+      y = "% Suppressed"
+    ) +
+    theme(
+      axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 2),
+      panel.grid.minor = element_blank()
+    )
+  
+  return(list(summary = summary_df, heatmap = heatmap_plot, line = line_plot))
+}
+
+```
+
+```{r}
+dataset_1 <- read.csv("../data/missing data/WONDER-SEX-5Yr-Cenus Division.csv")
+
+analyze_suppression(dataset_1, "Sex", "Five.Year.Age.Groups", "Census.Division", "Month.Code")
+```
+
+```{r}
+dataset_2 <- read.csv("../data/missing data/WONDER-SEX-5Yr-Cenus Region.csv")
+
+analyze_suppression(dataset_2, "Sex", "Five.Year.Age.Groups", "Census.Region", "Month.Code")
+```
+
+```{r}
+dataset_3 <- read.csv("../data/missing data/WONDER-SEX-10Yr-Cenus Division.csv")
+
+analyze_suppression(dataset_3, "Sex", "Ten.Year.Age.Groups", "Census.Division", "Month.Code")
+```
+
+```{r}
+dataset_4 <- read.csv("../data/missing data/WONDER-SEX-10Yr-Cenus Region.csv")
+
+analyze_suppression(dataset_4, "Sex", "Ten.Year.Age.Groups", "Census.Region", "Month.Code")
+```

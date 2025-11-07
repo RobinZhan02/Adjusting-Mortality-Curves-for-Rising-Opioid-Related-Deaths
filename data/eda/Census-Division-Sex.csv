@@ -1,0 +1,510 @@
+"Notes","Census Division","Census Division Code","Sex","Sex Code","Year","Year Code",Deaths,Population,Crude Rate,Crude Rate Lower 95% Confidence Interval,Crude Rate Upper 95% Confidence Interval,Crude Rate Standard Error,Age Adjusted Rate,Age Adjusted Rate Lower 95% Confidence Interval,Age Adjusted Rate Upper 95% Confidence Interval,Age Adjusted Rate Standard Error
+,"Division 1: New England","CENS-D1","Female","F","1999","1999",164,7143107,2.3,1.9,2.6,0.2,2.3,1.9,2.6,0.2
+,"Division 1: New England","CENS-D1","Female","F","2000","2000",138,7184414,1.9,1.6,2.2,0.2,1.9,1.6,2.2,0.2
+,"Division 1: New England","CENS-D1","Female","F","2001","2001",236,7239348,3.3,2.8,3.7,0.2,3.3,2.8,3.7,0.2
+,"Division 1: New England","CENS-D1","Female","F","2002","2002",270,7273891,3.7,3.3,4.2,0.2,3.7,3.3,4.2,0.2
+,"Division 1: New England","CENS-D1","Female","F","2003","2003",274,7301274,3.8,3.3,4.2,0.2,3.8,3.3,4.2,0.2
+,"Division 1: New England","CENS-D1","Female","F","2004","2004",276,7309874,3.8,3.3,4.2,0.2,3.8,3.3,4.2,0.2
+,"Division 1: New England","CENS-D1","Female","F","2005","2005",337,7311368,4.6,4.1,5.1,0.3,4.6,4.1,5.1,0.3
+,"Division 1: New England","CENS-D1","Female","F","2006","2006",365,7324214,5.0,4.5,5.5,0.3,4.9,4.4,5.4,0.3
+,"Division 1: New England","CENS-D1","Female","F","2007","2007",415,7339451,5.7,5.1,6.2,0.3,5.6,5.0,6.1,0.3
+,"Division 1: New England","CENS-D1","Female","F","2008","2008",371,7369602,5.0,4.5,5.5,0.3,4.9,4.4,5.4,0.3
+,"Division 1: New England","CENS-D1","Female","F","2009","2009",371,7402099,5.0,4.5,5.5,0.3,4.8,4.3,5.3,0.3
+,"Division 1: New England","CENS-D1","Female","F","2010","2010",366,7422567,4.9,4.4,5.4,0.3,4.9,4.4,5.4,0.3
+,"Division 1: New England","CENS-D1","Female","F","2011","2011",432,7439990,5.8,5.3,6.4,0.3,5.7,5.2,6.3,0.3
+,"Division 1: New England","CENS-D1","Female","F","2012","2012",411,7472846,5.5,5.0,6.0,0.3,5.5,5.0,6.1,0.3
+,"Division 1: New England","CENS-D1","Female","F","2013","2013",575,7497291,7.7,7.0,8.3,0.3,7.6,7.0,8.3,0.3
+,"Division 1: New England","CENS-D1","Female","F","2014","2014",718,7528397,9.5,8.8,10.2,0.4,9.7,9.0,10.5,0.4
+,"Division 1: New England","CENS-D1","Female","F","2015","2015",850,7550331,11.3,10.5,12.0,0.4,11.4,10.6,12.2,0.4
+,"Division 1: New England","CENS-D1","Female","F","2016","2016",1096,7549267,14.5,13.7,15.4,0.4,14.9,14.0,15.8,0.5
+,"Division 1: New England","CENS-D1","Female","F","2017","2017",1038,7585060,13.7,12.9,14.5,0.4,14.1,13.2,14.9,0.4
+,"Division 1: New England","CENS-D1","Female","F","2018","2018",1083,7608144,14.2,13.4,15.1,0.4,14.8,13.9,15.7,0.5
+,"Division 1: New England","CENS-D1","Female","F","2019","2019",1075,7604182,14.1,13.3,15.0,0.4,14.6,13.7,15.5,0.5
+,"Division 1: New England","CENS-D1","Female","F","2020","2020",1217,7604537,16.0,15.1,16.9,0.5,16.8,15.8,17.7,0.5
+"Total","Division 1: New England","CENS-D1","Female","F",,,12078,163061254,7.4,7.3,7.5,0.1,7.4,7.3,7.6,0.1
+,"Division 1: New England","CENS-D1","Male","M","1999","1999",430,6694546,6.4,5.8,7.0,0.3,6.2,5.6,6.8,0.3
+,"Division 1: New England","CENS-D1","Male","M","2000","2000",490,6738103,7.3,6.6,7.9,0.3,7.0,6.4,7.7,0.3
+,"Division 1: New England","CENS-D1","Male","M","2001","2001",630,6801695,9.3,8.5,10.0,0.4,9.0,8.3,9.7,0.4
+,"Division 1: New England","CENS-D1","Male","M","2002","2002",665,6848550,9.7,9.0,10.4,0.4,9.5,8.8,10.2,0.4
+,"Division 1: New England","CENS-D1","Male","M","2003","2003",803,6881180,11.7,10.9,12.5,0.4,11.4,10.6,12.2,0.4
+,"Division 1: New England","CENS-D1","Male","M","2004","2004",676,6896809,9.8,9.1,10.5,0.4,9.7,9.0,10.4,0.4
+,"Division 1: New England","CENS-D1","Male","M","2005","2005",757,6905288,11.0,10.2,11.7,0.4,10.8,10.0,11.5,0.4
+,"Division 1: New England","CENS-D1","Male","M","2006","2006",902,6921326,13.0,12.2,13.9,0.4,12.8,12.0,13.7,0.4
+,"Division 1: New England","CENS-D1","Male","M","2007","2007",864,6939754,12.5,11.6,13.3,0.4,12.3,11.5,13.2,0.4
+,"Division 1: New England","CENS-D1","Male","M","2008","2008",844,6970513,12.1,11.3,12.9,0.4,12.0,11.2,12.8,0.4
+,"Division 1: New England","CENS-D1","Male","M","2009","2009",861,7001476,12.3,11.5,13.1,0.4,12.2,11.4,13.1,0.4
+,"Division 1: New England","CENS-D1","Male","M","2010","2010",766,7022298,10.9,10.1,11.7,0.4,10.9,10.1,11.7,0.4
+,"Division 1: New England","CENS-D1","Male","M","2011","2011",868,7052370,12.3,11.5,13.1,0.4,12.3,11.5,13.2,0.4
+,"Division 1: New England","CENS-D1","Male","M","2012","2012",909,7089858,12.8,12.0,13.7,0.4,12.9,12.0,13.7,0.4
+,"Division 1: New England","CENS-D1","Male","M","2013","2013",1294,7121515,18.2,17.2,19.2,0.5,18.3,17.3,19.3,0.5
+,"Division 1: New England","CENS-D1","Male","M","2014","2014",1684,7152325,23.5,22.4,24.7,0.6,24.0,22.8,25.2,0.6
+,"Division 1: New England","CENS-D1","Male","M","2015","2015",2336,7177253,32.5,31.2,33.9,0.7,33.3,32.0,34.7,0.7
+,"Division 1: New England","CENS-D1","Male","M","2016","2016",2867,7186258,39.9,38.4,41.4,0.7,41.1,39.5,42.6,0.8
+,"Division 1: New England","CENS-D1","Male","M","2017","2017",3005,7224941,41.6,40.1,43.1,0.8,42.7,41.1,44.3,0.8
+,"Division 1: New England","CENS-D1","Male","M","2018","2018",2944,7245146,40.6,39.2,42.1,0.7,41.9,40.4,43.5,0.8
+,"Division 1: New England","CENS-D1","Male","M","2019","2019",3036,7240881,41.9,40.4,43.4,0.8,42.9,41.4,44.5,0.8
+,"Division 1: New England","CENS-D1","Male","M","2020","2020",3347,7242931,46.2,44.6,47.8,0.8,47.2,45.5,48.8,0.8
+"Total","Division 1: New England","CENS-D1","Male","M",,,30978,154355016,20.1,19.8,20.3,0.1,20.0,19.8,20.2,0.1
+"Total","Division 1: New England","CENS-D1",,,,,43056,317416270,13.6,13.4,13.7,0.1,13.6,13.5,13.8,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","1999","1999",299,20428989,1.5,1.3,1.6,0.1,1.5,1.3,1.6,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2000","2000",257,20512637,1.3,1.1,1.4,0.1,1.3,1.1,1.4,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2001","2001",273,20603040,1.3,1.2,1.5,0.1,1.4,1.2,1.5,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2002","2002",349,20665560,1.7,1.5,1.9,0.1,1.7,1.5,1.9,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2003","2003",373,20717668,1.8,1.6,2.0,0.1,1.8,1.6,2.0,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2004","2004",339,20741240,1.6,1.5,1.8,0.1,1.6,1.5,1.8,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2005","2005",421,20736065,2.0,1.8,2.2,0.1,2.1,1.9,2.3,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2006","2006",493,20748812,2.4,2.2,2.6,0.1,2.4,2.2,2.6,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2007","2007",542,20788745,2.6,2.4,2.8,0.1,2.5,2.3,2.8,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2008","2008",638,20862037,3.1,2.8,3.3,0.1,3.0,2.8,3.2,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2009","2009",540,20957150,2.6,2.4,2.8,0.1,2.6,2.3,2.8,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2010","2010",657,21025265,3.1,2.9,3.4,0.1,3.1,2.9,3.3,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2011","2011",817,21082680,3.9,3.6,4.1,0.1,3.8,3.6,4.1,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2012","2012",891,21155308,4.2,3.9,4.5,0.1,4.2,3.9,4.5,0.1
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2013","2013",1017,21201769,4.8,4.5,5.1,0.2,4.8,4.5,5.1,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2014","2014",1110,21274581,5.2,4.9,5.5,0.2,5.2,4.9,5.5,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2015","2015",1243,21308304,5.8,5.5,6.2,0.2,5.9,5.5,6.2,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2016","2016",1843,21257682,8.7,8.3,9.1,0.2,8.9,8.4,9.3,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2017","2017",2047,21355215,9.6,9.2,10.0,0.2,9.8,9.4,10.2,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2018","2018",2356,21142505,11.1,10.7,11.6,0.2,11.4,10.9,11.8,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2019","2019",2358,21074946,11.2,10.7,11.6,0.2,11.4,11.0,11.9,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Female","F","2020","2020",2859,21001813,13.6,13.1,14.1,0.3,14.0,13.5,14.6,0.3
+"Total","Division 2: Middle Atlantic","CENS-D2","Female","F",,,21722,460642011,4.7,4.7,4.8,0.0,4.7,4.7,4.8,0.0
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","1999","1999",965,19077133,5.1,4.7,5.4,0.2,5.0,4.6,5.3,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2000","2000",906,19159224,4.7,4.4,5.0,0.2,4.6,4.3,4.9,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2001","2001",987,19271439,5.1,4.8,5.4,0.2,5.0,4.7,5.3,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2002","2002",1037,19355914,5.4,5.0,5.7,0.2,5.3,5.0,5.6,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2003","2003",1118,19434331,5.8,5.4,6.1,0.2,5.7,5.3,6.0,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2004","2004",927,19475610,4.8,4.5,5.1,0.2,4.7,4.4,5.0,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2005","2005",1080,19498509,5.5,5.2,5.9,0.2,5.4,5.1,5.7,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2006","2006",1307,19528307,6.7,6.3,7.1,0.2,6.6,6.2,6.9,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2007","2007",1318,19585412,6.7,6.4,7.1,0.2,6.6,6.3,7.0,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2008","2008",1420,19673774,7.2,6.8,7.6,0.2,7.0,6.7,7.4,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2009","2009",1210,19772376,6.1,5.8,6.5,0.2,6.0,5.7,6.3,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2010","2010",1419,19847110,7.1,6.8,7.5,0.2,7.0,6.7,7.4,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2011","2011",1745,19946558,8.7,8.3,9.2,0.2,8.6,8.2,9.1,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2012","2012",2068,20043079,10.3,9.9,10.8,0.2,10.2,9.8,10.6,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2013","2013",2297,20122498,11.4,10.9,11.9,0.2,11.2,10.8,11.7,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2014","2014",2449,20197030,12.1,11.6,12.6,0.2,12.0,11.5,12.5,0.2
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2015","2015",3147,20248003,15.5,15.0,16.1,0.3,15.5,15.0,16.1,0.3
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2016","2016",4810,20216303,23.8,23.1,24.5,0.3,23.7,23.1,24.4,0.3
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2017","2017",5694,20305365,28.0,27.3,28.8,0.4,28.1,27.4,28.9,0.4
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2018","2018",6084,20115284,30.2,29.5,31.0,0.4,30.5,29.7,31.3,0.4
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2019","2019",6117,20062794,30.5,29.7,31.3,0.4,30.6,29.8,31.4,0.4
+,"Division 2: Middle Atlantic","CENS-D2","Male","M","2020","2020",7819,20000588,39.1,38.2,40.0,0.4,39.3,38.4,40.2,0.5
+"Total","Division 2: Middle Atlantic","CENS-D2","Male","M",,,55924,434936641,12.9,12.8,13.0,0.1,12.7,12.6,12.8,0.1
+"Total","Division 2: Middle Atlantic","CENS-D2",,,,,77646,895578652,8.7,8.6,8.7,0.0,8.7,8.6,8.7,0.0
+,"Division 3: East North Central","CENS-D3","Female","F","1999","1999",220,22981013,1.0,0.8,1.1,0.1,1.0,0.8,1.1,0.1
+,"Division 3: East North Central","CENS-D3","Female","F","2000","2000",289,23057829,1.3,1.1,1.4,0.1,1.3,1.1,1.4,0.1
+,"Division 3: East North Central","CENS-D3","Female","F","2001","2001",354,23167228,1.5,1.4,1.7,0.1,1.5,1.4,1.7,0.1
+,"Division 3: East North Central","CENS-D3","Female","F","2002","2002",450,23232492,1.9,1.8,2.1,0.1,2.0,1.8,2.1,0.1
+,"Division 3: East North Central","CENS-D3","Female","F","2003","2003",433,23301182,1.9,1.7,2.0,0.1,1.9,1.7,2.1,0.1
+,"Division 3: East North Central","CENS-D3","Female","F","2004","2004",537,23358179,2.3,2.1,2.5,0.1,2.3,2.1,2.5,0.1
+,"Division 3: East North Central","CENS-D3","Female","F","2005","2005",662,23403396,2.8,2.6,3.0,0.1,2.9,2.7,3.1,0.1
+,"Division 3: East North Central","CENS-D3","Female","F","2006","2006",770,23460189,3.3,3.1,3.5,0.1,3.3,3.1,3.5,0.1
+,"Division 3: East North Central","CENS-D3","Female","F","2007","2007",818,23518813,3.5,3.2,3.7,0.1,3.5,3.3,3.7,0.1
+,"Division 3: East North Central","CENS-D3","Female","F","2008","2008",961,23562261,4.1,3.8,4.3,0.1,4.1,3.8,4.4,0.1
+,"Division 3: East North Central","CENS-D3","Female","F","2009","2009",980,23604659,4.2,3.9,4.4,0.1,4.2,3.9,4.5,0.1
+,"Division 3: East North Central","CENS-D3","Female","F","2010","2010",1187,23636881,5.0,4.7,5.3,0.1,5.0,4.7,5.3,0.1
+,"Division 3: East North Central","CENS-D3","Female","F","2011","2011",1269,23676516,5.4,5.1,5.7,0.2,5.5,5.1,5.8,0.2
+,"Division 3: East North Central","CENS-D3","Female","F","2012","2012",1330,23692724,5.6,5.3,5.9,0.2,5.7,5.4,6.0,0.2
+,"Division 3: East North Central","CENS-D3","Female","F","2013","2013",1481,23728326,6.2,5.9,6.6,0.2,6.4,6.0,6.7,0.2
+,"Division 3: East North Central","CENS-D3","Female","F","2014","2014",1836,23765967,7.7,7.4,8.1,0.2,8.0,7.6,8.3,0.2
+,"Division 3: East North Central","CENS-D3","Female","F","2015","2015",2162,23778373,9.1,8.7,9.5,0.2,9.5,9.1,9.9,0.2
+,"Division 3: East North Central","CENS-D3","Female","F","2016","2016",2843,23744754,12.0,11.5,12.4,0.2,12.4,11.9,12.9,0.2
+,"Division 3: East North Central","CENS-D3","Female","F","2017","2017",3433,23806081,14.4,13.9,14.9,0.2,15.1,14.6,15.7,0.3
+,"Division 3: East North Central","CENS-D3","Female","F","2018","2018",3035,23825546,12.7,12.3,13.2,0.2,13.5,13.0,14.0,0.3
+,"Division 3: East North Central","CENS-D3","Female","F","2019","2019",3023,23809214,12.7,12.2,13.1,0.2,13.3,12.9,13.8,0.2
+,"Division 3: East North Central","CENS-D3","Female","F","2020","2020",3746,23773455,15.8,15.3,16.3,0.3,16.8,16.2,17.3,0.3
+"Total","Division 3: East North Central","CENS-D3","Female","F",,,31819,517885078,6.1,6.1,6.2,0.0,6.3,6.2,6.3,0.0
+,"Division 3: East North Central","CENS-D3","Male","M","1999","1999",677,21988212,3.1,2.8,3.3,0.1,3.1,2.8,3.3,0.1
+,"Division 3: East North Central","CENS-D3","Male","M","2000","2000",852,22097208,3.9,3.6,4.1,0.1,3.8,3.6,4.1,0.1
+,"Division 3: East North Central","CENS-D3","Male","M","2001","2001",906,22234336,4.1,3.8,4.3,0.1,4.0,3.8,4.3,0.1
+,"Division 3: East North Central","CENS-D3","Male","M","2002","2002",1003,22317792,4.5,4.2,4.8,0.1,4.5,4.2,4.7,0.1
+,"Division 3: East North Central","CENS-D3","Male","M","2003","2003",972,22406605,4.3,4.1,4.6,0.1,4.3,4.0,4.6,0.1
+,"Division 3: East North Central","CENS-D3","Male","M","2004","2004",1220,22486193,5.4,5.1,5.7,0.2,5.4,5.1,5.7,0.2
+,"Division 3: East North Central","CENS-D3","Male","M","2005","2005",1404,22545746,6.2,5.9,6.6,0.2,6.1,5.8,6.5,0.2
+,"Division 3: East North Central","CENS-D3","Male","M","2006","2006",1838,22611384,8.1,7.8,8.5,0.2,8.1,7.7,8.5,0.2
+,"Division 3: East North Central","CENS-D3","Male","M","2007","2007",1696,22669179,7.5,7.1,7.8,0.2,7.5,7.1,7.8,0.2
+,"Division 3: East North Central","CENS-D3","Male","M","2008","2008",2022,22712859,8.9,8.5,9.3,0.2,9.0,8.6,9.3,0.2
+,"Division 3: East North Central","CENS-D3","Male","M","2009","2009",2022,22751195,8.9,8.5,9.3,0.2,8.9,8.5,9.3,0.2
+,"Division 3: East North Central","CENS-D3","Male","M","2010","2010",2203,22784683,9.7,9.3,10.1,0.2,9.7,9.3,10.1,0.2
+,"Division 3: East North Central","CENS-D3","Male","M","2011","2011",2453,22842568,10.7,10.3,11.2,0.2,10.8,10.4,11.3,0.2
+,"Division 3: East North Central","CENS-D3","Male","M","2012","2012",2719,22873848,11.9,11.4,12.3,0.2,12.1,11.6,12.5,0.2
+,"Division 3: East North Central","CENS-D3","Male","M","2013","2013",3089,22933854,13.5,13.0,13.9,0.2,13.6,13.1,14.1,0.2
+,"Division 3: East North Central","CENS-D3","Male","M","2014","2014",3616,22973072,15.7,15.2,16.3,0.3,16.0,15.5,16.6,0.3
+,"Division 3: East North Central","CENS-D3","Male","M","2015","2015",4383,23008638,19.0,18.5,19.6,0.3,19.5,18.9,20.1,0.3
+,"Division 3: East North Central","CENS-D3","Male","M","2016","2016",6139,23011219,26.7,26.0,27.3,0.3,27.5,26.8,28.2,0.4
+,"Division 3: East North Central","CENS-D3","Male","M","2017","2017",7197,23079163,31.2,30.5,31.9,0.4,32.1,31.4,32.9,0.4
+,"Division 3: East North Central","CENS-D3","Male","M","2018","2018",6332,23106337,27.4,26.7,28.1,0.3,28.1,27.4,28.8,0.4
+,"Division 3: East North Central","CENS-D3","Male","M","2019","2019",6619,23093217,28.7,28.0,29.4,0.4,29.5,28.7,30.2,0.4
+,"Division 3: East North Central","CENS-D3","Male","M","2020","2020",8905,23061455,38.6,37.8,39.4,0.4,39.9,39.0,40.7,0.4
+"Total","Division 3: East North Central","CENS-D3","Male","M",,,68267,499588763,13.7,13.6,13.8,0.1,13.7,13.6,13.8,0.1
+"Total","Division 3: East North Central","CENS-D3",,,,,100086,1017473841,9.8,9.8,9.9,0.0,10.0,9.9,10.1,0.0
+,"Division 4: West North Central","CENS-D4","Female","F","1999","1999",54,9734012,0.6,0.4,0.7,0.1,0.6,0.4,0.8,0.1
+,"Division 4: West North Central","CENS-D4","Female","F","2000","2000",82,9779509,0.8,0.7,1.0,0.1,0.9,0.7,1.1,0.1
+,"Division 4: West North Central","CENS-D4","Female","F","2001","2001",127,9840410,1.3,1.1,1.5,0.1,1.3,1.1,1.6,0.1
+,"Division 4: West North Central","CENS-D4","Female","F","2002","2002",147,9881177,1.5,1.2,1.7,0.1,1.5,1.3,1.8,0.1
+,"Division 4: West North Central","CENS-D4","Female","F","2003","2003",179,9926768,1.8,1.5,2.1,0.1,1.9,1.6,2.1,0.1
+,"Division 4: West North Central","CENS-D4","Female","F","2004","2004",245,9979675,2.5,2.1,2.8,0.2,2.6,2.2,2.9,0.2
+,"Division 4: West North Central","CENS-D4","Female","F","2005","2005",273,10033425,2.7,2.4,3.0,0.2,2.8,2.5,3.2,0.2
+,"Division 4: West North Central","CENS-D4","Female","F","2006","2006",318,10103420,3.1,2.8,3.5,0.2,3.2,2.9,3.6,0.2
+,"Division 4: West North Central","CENS-D4","Female","F","2007","2007",330,10174594,3.2,2.9,3.6,0.2,3.3,3.0,3.7,0.2
+,"Division 4: West North Central","CENS-D4","Female","F","2008","2008",377,10240792,3.7,3.3,4.1,0.2,3.8,3.4,4.2,0.2
+,"Division 4: West North Central","CENS-D4","Female","F","2009","2009",431,10309348,4.2,3.8,4.6,0.2,4.3,3.9,4.7,0.2
+,"Division 4: West North Central","CENS-D4","Female","F","2010","2010",437,10362560,4.2,3.8,4.6,0.2,4.4,4.0,4.8,0.2
+,"Division 4: West North Central","CENS-D4","Female","F","2011","2011",476,10422501,4.6,4.2,5.0,0.2,4.8,4.3,5.2,0.2
+,"Division 4: West North Central","CENS-D4","Female","F","2012","2012",486,10470391,4.6,4.2,5.1,0.2,4.8,4.4,5.3,0.2
+,"Division 4: West North Central","CENS-D4","Female","F","2013","2013",544,10528900,5.2,4.7,5.6,0.2,5.4,4.9,5.9,0.2
+,"Division 4: West North Central","CENS-D4","Female","F","2014","2014",570,10584211,5.4,4.9,5.8,0.2,5.6,5.2,6.1,0.2
+,"Division 4: West North Central","CENS-D4","Female","F","2015","2015",574,10633827,5.4,5.0,5.8,0.2,5.7,5.2,6.1,0.2
+,"Division 4: West North Central","CENS-D4","Female","F","2016","2016",603,10662996,5.7,5.2,6.1,0.2,5.9,5.4,6.4,0.2
+,"Division 4: West North Central","CENS-D4","Female","F","2017","2017",671,10713946,6.3,5.8,6.7,0.2,6.6,6.0,7.1,0.3
+,"Division 4: West North Central","CENS-D4","Female","F","2018","2018",647,10755021,6.0,5.6,6.5,0.2,6.4,5.9,6.9,0.3
+,"Division 4: West North Central","CENS-D4","Female","F","2019","2019",692,10778090,6.4,5.9,6.9,0.2,6.7,6.2,7.2,0.3
+,"Division 4: West North Central","CENS-D4","Female","F","2020","2020",907,10807995,8.4,7.8,8.9,0.3,9.0,8.4,9.6,0.3
+"Total","Division 4: West North Central","CENS-D4","Female","F",,,9170,226723568,4.0,4.0,4.1,0.0,4.2,4.1,4.3,0.0
+,"Division 4: West North Central","CENS-D4","Male","M","1999","1999",155,9396824,1.6,1.4,1.9,0.1,1.7,1.4,1.9,0.1
+,"Division 4: West North Central","CENS-D4","Male","M","2000","2000",172,9458230,1.8,1.5,2.1,0.1,1.8,1.5,2.1,0.1
+,"Division 4: West North Central","CENS-D4","Male","M","2001","2001",223,9534557,2.3,2.0,2.6,0.2,2.3,2.0,2.6,0.2
+,"Division 4: West North Central","CENS-D4","Male","M","2002","2002",305,9586832,3.2,2.8,3.5,0.2,3.2,2.8,3.6,0.2
+,"Division 4: West North Central","CENS-D4","Male","M","2003","2003",343,9642399,3.6,3.2,3.9,0.2,3.5,3.2,3.9,0.2
+,"Division 4: West North Central","CENS-D4","Male","M","2004","2004",401,9708258,4.1,3.7,4.5,0.2,4.2,3.8,4.6,0.2
+,"Division 4: West North Central","CENS-D4","Male","M","2005","2005",419,9769305,4.3,3.9,4.7,0.2,4.3,3.9,4.7,0.2
+,"Division 4: West North Central","CENS-D4","Male","M","2006","2006",517,9853562,5.2,4.8,5.7,0.2,5.3,4.9,5.8,0.2
+,"Division 4: West North Central","CENS-D4","Male","M","2007","2007",540,9931103,5.4,5.0,5.9,0.2,5.4,5.0,5.9,0.2
+,"Division 4: West North Central","CENS-D4","Male","M","2008","2008",640,10008023,6.4,5.9,6.9,0.3,6.5,5.9,7.0,0.3
+,"Division 4: West North Central","CENS-D4","Male","M","2009","2009",774,10083235,7.7,7.1,8.2,0.3,7.8,7.3,8.4,0.3
+,"Division 4: West North Central","CENS-D4","Male","M","2010","2010",756,10142877,7.5,6.9,8.0,0.3,7.6,7.0,8.1,0.3
+,"Division 4: West North Central","CENS-D4","Male","M","2011","2011",792,10217250,7.8,7.2,8.3,0.3,7.8,7.2,8.3,0.3
+,"Division 4: West North Central","CENS-D4","Male","M","2012","2012",771,10279334,7.5,7.0,8.0,0.3,7.6,7.1,8.2,0.3
+,"Division 4: West North Central","CENS-D4","Male","M","2013","2013",804,10356810,7.8,7.2,8.3,0.3,7.9,7.4,8.5,0.3
+,"Division 4: West North Central","CENS-D4","Male","M","2014","2014",895,10421858,8.6,8.0,9.2,0.3,8.8,8.2,9.4,0.3
+,"Division 4: West North Central","CENS-D4","Male","M","2015","2015",892,10486565,8.5,7.9,9.1,0.3,8.7,8.1,9.3,0.3
+,"Division 4: West North Central","CENS-D4","Male","M","2016","2016",1176,10522460,11.2,10.5,11.8,0.3,11.6,11.0,12.3,0.3
+,"Division 4: West North Central","CENS-D4","Male","M","2017","2017",1182,10580161,11.2,10.5,11.8,0.3,11.6,11.0,12.3,0.3
+,"Division 4: West North Central","CENS-D4","Male","M","2018","2018",1254,10621840,11.8,11.2,12.5,0.3,12.3,11.6,13.0,0.4
+,"Division 4: West North Central","CENS-D4","Male","M","2019","2019",1327,10648483,12.5,11.8,13.1,0.3,13.0,12.3,13.7,0.4
+,"Division 4: West North Central","CENS-D4","Male","M","2020","2020",1852,10673839,17.4,16.6,18.1,0.4,18.1,17.2,18.9,0.4
+"Total","Division 4: West North Central","CENS-D4","Male","M",,,16190,221923805,7.3,7.2,7.4,0.1,7.4,7.3,7.5,0.1
+"Total","Division 4: West North Central","CENS-D4",,,,,25360,448647373,5.7,5.6,5.7,0.0,5.8,5.8,5.9,0.0
+,"Division 5: South Atlantic","CENS-D5","Female","F","1999","1999",375,26197143,1.4,1.3,1.6,0.1,1.4,1.3,1.6,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2000","2000",532,26493942,2.0,1.8,2.2,0.1,2.0,1.8,2.2,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2001","2001",727,26988200,2.7,2.5,2.9,0.1,2.7,2.5,2.9,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2002","2002",860,27401447,3.1,2.9,3.3,0.1,3.2,2.9,3.4,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2003","2003",1003,27789264,3.6,3.4,3.8,0.1,3.6,3.4,3.9,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2004","2004",1171,28243330,4.1,3.9,4.4,0.1,4.2,3.9,4.4,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2005","2005",1115,28740684,3.9,3.7,4.1,0.1,3.9,3.6,4.1,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2006","2006",1319,29242624,4.5,4.3,4.8,0.1,4.5,4.2,4.7,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2007","2007",1585,29667369,5.3,5.1,5.6,0.1,5.3,5.0,5.6,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2008","2008",1524,30040114,5.1,4.8,5.3,0.1,5.1,4.8,5.3,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2009","2009",1643,30362529,5.4,5.1,5.7,0.1,5.3,5.1,5.6,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2010","2010",1773,30612426,5.8,5.5,6.1,0.1,5.7,5.5,6.0,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2011","2011",1925,30965361,6.2,5.9,6.5,0.1,6.2,5.9,6.5,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2012","2012",1836,31308873,5.9,5.6,6.1,0.1,5.8,5.6,6.1,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2013","2013",1865,31609171,5.9,5.6,6.2,0.1,5.9,5.7,6.2,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2014","2014",2198,31999489,6.9,6.6,7.2,0.1,6.9,6.6,7.2,0.1
+,"Division 5: South Atlantic","CENS-D5","Female","F","2015","2015",2573,32400030,7.9,7.6,8.2,0.2,8.0,7.7,8.3,0.2
+,"Division 5: South Atlantic","CENS-D5","Female","F","2016","2016",3250,32750684,9.9,9.6,10.3,0.2,10.1,9.7,10.4,0.2
+,"Division 5: South Atlantic","CENS-D5","Female","F","2017","2017",3734,33139867,11.3,10.9,11.6,0.2,11.5,11.1,11.8,0.2
+,"Division 5: South Atlantic","CENS-D5","Female","F","2018","2018",3560,33465885,10.6,10.3,11.0,0.2,10.9,10.5,11.2,0.2
+,"Division 5: South Atlantic","CENS-D5","Female","F","2019","2019",3671,33711538,10.9,10.5,11.2,0.2,11.2,10.8,11.5,0.2
+,"Division 5: South Atlantic","CENS-D5","Female","F","2020","2020",5062,34036193,14.9,14.5,15.3,0.2,15.4,15.0,15.9,0.2
+"Total","Division 5: South Atlantic","CENS-D5","Female","F",,,43301,667166163,6.5,6.4,6.6,0.0,6.5,6.5,6.6,0.0
+,"Division 5: South Atlantic","CENS-D5","Male","M","1999","1999",1098,24943971,4.4,4.1,4.7,0.1,4.3,4.1,4.6,0.1
+,"Division 5: South Atlantic","CENS-D5","Male","M","2000","2000",1365,25275218,5.4,5.1,5.7,0.1,5.3,5.0,5.6,0.1
+,"Division 5: South Atlantic","CENS-D5","Male","M","2001","2001",1744,25765658,6.8,6.5,7.1,0.2,6.7,6.3,7.0,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2002","2002",1952,26142178,7.5,7.1,7.8,0.2,7.4,7.1,7.7,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2003","2003",2074,26472458,7.8,7.5,8.2,0.2,7.8,7.4,8.1,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2004","2004",2188,26942818,8.1,7.8,8.5,0.2,8.1,7.7,8.4,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2005","2005",2156,27405095,7.9,7.5,8.2,0.2,7.8,7.5,8.2,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2006","2006",2495,27914249,8.9,8.6,9.3,0.2,8.9,8.5,9.2,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2007","2007",2730,28297221,9.6,9.3,10.0,0.2,9.6,9.3,10.0,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2008","2008",2892,28653360,10.1,9.7,10.5,0.2,10.0,9.6,10.4,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2009","2009",2873,28938457,9.9,9.6,10.3,0.2,9.9,9.5,10.2,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2010","2010",2968,29164611,10.2,9.8,10.5,0.2,10.2,9.8,10.5,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2011","2011",3086,29548410,10.4,10.1,10.8,0.2,10.5,10.1,10.9,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2012","2012",2880,29879694,9.6,9.3,10.0,0.2,9.7,9.3,10.1,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2013","2013",3066,30174476,10.2,9.8,10.5,0.2,10.2,9.8,10.6,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2014","2014",3813,30515126,12.5,12.1,12.9,0.2,12.6,12.2,13.0,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2015","2015",4615,30876734,14.9,14.5,15.4,0.2,15.1,14.7,15.6,0.2
+,"Division 5: South Atlantic","CENS-D5","Male","M","2016","2016",6647,31172625,21.3,20.8,21.8,0.3,21.7,21.2,22.2,0.3
+,"Division 5: South Atlantic","CENS-D5","Male","M","2017","2017",7780,31565665,24.6,24.1,25.2,0.3,25.1,24.6,25.7,0.3
+,"Division 5: South Atlantic","CENS-D5","Male","M","2018","2018",7641,31856523,24.0,23.4,24.5,0.3,24.4,23.9,25.0,0.3
+,"Division 5: South Atlantic","CENS-D5","Male","M","2019","2019",8314,32073279,25.9,25.4,26.5,0.3,26.6,26.0,27.2,0.3
+,"Division 5: South Atlantic","CENS-D5","Male","M","2020","2020",12030,32356776,37.2,36.5,37.8,0.3,38.2,37.5,38.9,0.4
+"Total","Division 5: South Atlantic","CENS-D5","Male","M",,,86407,635934602,13.6,13.5,13.7,0.0,13.6,13.5,13.7,0.0
+"Total","Division 5: South Atlantic","CENS-D5",,,,,129708,1303100765,10.0,9.9,10.0,0.0,10.0,10.0,10.1,0.0
+,"Division 6: East South Central","CENS-D6","Female","F","1999","1999",65,8711707,0.7,0.6,1.0,0.1,0.8,0.6,1.0,0.1
+,"Division 6: East South Central","CENS-D6","Female","F","2000","2000",87,8757109,1.0,0.8,1.2,0.1,1.0,0.8,1.2,0.1
+,"Division 6: East South Central","CENS-D6","Female","F","2001","2001",123,8808274,1.4,1.1,1.6,0.1,1.4,1.2,1.7,0.1
+,"Division 6: East South Central","CENS-D6","Female","F","2002","2002",164,8848878,1.9,1.6,2.1,0.1,1.9,1.6,2.2,0.1
+,"Division 6: East South Central","CENS-D6","Female","F","2003","2003",232,8906971,2.6,2.3,2.9,0.2,2.7,2.3,3.0,0.2
+,"Division 6: East South Central","CENS-D6","Female","F","2004","2004",268,8967954,3.0,2.6,3.3,0.2,3.0,2.7,3.4,0.2
+,"Division 6: East South Central","CENS-D6","Female","F","2005","2005",335,9052482,3.7,3.3,4.1,0.2,3.7,3.3,4.2,0.2
+,"Division 6: East South Central","CENS-D6","Female","F","2006","2006",388,9152344,4.2,3.8,4.7,0.2,4.3,3.9,4.7,0.2
+,"Division 6: East South Central","CENS-D6","Female","F","2007","2007",408,9240836,4.4,4.0,4.8,0.2,4.4,4.0,4.9,0.2
+,"Division 6: East South Central","CENS-D6","Female","F","2008","2008",448,9333859,4.8,4.4,5.2,0.2,4.9,4.4,5.3,0.2
+,"Division 6: East South Central","CENS-D6","Female","F","2009","2009",498,9395064,5.3,4.8,5.8,0.2,5.3,4.9,5.8,0.2
+,"Division 6: East South Central","CENS-D6","Female","F","2010","2010",549,9442621,5.8,5.3,6.3,0.2,6.0,5.5,6.5,0.3
+,"Division 6: East South Central","CENS-D6","Female","F","2011","2011",631,9507121,6.6,6.1,7.2,0.3,6.9,6.3,7.4,0.3
+,"Division 6: East South Central","CENS-D6","Female","F","2012","2012",684,9549285,7.2,6.6,7.7,0.3,7.3,6.8,7.9,0.3
+,"Division 6: East South Central","CENS-D6","Female","F","2013","2013",703,9585778,7.3,6.8,7.9,0.3,7.4,6.8,7.9,0.3
+,"Division 6: East South Central","CENS-D6","Female","F","2014","2014",775,9636404,8.0,7.5,8.6,0.3,8.2,7.6,8.7,0.3
+,"Division 6: East South Central","CENS-D6","Female","F","2015","2015",906,9675114,9.4,8.8,10.0,0.3,9.7,9.0,10.3,0.3
+,"Division 6: East South Central","CENS-D6","Female","F","2016","2016",1054,9706748,10.9,10.2,11.5,0.3,11.2,10.5,11.9,0.4
+,"Division 6: East South Central","CENS-D6","Female","F","2017","2017",1165,9753022,11.9,11.3,12.6,0.3,12.4,11.7,13.2,0.4
+,"Division 6: East South Central","CENS-D6","Female","F","2018","2018",1054,9796528,10.8,10.1,11.4,0.3,11.1,10.4,11.8,0.4
+,"Division 6: East South Central","CENS-D6","Female","F","2019","2019",1130,9831104,11.5,10.8,12.2,0.3,11.9,11.2,12.7,0.4
+,"Division 6: East South Central","CENS-D6","Female","F","2020","2020",1639,9876257,16.6,15.8,17.4,0.4,17.5,16.6,18.3,0.4
+"Total","Division 6: East South Central","CENS-D6","Female","F",,,13306,205535460,6.5,6.4,6.6,0.1,6.6,6.4,6.7,0.1
+,"Division 6: East South Central","CENS-D6","Male","M","1999","1999",128,8203601,1.6,1.3,1.8,0.1,1.6,1.3,1.8,0.1
+,"Division 6: East South Central","CENS-D6","Male","M","2000","2000",160,8265701,1.9,1.6,2.2,0.2,1.9,1.6,2.2,0.2
+,"Division 6: East South Central","CENS-D6","Male","M","2001","2001",240,8331275,2.9,2.5,3.2,0.2,2.9,2.5,3.2,0.2
+,"Division 6: East South Central","CENS-D6","Male","M","2002","2002",277,8375685,3.3,2.9,3.7,0.2,3.3,2.9,3.7,0.2
+,"Division 6: East South Central","CENS-D6","Male","M","2003","2003",376,8429814,4.5,4.0,4.9,0.2,4.5,4.0,4.9,0.2
+,"Division 6: East South Central","CENS-D6","Male","M","2004","2004",441,8508695,5.2,4.7,5.7,0.2,5.2,4.7,5.7,0.2
+,"Division 6: East South Central","CENS-D6","Male","M","2005","2005",517,8597065,6.0,5.5,6.5,0.3,6.0,5.5,6.5,0.3
+,"Division 6: East South Central","CENS-D6","Male","M","2006","2006",602,8689620,6.9,6.4,7.5,0.3,6.9,6.4,7.5,0.3
+,"Division 6: East South Central","CENS-D6","Male","M","2007","2007",674,8792753,7.7,7.1,8.2,0.3,7.7,7.1,8.3,0.3
+,"Division 6: East South Central","CENS-D6","Male","M","2008","2008",688,8869442,7.8,7.2,8.3,0.3,7.9,7.3,8.4,0.3
+,"Division 6: East South Central","CENS-D6","Male","M","2009","2009",773,8944741,8.6,8.0,9.3,0.3,8.8,8.2,9.4,0.3
+,"Division 6: East South Central","CENS-D6","Male","M","2010","2010",962,8989884,10.7,10.0,11.4,0.3,10.9,10.2,11.6,0.4
+,"Division 6: East South Central","CENS-D6","Male","M","2011","2011",926,9046840,10.2,9.6,10.9,0.3,10.5,9.8,11.2,0.3
+,"Division 6: East South Central","CENS-D6","Male","M","2012","2012",988,9094322,10.9,10.2,11.5,0.3,11.2,10.5,11.9,0.4
+,"Division 6: East South Central","CENS-D6","Male","M","2013","2013",995,9130424,10.9,10.2,11.6,0.3,11.2,10.5,11.9,0.4
+,"Division 6: East South Central","CENS-D6","Male","M","2014","2014",1202,9169861,13.1,12.4,13.8,0.4,13.4,12.7,14.2,0.4
+,"Division 6: East South Central","CENS-D6","Male","M","2015","2015",1449,9201589,15.7,14.9,16.6,0.4,16.4,15.5,17.2,0.4
+,"Division 6: East South Central","CENS-D6","Male","M","2016","2016",1644,9233446,17.8,16.9,18.7,0.4,18.5,17.6,19.4,0.5
+,"Division 6: East South Central","CENS-D6","Male","M","2017","2017",1871,9275998,20.2,19.3,21.1,0.5,21.1,20.1,22.0,0.5
+,"Division 6: East South Central","CENS-D6","Male","M","2018","2018",1796,9316285,19.3,18.4,20.2,0.5,20.2,19.3,21.2,0.5
+,"Division 6: East South Central","CENS-D6","Male","M","2019","2019",2108,9345077,22.6,21.6,23.5,0.5,23.7,22.6,24.7,0.5
+,"Division 6: East South Central","CENS-D6","Male","M","2020","2020",3477,9376146,37.1,35.9,38.3,0.6,39.3,38.0,40.7,0.7
+"Total","Division 6: East South Central","CENS-D6","Male","M",,,22294,195188264,11.4,11.3,11.6,0.1,11.6,11.5,11.8,0.1
+"Total","Division 6: East South Central","CENS-D6",,,,,35600,400723724,8.9,8.8,9.0,0.0,9.1,9.0,9.2,0.0
+,"Division 7: West South Central","CENS-D7","Female","F","1999","1999",148,15771174,0.9,0.8,1.1,0.1,1.0,0.8,1.1,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2000","2000",195,15928449,1.2,1.1,1.4,0.1,1.3,1.1,1.4,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2001","2001",272,16176150,1.7,1.5,1.9,0.1,1.7,1.5,1.9,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2002","2002",389,16382496,2.4,2.1,2.6,0.1,2.4,2.2,2.7,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2003","2003",442,16592352,2.7,2.4,2.9,0.1,2.7,2.5,3.0,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2004","2004",506,16804874,3.0,2.7,3.3,0.1,3.1,2.8,3.3,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2005","2005",549,17034650,3.2,3.0,3.5,0.1,3.3,3.0,3.6,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2006","2006",648,17232436,3.8,3.5,4.0,0.1,3.8,3.5,4.1,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2007","2007",729,17538230,4.2,3.9,4.5,0.2,4.2,3.9,4.5,0.2
+,"Division 7: West South Central","CENS-D7","Female","F","2008","2008",629,17838557,3.5,3.3,3.8,0.1,3.6,3.3,3.9,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2009","2009",776,18148396,4.3,4.0,4.6,0.2,4.3,4.0,4.6,0.2
+,"Division 7: West South Central","CENS-D7","Female","F","2010","2010",773,18366016,4.2,3.9,4.5,0.2,4.2,3.9,4.5,0.2
+,"Division 7: West South Central","CENS-D7","Female","F","2011","2011",723,18677665,3.9,3.6,4.2,0.1,3.9,3.6,4.2,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2012","2012",760,18886948,4.0,3.7,4.3,0.1,4.0,3.7,4.3,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2013","2013",793,19111786,4.1,3.9,4.4,0.1,4.2,3.9,4.4,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2014","2014",815,19417265,4.2,3.9,4.5,0.1,4.2,4.0,4.5,0.2
+,"Division 7: West South Central","CENS-D7","Female","F","2015","2015",864,19707801,4.4,4.1,4.7,0.1,4.4,4.1,4.7,0.2
+,"Division 7: West South Central","CENS-D7","Female","F","2016","2016",917,19923493,4.6,4.3,4.9,0.2,4.6,4.3,5.0,0.2
+,"Division 7: West South Central","CENS-D7","Female","F","2017","2017",932,20149207,4.6,4.3,4.9,0.2,4.6,4.3,4.9,0.2
+,"Division 7: West South Central","CENS-D7","Female","F","2018","2018",817,20350673,4.0,3.7,4.3,0.1,4.0,3.7,4.3,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2019","2019",819,20507424,4.0,3.7,4.3,0.1,4.0,3.7,4.3,0.1
+,"Division 7: West South Central","CENS-D7","Female","F","2020","2020",1184,20714134,5.7,5.4,6.0,0.2,5.8,5.5,6.2,0.2
+"Total","Division 7: West South Central","CENS-D7","Female","F",,,14680,401260176,3.7,3.6,3.7,0.0,3.7,3.7,3.8,0.0
+,"Division 7: West South Central","CENS-D7","Male","M","1999","1999",348,15336864,2.3,2.0,2.5,0.1,2.2,2.0,2.5,0.1
+,"Division 7: West South Central","CENS-D7","Male","M","2000","2000",383,15516401,2.5,2.2,2.7,0.1,2.5,2.2,2.7,0.1
+,"Division 7: West South Central","CENS-D7","Male","M","2001","2001",556,15780018,3.5,3.2,3.8,0.1,3.5,3.2,3.8,0.1
+,"Division 7: West South Central","CENS-D7","Male","M","2002","2002",681,16000103,4.3,3.9,4.6,0.2,4.3,3.9,4.6,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2003","2003",813,16189329,5.0,4.7,5.4,0.2,5.0,4.7,5.4,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2004","2004",885,16416306,5.4,5.0,5.7,0.2,5.3,5.0,5.7,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2005","2005",931,16649795,5.6,5.2,6.0,0.2,5.6,5.2,5.9,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2006","2006",1136,16845660,6.7,6.4,7.1,0.2,6.7,6.3,7.1,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2007","2007",1144,17152333,6.7,6.3,7.1,0.2,6.6,6.2,7.0,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2008","2008",1052,17449598,6.0,5.7,6.4,0.2,6.0,5.6,6.3,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2009","2009",1266,17759428,7.1,6.7,7.5,0.2,7.1,6.7,7.5,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2010","2010",1172,17980186,6.5,6.1,6.9,0.2,6.5,6.1,6.9,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2011","2011",1223,18301339,6.7,6.3,7.1,0.2,6.6,6.2,7.0,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2012","2012",1240,18538099,6.7,6.3,7.1,0.2,6.7,6.3,7.0,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2013","2013",1198,18771818,6.4,6.0,6.7,0.2,6.3,6.0,6.7,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2014","2014",1271,19033789,6.7,6.3,7.0,0.2,6.6,6.3,7.0,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2015","2015",1340,19321579,6.9,6.6,7.3,0.2,6.9,6.5,7.3,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2016","2016",1417,19532578,7.3,6.9,7.6,0.2,7.3,6.9,7.6,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2017","2017",1517,19774865,7.7,7.3,8.1,0.2,7.7,7.3,8.1,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2018","2018",1545,19968054,7.7,7.4,8.1,0.2,7.8,7.4,8.1,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2019","2019",1702,20112026,8.5,8.1,8.9,0.2,8.5,8.1,8.9,0.2
+,"Division 7: West South Central","CENS-D7","Male","M","2020","2020",2489,20303248,12.3,11.8,12.7,0.2,12.4,11.9,12.9,0.3
+"Total","Division 7: West South Central","CENS-D7","Male","M",,,25309,392733416,6.4,6.4,6.5,0.0,6.5,6.4,6.5,0.0
+"Total","Division 7: West South Central","CENS-D7",,,,,39989,793993592,5.0,5.0,5.1,0.0,5.1,5.1,5.2,0.0
+,"Division 8: Mountain","CENS-D8","Female","F","1999","1999",248,8919766,2.8,2.4,3.1,0.2,2.8,2.5,3.2,0.2
+,"Division 8: Mountain","CENS-D8","Female","F","2000","2000",273,9067342,3.0,2.7,3.4,0.2,3.1,2.7,3.4,0.2
+,"Division 8: Mountain","CENS-D8","Female","F","2001","2001",343,9295853,3.7,3.3,4.1,0.2,3.8,3.4,4.2,0.2
+,"Division 8: Mountain","CENS-D8","Female","F","2002","2002",406,9476538,4.3,3.9,4.7,0.2,4.4,4.0,4.8,0.2
+,"Division 8: Mountain","CENS-D8","Female","F","2003","2003",503,9642717,5.2,4.8,5.7,0.2,5.3,4.9,5.8,0.2
+,"Division 8: Mountain","CENS-D8","Female","F","2004","2004",489,9837882,5.0,4.5,5.4,0.2,5.1,4.6,5.5,0.2
+,"Division 8: Mountain","CENS-D8","Female","F","2005","2005",619,10076645,6.1,5.7,6.6,0.2,6.3,5.8,6.7,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2006","2006",679,10339853,6.6,6.1,7.1,0.3,6.6,6.1,7.1,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2007","2007",751,10571919,7.1,6.6,7.6,0.3,7.2,6.7,7.7,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2008","2008",783,10768399,7.3,6.8,7.8,0.3,7.3,6.8,7.8,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2009","2009",847,10924549,7.8,7.2,8.3,0.3,7.9,7.3,8.4,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2010","2010",851,11030184,7.7,7.2,8.2,0.3,7.8,7.3,8.3,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2011","2011",901,11177553,8.1,7.5,8.6,0.3,8.2,7.6,8.7,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2012","2012",956,11298070,8.5,7.9,9.0,0.3,8.6,8.0,9.1,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2013","2013",953,11427496,8.3,7.8,8.9,0.3,8.4,7.9,9.0,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2014","2014",1029,11592027,8.9,8.3,9.4,0.3,8.9,8.3,9.4,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2015","2015",1075,11757195,9.1,8.6,9.7,0.3,9.3,8.8,9.9,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2016","2016",1044,11918551,8.8,8.2,9.3,0.3,8.8,8.2,9.3,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2017","2017",1107,12063050,9.2,8.6,9.7,0.3,9.1,8.5,9.6,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2018","2018",1071,12259732,8.7,8.2,9.3,0.3,8.7,8.2,9.2,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2019","2019",1153,12410453,9.3,8.8,9.8,0.3,9.4,8.8,9.9,0.3
+,"Division 8: Mountain","CENS-D8","Female","F","2020","2020",1488,12591627,11.8,11.2,12.4,0.3,12.1,11.5,12.8,0.3
+"Total","Division 8: Mountain","CENS-D8","Female","F",,,17569,238447401,7.4,7.3,7.5,0.1,7.5,7.4,7.6,0.1
+,"Division 8: Mountain","CENS-D8","Male","M","1999","1999",672,8941318,7.5,6.9,8.1,0.3,7.6,7.0,8.1,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2000","2000",699,9104953,7.7,7.1,8.2,0.3,7.7,7.1,8.3,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2001","2001",681,9338695,7.3,6.7,7.8,0.3,7.3,6.8,7.9,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2002","2002",811,9516094,8.5,7.9,9.1,0.3,8.6,8.0,9.2,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2003","2003",870,9669403,9.0,8.4,9.6,0.3,9.1,8.5,9.7,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2004","2004",907,9872062,9.2,8.6,9.8,0.3,9.3,8.7,9.9,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2005","2005",1016,10098956,10.1,9.4,10.7,0.3,10.1,9.5,10.8,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2006","2006",1154,10364041,11.1,10.5,11.8,0.3,11.1,10.5,11.8,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2007","2007",1213,10593205,11.5,10.8,12.1,0.3,11.5,10.8,12.1,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2008","2008",1319,10785792,12.2,11.6,12.9,0.3,12.3,11.6,12.9,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2009","2009",1347,10933960,12.3,11.7,13.0,0.3,12.3,11.6,13.0,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2010","2010",1225,11035267,11.1,10.5,11.7,0.3,11.1,10.5,11.7,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2011","2011",1347,11195858,12.0,11.4,12.7,0.3,12.1,11.4,12.7,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2012","2012",1319,11319804,11.7,11.0,12.3,0.3,11.7,11.1,12.4,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2013","2013",1351,11453749,11.8,11.2,12.4,0.3,11.9,11.2,12.5,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2014","2014",1494,11605092,12.9,12.2,13.5,0.3,13.0,12.3,13.7,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2015","2015",1493,11773303,12.7,12.0,13.3,0.3,12.7,12.1,13.4,0.3
+,"Division 8: Mountain","CENS-D8","Male","M","2016","2016",1695,11936516,14.2,13.5,14.9,0.3,14.4,13.7,15.1,0.4
+,"Division 8: Mountain","CENS-D8","Male","M","2017","2017",1787,12095067,14.8,14.1,15.5,0.3,14.9,14.2,15.6,0.4
+,"Division 8: Mountain","CENS-D8","Male","M","2018","2018",1970,12292653,16.0,15.3,16.7,0.4,16.0,15.3,16.7,0.4
+,"Division 8: Mountain","CENS-D8","Male","M","2019","2019",2184,12444545,17.5,16.8,18.3,0.4,17.7,16.9,18.4,0.4
+,"Division 8: Mountain","CENS-D8","Male","M","2020","2020",3221,12621768,25.5,24.6,26.4,0.4,25.8,24.9,26.7,0.5
+"Total","Division 8: Mountain","CENS-D8","Male","M",,,29775,238992101,12.5,12.3,12.6,0.1,12.6,12.4,12.7,0.1
+"Total","Division 8: Mountain","CENS-D8",,,,,47344,477439502,9.9,9.8,10.0,0.0,10.1,10.0,10.2,0.0
+,"Division 9: Pacific","CENS-D9","Female","F","1999","1999",484,22350384,2.2,2.0,2.4,0.1,2.2,2.0,2.4,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2000","2000",411,22587112,1.8,1.6,2.0,0.1,1.8,1.7,2.0,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2001","2001",312,22958960,1.4,1.2,1.5,0.1,1.4,1.2,1.5,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2002","2002",725,23232155,3.1,2.9,3.3,0.1,3.1,2.9,3.3,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2003","2003",699,23500840,3.0,2.8,3.2,0.1,3.0,2.7,3.2,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2004","2004",812,23734278,3.4,3.2,3.7,0.1,3.4,3.2,3.7,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2005","2005",850,23930806,3.6,3.3,3.8,0.1,3.5,3.3,3.7,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2006","2006",965,24128755,4.0,3.7,4.3,0.1,3.9,3.7,4.2,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2007","2007",1003,24326396,4.1,3.9,4.4,0.1,4.0,3.8,4.2,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2008","2008",1088,24588394,4.4,4.2,4.7,0.1,4.3,4.0,4.5,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2009","2009",1201,24860281,4.8,4.6,5.1,0.1,4.7,4.4,4.9,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2010","2010",1141,25065692,4.6,4.3,4.8,0.1,4.4,4.1,4.6,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2011","2011",1151,25351711,4.5,4.3,4.8,0.1,4.4,4.1,4.7,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2012","2012",1078,25587528,4.2,4.0,4.5,0.1,4.0,3.8,4.3,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2013","2013",1124,25786720,4.4,4.1,4.6,0.1,4.2,3.9,4.4,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2014","2014",1176,26122228,4.5,4.2,4.8,0.1,4.3,4.0,4.5,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2015","2015",1173,26378548,4.4,4.2,4.7,0.1,4.2,3.9,4.4,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2016","2016",1101,26534415,4.1,3.9,4.4,0.1,3.9,3.7,4.1,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2017","2017",1136,26745611,4.2,4.0,4.5,0.1,4.0,3.8,4.2,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2018","2018",1101,26834721,4.1,3.9,4.3,0.1,3.9,3.7,4.1,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2019","2019",1304,26855248,4.9,4.6,5.1,0.1,4.6,4.4,4.9,0.1
+,"Division 9: Pacific","CENS-D9","Female","F","2020","2020",1868,26821910,7.0,6.6,7.3,0.2,6.9,6.6,7.2,0.2
+"Total","Division 9: Pacific","CENS-D9","Female","F",,,21903,548282693,4.0,3.9,4.0,0.0,3.9,3.9,4.0,0.0
+,"Division 9: Pacific","CENS-D9","Male","M","1999","1999",1520,22220404,6.8,6.5,7.2,0.2,6.8,6.4,7.1,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2000","2000",1116,22438525,5.0,4.7,5.3,0.1,4.9,4.6,5.2,0.1
+,"Division 9: Pacific","CENS-D9","Male","M","2001","2001",762,22833819,3.3,3.1,3.6,0.1,3.3,3.1,3.6,0.1
+,"Division 9: Pacific","CENS-D9","Male","M","2002","2002",1429,23087411,6.2,5.9,6.5,0.2,6.2,5.9,6.5,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2003","2003",1433,23303378,6.1,5.8,6.5,0.2,6.1,5.8,6.4,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2004","2004",1468,23521261,6.2,5.9,6.6,0.2,6.2,5.9,6.5,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2005","2005",1477,23727319,6.2,5.9,6.5,0.2,6.1,5.8,6.4,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2006","2006",1649,23919116,6.9,6.6,7.2,0.2,6.7,6.4,7.1,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2007","2007",1756,24103894,7.3,6.9,7.6,0.2,7.1,6.7,7.4,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2008","2008",1886,24366590,7.7,7.4,8.1,0.2,7.5,7.2,7.9,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2009","2009",2009,24622586,8.2,7.8,8.5,0.2,7.9,7.6,8.3,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2010","2010",1884,24814410,7.6,7.2,7.9,0.2,7.3,7.0,7.7,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2011","2011",2019,25139626,8.0,7.7,8.4,0.2,7.7,7.4,8.1,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2012","2012",1840,25374029,7.3,6.9,7.6,0.2,7.0,6.7,7.3,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2013","2013",1903,25586458,7.4,7.1,7.8,0.2,7.1,6.8,7.5,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2014","2014",1996,25868334,7.7,7.4,8.1,0.2,7.4,7.1,7.7,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2015","2015",2016,26135633,7.7,7.4,8.1,0.2,7.4,7.0,7.7,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2016","2016",2103,26267518,8.0,7.7,8.3,0.2,7.7,7.3,8.0,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2017","2017",2304,26506894,8.7,8.3,9.0,0.2,8.3,7.9,8.6,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2018","2018",2512,26606557,9.4,9.1,9.8,0.2,9.1,8.7,9.4,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2019","2019",3228,26637022,12.1,11.7,12.5,0.2,11.7,11.3,12.1,0.2
+,"Division 9: Pacific","CENS-D9","Male","M","2020","2020",5520,26619451,20.7,20.2,21.3,0.3,20.2,19.6,20.7,0.3
+"Total","Division 9: Pacific","CENS-D9","Male","M",,,43830,543700235,8.1,8.0,8.1,0.0,7.9,7.8,8.0,0.0
+"Total","Division 9: Pacific","CENS-D9",,,,,65733,1091982928,6.0,6.0,6.1,0.0,5.9,5.9,6.0,0.0
+"Total",,,,,,,564522,6746356647,8.4,8.3,8.4,0.0,8.4,8.4,8.4,0.0
+"---"
+"Dataset: Multiple Cause of Death, 1999-2020"
+"Query Parameters:"
+"Title: Census-Division-Sex"
+"MCD - ICD-10 Codes: T40.0 (Opium); T40.1 (Heroin); T40.2 (Other opioids); T40.3 (Methadone); T40.4 (Other synthetic narcotics);"
+"T40.6 (Other and unspecified narcotics)"
+"UCD - ICD-10 Codes: X40 (Accidental poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics); X41"
+"(Accidental poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not"
+"elsewhere classified); X42 (Accidental poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not"
+"elsewhere classified); X43 (Accidental poisoning by and exposure to other drugs acting on the autonomic nervous system); X44"
+"(Accidental poisoning by and exposure to other and unspecified drugs, medicaments and biological substances); X60 (Intentional"
+"self-poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics); X61 (Intentional self-poisoning by and"
+"exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not elsewhere classified); X62"
+"(Intentional self-poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not elsewhere classified); X63"
+"(Intentional self-poisoning by and exposure to other drugs acting on the autonomic nervous system); X64 (Intentional"
+"self-poisoning by and exposure to other and unspecified drugs, medicaments and biological substances); X85 (Assault by drugs,"
+"medicaments and biological substances); Y10 (Poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics,"
+"undetermined intent); Y11 (Poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic"
+"drugs, not elsewhere classified, undetermined intent); Y12 (Poisoning by and exposure to narcotics and psychodysleptics"
+"[hallucinogens], not elsewhere classified, undetermined intent); Y13 (Poisoning by and exposure to other drugs acting on the"
+"autonomic nervous system, undetermined intent); Y14 (Poisoning by and exposure to other and unspecified drugs, medicaments and"
+"biological substances, undetermined intent)"
+"Group By: Census Division; Sex; Year"
+"Show Totals: True"
+"Show Zero Values: True"
+"Show Suppressed: True"
+"Standard Population: 2000 U.S. Std. Population"
+"Calculate Rates Per: 100,000"
+"Rate Options: Default intercensal populations for years 2001-2009 (except Infant Age Groups)"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/mcd.html for more information."
+"---"
+"Query Date: Nov 7, 2025 10:52:50 AM"
+"---"
+"Suggested Citation: Centers for Disease Control and Prevention, National Center for Health Statistics. National Vital Statistics"
+"System, Mortality 1999-2020 on CDC WONDER Online Database, released in 2021. Data are from the Multiple Cause of Death Files,"
+"1999-2020, as compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative"
+"Program. Accessed at http://wonder.cdc.gov/mcd-icd10.html on Nov 7, 2025 10:52:50 AM"
+"---"
+Caveats:
+"1. As of April 3, 2017, the underlying cause of death has been revised for 125 deaths in 2014. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#2014-Revision."
+"2. Circumstances in Georgia for the years 2008 and 2009 have resulted in unusually high death counts for the ICD-10 cause of"
+"death code R99, ""Other ill-defined and unspecified causes of mortality."" Caution should be used in interpreting these data."
+"More information: http://wonder.cdc.gov/wonder/help/mcd.html#Georgia-Reporting-Anomalies."
+"3. Circumstances in New Jersey for the year 2009 have resulted in unusually high death counts for the ICD-10 cause of death code"
+"R99, ""Other ill-defined and unspecified causes of mortality"" and therefore unusually low death counts in other ICD-10 codes,"
+"most notably R95, ""Sudden Infant Death Syndrome"" and X40-X49, ""Unintentional poisoning."" Caution should be used in"
+"interpreting these data. More information: http://wonder.cdc.gov/wonder/help/mcd.html#New-Jersey-Reporting-Anomalies."
+"4. Circumstances in California resulted in unusually high death counts for the ICD-10 cause of death code R99, ""Other"
+"ill-defined and unspecified causes of mortality"" for deaths occurring in years 2000 and 2001. Caution should be used in"
+"interpreting these data. More information: http://wonder.cdc.gov/wonder/help/mcd.html#California-Reporting-Anomalies."
+"5. The populations used to calculate standard age-adjusted rates are documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#2000 Standard Population."
+"6. The method used to calculate age-adjusted rates is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Age-Adjusted Rates."
+"7. Deaths for persons of unknown age are included in counts and crude rates, but are not included in age-adjusted rates."
+"8. The method used to calculate 95% confidence intervals is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Confidence-Intervals."
+"9. The method used to calculate standard errors is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Standard-Errors."
+"10. The population figures for year 2020 are bridged-race estimates of the July 1 resident population, from the Vintage 2020"
+"postcensal series released by NCHS on September 22, 2021. The population figures for year 2019 are bridged-race estimates of the"
+"July 1 resident population, from the Vintage 2019 postcensal series released by NCHS on July 9, 2020. The population figures for"
+"year 2018 are bridged-race estimates of the July 1 resident population, from the Vintage 2018 postcensal series released by NCHS"
+"on June 25, 2019. The population figures for year 2017 are bridged-race estimates of the July 1 resident population, from the"
+"Vintage 2017 postcensal series released by NCHS on June 27, 2018. The population figures for year 2016 are bridged-race"
+"estimates of the July 1 resident population, from the Vintage 2016 postcensal series released by NCHS on June 26, 2017. The"
+"population figures for year 2015 are bridged-race estimates of the July 1 resident population, from the Vintage 2015 postcensal"
+"series released by NCHS on June 28, 2016. The population figures for year 2014 are bridged-race estimates of the July 1 resident"
+"population, from the Vintage 2014 postcensal series released by NCHS on June 30, 2015. The population figures for year 2013 are"
+"bridged-race estimates of the July 1 resident population, from the Vintage 2013 postcensal series released by NCHS on June 26,"
+"2014. The population figures for year 2012 are bridged-race estimates of the July 1 resident population, from the Vintage 2012"
+"postcensal series released by NCHS on June 13, 2013. Population figures for 2011 are bridged-race estimates of the July 1"
+"resident population, from the county-level postcensal Vintage 2011 series released by NCHS on July 18, 2012. Population figures"
+"for 2010 are April 1 Census counts. The population figures for years 2001 - 2009, are bridged-race estimates of the July 1"
+"resident population, from the revised intercensal county-level 2000 - 2009 series released by NCHS on October 26, 2012."
+"Population figures for 2000 are April 1 Census counts. Population figures for 1999 are from the 1990-1999 intercensal series of"
+"July 1 estimates. Population figures for Infant Age Groups are the number of live births. <br/><b>Note:</b> Rates and population"
+"figures for years 2001 - 2009 differ slightly from previously published reports, due to use of the population estimates which"
+"were available at the time of release."
+"11. The population figures used in the calculation of death rates for the age group 'under 1 year' are the estimates of the"
+"resident population that is under one year of age. More information: http://wonder.cdc.gov/wonder/help/mcd.html#Age Group."
+"12. Changes to cause of death classification affect reporting trends. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#ICD-10 Changes."
