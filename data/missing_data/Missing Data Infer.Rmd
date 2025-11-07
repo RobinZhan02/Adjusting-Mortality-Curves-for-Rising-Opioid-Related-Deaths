@@ -5,583 +5,603 @@ output: html_document
 
 ```{r}
 rm(list=ls());gc()
-#Please Set the wd to this folder
 library(tidyverse)
+library(lpSolve)
 library(data.table)
 library(lubridate) 
 ```
-
-
-
+# load and check the data
 ```{r}
-main_data_5 <- read_csv("WONDER-SEX-5Yr-Cenus Division.csv")|> select(`Census Division Code`, `Sex Code`, `Five-Year Age Groups Code`, `Month Code`, Deaths)
+file_list <- list.files("Data For Infer")
+
+# constants
+n_years   <- 22
+n_months  <- 12
+n_age_10  <- 12
+n_age_5   <- 23
+n_div     <- 9
+n_region  <- 4
+n_sex     <- 2
+
+# helper to compute expected row count from file name
+expected_rows_for_file <- function(fname) {
+  # age groups: assume files without "5Yr" or "10Yr" are not age-stratified (age factor = 1)
+  age_factor <- if (str_detect(fname, fixed("5Yr"))) {
+    n_age_5
+  } else if (str_detect(fname, fixed("10Yr"))) {
+    n_age_10
+  } else {
+    1L
+  }
+  # geography: exactly one of Division or Region; otherwise fallback to 1
+  geo_factor <- if (str_detect(fname, fixed("Cenus Division"))) {
+    n_div
+  } else if (str_detect(fname, fixed("Cenus Region"))) {
+    n_region
+  } else {
+    1L
+  }
+  # sex: 2 if "Sex" mentioned, else 1
+  sex_factor <- if (str_detect(fname, fixed("Sex"))) n_sex else 1L
+
+  age_factor * geo_factor * sex_factor * n_months * n_years
+}
+
+# containers
+row_checks <- list()
+data <- tibble()
+
+# main loop
+for (i in file_list) {
+  # read
+  tmp <- fread(paste0("Data For Infer/", i))
+
+  # filter Month Code present
+  tmp <- tmp |>
+    filter(!is.na(`Month Code`)) |>
+    # coerce every column to character but keep NA as NA (not "NA")
+    mutate(across(everything(), ~ ifelse(is.na(.x), NA_character_, as.character(.x))))
+
+  # bind
+  data <- bind_rows(data, tmp)
+
+  # check counts
+  observed <- nrow(tmp)
+  expected <- expected_rows_for_file(i)
+
+  row_checks[[length(row_checks) + 1]] <- tibble(
+    file     = i,
+    expected = expected,
+    observed = observed,
+    matches  = observed == expected
+  )
+}
+
+# summarize checks
+row_checks <- bind_rows(row_checks) |> arrange(matches, file)
+
+# print only mismatches with a clear message
+mismatches <- row_checks |> filter(!matches)
+if (nrow(mismatches) == 0) {
+  message("All files match expected row counts.")
+} else {
+  message("The following files do not match expected row counts:")
+  print(mismatches, n = Inf)
+}
+
+rm(tmp, row_checks, mismatches);gc()
+```
+# Prepare Data for Analysis
+```{r}
+data_prepared <- data |> select(`Census Division Code`, `Census Region Code`, `Month Code`,`Sex Code`, `Age Group Code`, `Ten-Year Age Groups Code`, `Five-Year Age Groups Code`, `Deaths`) |>
+  mutate(`Age Group Code` = case_when(!is.na(`Ten-Year Age Groups Code`) ~ `Ten-Year Age Groups Code`,
+                                      !is.na(`Five-Year Age Groups Code`) ~ `Five-Year Age Groups Code`,
+                                      T ~ `Age Group Code`)) |>
+  select(-`Ten-Year Age Groups Code`, -`Five-Year Age Groups Code`) |> unique()
+rm(data);gc()
+```
+
+# Load the Code for later mapping
+```{r}
+Cenus_Region_Code <- read_csv("Cenus Region_Code.csv", show_col_types = F)
+Cenus_Division_Code <- read_csv("Cenus Division_Code.csv", show_col_types = F)
+Age_Group_Code <- read_csv("Age Group_Code.csv", show_col_types = F)
+
 
 ```
 
+
+
 ```{r}
-complete_death_panel_nogroup <- function(
-  main_data,
-  age_var     = NULL,
-  start_month = "1999-01-01",
-  end_month   = "2020-12-01",
-  group_by_sex = TRUE
-) {
-  # 1) Decide which age column to use (honor whatever the data already uses)
-  if (is.null(age_var)) {
-    if ("Five-Year Age Groups Code" %in% names(main_data)) {
-      age_var <- "Five-Year Age Groups Code"
-    } else if ("Ten-Year Age Groups Code" %in% names(main_data)) {
-      age_var <- "Ten-Year Age Groups Code"
-    } else {
-      age_var <- NULL
+infer_suppressed_iterative <- function(data_prepared,
+                                       max_region_iter = 20,
+                                       max_division_iter = 20) {
+  library(data.table)
+
+  ## ---------- Prep ----------
+  dt <- as.data.table(data_prepared)
+
+  if (!"Deaths" %in% names(dt)) {
+    stop("Input must contain 'Deaths'.")
+  }
+
+  dt[, row_id := .I]
+  dt[, is_suppressed_orig := Deaths == "Suppressed"]
+
+  suppressWarnings(
+    dt[, Deaths_num := as.numeric(Deaths)]
+  )
+  dt[, current_val := Deaths_num]
+
+  # exactly one of region/division per row
+  dt[, geo_type := fifelse(!is.na(`Census Division Code`), "division",
+                    fifelse(!is.na(`Census Region Code`), "region", NA_character_))]
+  dt[, geo_code := fifelse(geo_type == "division", `Census Division Code`,
+                     fifelse(geo_type == "region", `Census Region Code`, NA_character_))]
+
+  # mapping region <-> divisions (adjust to actual codes if different)
+  div_to_region <- data.table(
+    division_code = c("CENS-D1","CENS-D2","CENS-D3","CENS-D4","CENS-D5",
+                      "CENS-D6","CENS-D7","CENS-D8","CENS-D9"),
+    region_code   = c("CENS-R1","CENS-R1","CENS-R2","CENS-R2","CENS-R3",
+                      "CENS-R3","CENS-R3","CENS-R4","CENS-R4")
+  )
+  region_to_divs <- split(div_to_region$division_code, div_to_region$region_code)
+
+  # 10-year bands as unions of 5-year bands (critically, no "1" here)
+  age_10_to_5 <- list(
+    "5-14"  = c("5-9", "10-14"),
+    "15-24" = c("15-19", "20-24"),
+    "25-34" = c("25-29", "30-34"),
+    "35-44" = c("35-39", "40-44"),
+    "45-54" = c("45-49", "50-54"),
+    "55-64" = c("55-59", "60-64"),
+    "65-74" = c("65-69", "70-74"),
+    "75-84" = c("75-79", "80-84"),
+    "85+"   = c("85-89", "90-94", "95-99", "100+")
+  )
+
+  # rows that cannot be inferred via our direct rules
+  dt[, is_impossible := FALSE]
+
+  ## ---------- Helpers ----------
+
+  is_unknown_now <- function() {
+    dt$is_suppressed_orig & is.na(dt$current_val) & !dt$is_impossible
+  }
+
+  try_set <- function(idx, candidate) {
+    if (length(idx) != 1L || is.na(idx)) return(FALSE)
+    if (is.na(candidate)) return(FALSE)
+    if (candidate < 1L || candidate > 9L) return(FALSE)
+    if (abs(candidate - round(candidate)) > 1e-9) return(FALSE)
+    if (!dt$is_suppressed_orig[idx]) return(FALSE)
+    if (!is.na(dt$current_val[idx])) return(FALSE)
+    if (dt$is_impossible[idx]) return(FALSE)
+    dt[idx, current_val := as.integer(round(candidate))]
+    TRUE
+  }
+
+  ## ---------- Rule: Sex totals (Tot = F + M) ----------
+  # Sex Code NA => not grouped by sex => total for that slice.
+
+  deduce_sex_from_total <- function(geo_filter = NULL) {
+    dt[, is_unknown := is_unknown_now()]
+
+    gdt <- dt[
+      is_impossible == FALSE &
+      (is.na(`Sex Code`) | `Sex Code` %chin% c("F", "M"))
+    ]
+    if (!is.null(geo_filter)) gdt <- gdt[geo_type == geo_filter]
+    if (!NROW(gdt)) { dt[, is_unknown := NULL]; return(0L) }
+
+    keys <- c("Month Code", "geo_type", "geo_code", "Age Group Code")
+    sumdt <- gdt[, .(
+      has_tot = any(is.na(`Sex Code`)),
+      has_F   = any(`Sex Code` == "F"),
+      has_M   = any(`Sex Code` == "M")
+    ), by = keys]
+
+    cand <- sumdt[has_tot == TRUE & has_F == TRUE & has_M == TRUE]
+    if (!NROW(cand)) { dt[, is_unknown := NULL]; return(0L) }
+
+    setkeyv(gdt, keys)
+    new_count <- 0L
+
+    for (i in seq_len(nrow(cand))) {
+      key_row <- cand[i]
+      rows <- gdt[key_row, on = keys, nomatch = 0]
+
+      tot_row <- rows[is.na(`Sex Code`)]
+      F_row   <- rows[`Sex Code` == "F"]
+      M_row   <- rows[`Sex Code` == "M"]
+      if (nrow(tot_row) != 1L || nrow(F_row) != 1L || nrow(M_row) != 1L) next
+
+      ids  <- c(tot_row$row_id, F_row$row_id, M_row$row_id)
+      vals <- dt$current_val[ids]
+      unks <- dt$is_unknown[ids]
+
+      if (sum(unks) != 1L) next
+      if (any(!unks & is.na(vals))) next
+
+      unk_id <- ids[unks]
+
+      if (unk_id == ids[1]) {
+        candidate <- vals[2] + vals[3]
+      } else if (unk_id == ids[2]) {
+        candidate <- vals[1] - vals[3]
+      } else {
+        candidate <- vals[1] - vals[2]
+      }
+
+      if (try_set(unk_id, candidate)) new_count <- new_count + 1L
     }
+
+    dt[, is_unknown := NULL]
+    new_count
   }
 
-  # 2) Universes for each dimension
-  census_divisions <- paste0("CENS-D", 1:9)
-  sex_codes <- c("F", "M")
+  ## ---------- Rule: Age totals (NA Age = total over ages) ----------
 
-  age_groups_5yr <- c(
-    "1", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39",
-    "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74",
-    "75-79", "80-84", "85-89", "90-94", "95-99", "NS", "1-4", "100+"
-  )
+  deduce_age_total <- function(geo_filter = NULL) {
+    dt[, is_unknown := is_unknown_now()]
 
-  age_groups_10yr <- c(
-    "1", "1-4", "5-14", "15-24", "25-34", "35-44",
-    "45-54", "55-64", "65-74", "75-84", "85+", "NS"
-  )
+    gdt <- dt[is_impossible == FALSE]
+    if (!is.null(geo_filter)) gdt <- gdt[geo_type == geo_filter]
+    if (!NROW(gdt)) { dt[, is_unknown := NULL]; return(0L) }
 
-  month_seq <- seq(
-    lubridate::ymd(start_month),
-    lubridate::ymd(end_month),
-    by = "1 month"
-  )
-  month_codes <- paste0(format(month_seq, "%Y"), "/", format(month_seq, "%m"))
+    keys <- c("Month Code", "geo_type", "geo_code", "Sex Code")
+    sumdt <- gdt[, .(
+      has_total = any(is.na(`Age Group Code`) & !is.na(current_val)),
+      n_age     = sum(!is.na(`Age Group Code`)),
+      unk_any   = any(is_unknown)
+    ), by = keys]
 
-  # Choose which age levels to use in the completed panel
-  if (!is.null(age_var)) {
-    if (age_var == "Five-Year Age Groups Code") {
-      age_levels <- age_groups_5yr
-    } else if (age_var == "Ten-Year Age Groups Code") {
-      age_levels <- age_groups_10yr
-    } else {
-      age_levels <- unique(as.character(main_data[[age_var]]))
-    }
-  } else {
-    age_levels <- NULL
-  }
+    cand <- sumdt[has_total == TRUE & n_age > 0 & unk_any == TRUE]
+    if (!NROW(cand)) { dt[, is_unknown := NULL]; return(0L) }
 
-  # 3) Clean incoming data (standardize names/types)
-  main_data_clean <- main_data %>%
-    dplyr::mutate(
-      `Census Division Code` = as.character(`Census Division Code`),
-      `Month Code`           = as.character(`Month Code`),
-      Deaths                 = as.character(Deaths)
-    )
+    new_count <- 0L
 
-  if ("Sex Code" %in% names(main_data_clean)) {
-    main_data_clean <- main_data_clean %>%
-      dplyr::mutate(`Sex Code` = as.character(`Sex Code`))
-  }
+    for (i in seq_len(nrow(cand))) {
+      key_row <- cand[i]
 
-  if (!is.null(age_var)) {
-    main_data_clean <- main_data_clean %>%
-      dplyr::mutate(`Age Group Code` = as.character(.data[[age_var]]))
-  }
-
-  # Keep only the columns used downstream
-  keep_cols <- c("Census Division Code", "Month Code", "Deaths")
-  if (!is.null(age_var)) keep_cols <- c(keep_cols, "Age Group Code")
-  if ("Sex Code" %in% names(main_data_clean)) keep_cols <- c(keep_cols, "Sex Code")
-
-  main_data_clean <- main_data_clean %>% dplyr::select(dplyr::any_of(keep_cols))
-
-  # 4) If not grouping by sex, collapse across sexes (sum Deaths numerically; NAs treated as 0)
-  if (!group_by_sex) {
-    # If Sex Code missing, there's nothing to collapse
-    if ("Sex Code" %in% names(main_data_clean)) {
-      main_data_clean <- main_data_clean %>%
-        dplyr::mutate(
-          Deaths_num = suppressWarnings(as.numeric(Deaths)),
-          Deaths_num = dplyr::if_else(is.na(Deaths_num), 0, Deaths_num)
+      rows <- gdt[
+        `Month Code` == key_row[["Month Code"]] &
+        geo_type      == key_row[["geo_type"]] &
+        geo_code      == key_row[["geo_code"]] &
+        (
+          (is.na(key_row[["Sex Code"]]) & is.na(`Sex Code`)) |
+          (!is.na(key_row[["Sex Code"]]) & `Sex Code` == key_row[["Sex Code"]])
         )
+      ]
+      if (!NROW(rows)) next
 
-      group_vars <- c("Census Division Code", "Month Code")
-      if (!is.null(age_var)) group_vars <- c(group_vars, "Age Group Code")
+      total_row <- rows[is.na(`Age Group Code`) & !is.na(current_val)]
+      age_rows  <- rows[!is.na(`Age Group Code`)]
+      if (nrow(total_row) != 1L || !NROW(age_rows)) next
 
-      main_data_clean <- main_data_clean %>%
-        dplyr::group_by(dplyr::across(dplyr::all_of(group_vars))) %>%
-        dplyr::summarise(Deaths = sum(Deaths_num, na.rm = TRUE), .groups = "drop") %>%
-        dplyr::mutate(Deaths = as.character(Deaths))
+      ids  <- c(total_row$row_id, age_rows$row_id)
+      vals <- dt$current_val[ids]
+      unks <- dt$is_unknown[ids]
+
+      if (sum(unks) != 1L) next
+      if (any(!unks & is.na(vals))) next
+
+      unk_id    <- ids[unks]
+      total_val <- total_row$current_val[1]
+
+      if (unk_id == total_row$row_id) {
+        candidate <- sum(vals[!unks])
+      } else {
+        candidate <- total_val - sum(vals[!unks & ids != total_row$row_id])
+      }
+
+      if (try_set(unk_id, candidate)) new_count <- new_count + 1L
     }
 
-    # Ensure Sex Code is not present after collapsing
-    main_data_clean <- main_data_clean %>% dplyr::select(-dplyr::any_of("Sex Code"))
-  } else {
-    # If grouping by sex is requested but Sex Code is missing, fall back to no-sex mode
-    if (!("Sex Code" %in% names(main_data_clean))) {
-      message("Sex Code column not found; proceeding without sex dimension.")
-      group_by_sex <- FALSE
+    dt[, is_unknown := NULL]
+    new_count
+  }
+
+  ## ---------- Rule: 10-year vs 5-year bands ----------
+
+  deduce_age_5v10 <- function(geo_filter = NULL) {
+    dt[, is_unknown := is_unknown_now()]
+    gdt <- dt[is_impossible == FALSE]
+    if (!is.null(geo_filter)) gdt <- gdt[geo_type == geo_filter]
+    if (!NROW(gdt)) { dt[, is_unknown := NULL]; return(0L) }
+
+    keys <- c("Month Code", "geo_type", "geo_code", "Sex Code")
+    panels <- gdt[, .(
+      any_unknown = any(is_unknown),
+      n_age       = sum(!is.na(`Age Group Code`))
+    ), by = keys][any_unknown == TRUE & n_age > 0]
+
+    if (!NROW(panels)) { dt[, is_unknown := NULL]; return(0L) }
+
+    new_count <- 0L
+
+    for (i in seq_len(nrow(panels))) {
+      key_row <- panels[i]
+
+      rows <- gdt[
+        `Month Code` == key_row[["Month Code"]] &
+        geo_type      == key_row[["geo_type"]] &
+        geo_code      == key_row[["geo_code"]] &
+        (
+          (is.na(key_row[["Sex Code"]]) & is.na(`Sex Code`)) |
+          (!is.na(key_row[["Sex Code"]]) & `Sex Code` == key_row[["Sex Code"]])
+        )
+      ]
+      if (!NROW(rows)) next
+
+      for (ten in names(age_10_to_5)) {
+        parts <- age_10_to_5[[ten]]
+
+        row10   <- rows[`Age Group Code` == ten]
+        row5set <- rows[`Age Group Code` %chin% parts]
+
+        if (nrow(row10) != 1L) next
+        if (nrow(row5set) != length(parts)) next
+
+        ids  <- c(row10$row_id, row5set$row_id)
+        vals <- dt$current_val[ids]
+        unks <- dt$is_unknown[ids]
+
+        if (sum(unks) != 1L) next
+        if (any(!unks & is.na(vals))) next
+
+        unk_id <- ids[unks]
+
+        if (unk_id == row10$row_id) {
+          candidate <- sum(vals[!unks])
+        } else {
+          total_val <- row10$current_val[1]
+          if (is.na(total_val)) next
+          candidate <- total_val - sum(vals[!unks & ids != row10$row_id])
+        }
+
+        if (try_set(unk_id, candidate)) new_count <- new_count + 1L
+      }
+    }
+
+    dt[, is_unknown := NULL]
+    new_count
+  }
+
+  ## ---------- Rule: Division from Region ----------
+  # For each (Month, Region, Sex, AgeGroup):
+  #   if region total is known, and exactly one child division in that slice is unknown,
+  #   infer that division as Region - sum(other divisions).
+
+  deduce_div_from_region <- function() {
+    dt[, is_unknown := is_unknown_now()]
+    reg <- dt[geo_type == "region" & !is.na(current_val)]
+    if (!NROW(reg)) { dt[, is_unknown := NULL]; return(0L) }
+
+    new_count <- 0L
+
+    for (i in seq_len(nrow(reg))) {
+      rr <- reg[i]
+      R  <- rr$geo_code
+      mc <- rr$`Month Code`
+      sc <- rr$`Sex Code`
+      ag <- rr$`Age Group Code`
+
+      child_divs <- region_to_divs[[R]]
+      if (is.null(child_divs)) next
+
+      div_rows <- dt[
+        geo_type == "division" &
+        geo_code %chin% child_divs &
+        `Month Code` == mc &
+        (
+          (is.na(sc) & is.na(`Sex Code`)) |
+          (!is.na(sc) & `Sex Code` == sc)
+        ) &
+        (
+          (is.na(ag) & is.na(`Age Group Code`)) |
+          (!is.na(ag) & `Age Group Code` == ag)
+        ) &
+        is_impossible == FALSE
+      ]
+
+      if (!NROW(div_rows)) next
+
+      ids  <- div_rows$row_id
+      vals <- dt$current_val[ids]
+      unks <- dt$is_unknown[ids]
+
+      if (sum(unks) != 1L) next
+      if (any(!unks & is.na(vals))) next
+
+      unk_id    <- ids[unks]
+      known_sum <- sum(vals[!unks])
+      candidate <- rr$current_val - known_sum
+
+      if (try_set(unk_id, candidate)) new_count <- new_count + 1L
+    }
+
+    dt[, is_unknown := NULL]
+    new_count
+  }
+
+  ## ---------- Stage 1: regions first (no region-from-divisions) ----------
+
+  total_supp <- sum(dt$is_suppressed_orig)
+  cat("Total suppressed cells:", total_supp, "\n")
+
+  cat("\nStage 1: infer for regions\n")
+  for (iter in seq_len(max_region_iter)) {
+    before <- sum(dt$is_suppressed_orig & dt$geo_type == "region" & !is.na(dt$current_val))
+    cat(" Region Iteration", iter, "\n")
+
+    n1 <- deduce_sex_from_total("region")
+    cat("   Region sex totals inferred:", n1, "\n")
+
+    n2 <- deduce_age_total("region")
+    cat("   Region age totals inferred:", n2, "\n")
+
+    n3 <- deduce_age_5v10("region")
+    cat("   Region 5y-10y inferred:", n3, "\n")
+
+    after <- sum(dt$is_suppressed_orig & dt$geo_type == "region" & !is.na(dt$current_val))
+    new_count <- after - before
+    cat("   Newly inferred (region) this iter:", new_count,
+        " | total region inferred:", after, "\n")
+
+    if (new_count == 0L) {
+      cat("   No new regional values. Mark remaining regional suppressed as impossible.\n")
+      dt[
+        geo_type == "region" &
+        is_suppressed_orig == TRUE &
+        is.na(current_val),
+        is_impossible := TRUE
+      ]
+      break
     }
   }
 
-  # 5) Build the full grid to complete
-  if (is.null(age_levels)) {
-    if (group_by_sex) {
-      all_combos <- tidyr::expand_grid(
-        `Census Division Code` = census_divisions,
-        `Sex Code`             = sex_codes,
-        `Month Code`           = month_codes
-      )
-    } else {
-      all_combos <- tidyr::expand_grid(
-        `Census Division Code` = census_divisions,
-        `Month Code`           = month_codes
-      )
-    }
-  } else {
-    if (group_by_sex) {
-      all_combos <- tidyr::expand_grid(
-        `Census Division Code` = census_divisions,
-        `Sex Code`             = sex_codes,
-        `Age Group Code`       = age_levels,
-        `Month Code`           = month_codes
-      )
-    } else {
-      all_combos <- tidyr::expand_grid(
-        `Census Division Code` = census_divisions,
-        `Age Group Code`       = age_levels,
-        `Month Code`           = month_codes
-      )
+  ## ---------- Stage 2: divisions using regions ----------
+
+  cat("\nStage 2: infer for divisions (using cleaned regions)\n")
+  for (iter in seq_len(max_division_iter)) {
+    before <- sum(dt$is_suppressed_orig & dt$geo_type == "division" & !is.na(dt$current_val))
+    cat(" Division Iteration", iter, "\n")
+
+    n1 <- deduce_sex_from_total("division")
+    cat("   Division sex totals inferred:", n1, "\n")
+
+    n2 <- deduce_age_total("division")
+    cat("   Division age totals inferred:", n2, "\n")
+
+    n3 <- deduce_age_5v10("division")
+    cat("   Division 5y-10y inferred:", n3, "\n")
+
+    n4 <- deduce_div_from_region()
+    cat("   Division from region inferred:", n4, "\n")
+
+    after <- sum(dt$is_suppressed_orig & dt$geo_type == "division" & !is.na(dt$current_val))
+    new_count <- after - before
+    cat("   Newly inferred (division) this iter:", new_count,
+        " | total division inferred:", after, "\n")
+
+    if (new_count == 0L) {
+      cat("   No new divisional values. Mark remaining divisional suppressed as impossible.\n")
+      dt[
+        geo_type == "division" &
+        is_suppressed_orig == TRUE &
+        is.na(current_val),
+        is_impossible := TRUE
+      ]
+      break
     }
   }
 
-  # 6) Join to the grid and fill missing Deaths with "0"
-  join_keys <- intersect(names(all_combos), names(main_data_clean))
+  ## ---------- Final output ----------
 
-  completed_data <- all_combos %>%
-    dplyr::left_join(main_data_clean, by = join_keys) %>%
-    dplyr::mutate(
-      Deaths = dplyr::if_else(is.na(Deaths), "0", as.character(Deaths))
+  dt[, Deaths_inferred := ifelse(is_suppressed_orig, current_val, Deaths_num)]
+  dt[, was_inferred := is_suppressed_orig & !is.na(Deaths_inferred)]
+
+  cat("\nSummary:\n")
+  cat("  Inferred suppressed cells:",
+      sum(dt$was_inferred), "out of", total_supp, "\n")
+  cat("  Marked impossible:",
+      sum(dt$is_suppressed_orig & dt$is_impossible), "\n")
+
+  out <- dt[
+    ,
+    .(
+      `Census Division Code`,
+      `Census Region Code`,
+      `Month Code`,
+      `Sex Code`,
+      `Age Group Code`,
+      Deaths,
+      Deaths_inferred,
+      was_inferred,
+      is_impossible
     )
+  ]
 
-  return(completed_data)
+  as.data.frame(out)
 }
 
 
+
+result <- infer_suppressed_iterative(data_prepared)
+result |> write_csv("inferred_data_raw.csv")
 ```
-
-
 ```{r}
-WONDER_5Yr_Cenus_Region_Sex <- complete_death_panel_nogroup(
-  main_data   = main_data_5,
-  age_var     = "Five-Year Age Groups Code",
-  start_month = "1999-01-01",
-  end_month   = "2020-12-01"
-) |>
-  rename(`Five-Year Age Groups Code` = `Age Group Code`)
+## start from the inference result
+res <- as.data.table(result)
 
+## reconstruct geo_type from columns
+res[, geo_type := fifelse(!is.na(`Census Division Code`), "division",
+                   fifelse(!is.na(`Census Region Code`), "region", NA_character_))]
 
-
-main_data_10 <-  read_csv("WONDER-SEX-10Yr-Cenus Division.csv") |> 
-  select(`Census Division Code`, `Sex Code`, `Ten-Year Age Groups Code`, `Month Code`, Deaths) 
-
-
-WONDER_10Yr_Cenus_Region_Sex<- complete_death_panel_nogroup(
-  main_data = main_data_10,
-  age_var     = "Ten-Year Age Groups Code",
-  start_month = "1999-01-01",
-  end_month   = "2020-12-01"
-)|>
-  rename(`Ten-Year Age Groups Code` = `Age Group Code`)
-
-```
-
-
-```{r, warning=F}
-
-
-WONDER_10Yr_Cenus_Region_1999_2005 <- fread("Cenus Region Specific/WONDER-10Yr-Cenus Region-1999-2005.csv", fill = T)
-WONDER_10Yr_Cenus_Region_2006_2010 <- fread("Cenus Region Specific/WONDER-10Yr-Cenus Region-2006-2010.csv", fill = T)
-WONDER_10Yr_Cenus_Region_2011_2016 <- fread("Cenus Region Specific/WONDER-10Yr-Cenus Region-2011-2016.csv", fill = T)
-WONDER_10Yr_Cenus_Region_2017_2020 <- fread("Cenus Region Specific/WONDER-10Yr-Cenus Region-2017-2020.csv", fill = T)
-
-
-WONDER_5Yr_Cenus_Region_2017_2020 <- fread("Cenus Region Specific/WONDER-5Yr-Cenus Region-2017-2020.csv", fill = T)
-WONDER_5Yr_Cenus_Region_2010_2016 <- fread("Cenus Region Specific/WONDER-5Yr-Cenus Region-2010-2016.csv", fill = T)
-WONDER_5Yr_Cenus_Region_1999_2003 <- fread("Cenus Region Specific/WONDER-5Yr-Cenus Region-1999-2003.csv", fill = T)
-WONDER_5Yr_Cenus_Region_2004_2009 <- fread("Cenus Region Specific/WONDER-5Yr-Cenus Region-2004-2009.csv", fill = T)
-
-
-```
-
-```{r}
-WONDER_10Yr_Cenus_Region <- WONDER_10Yr_Cenus_Region_1999_2005 |>
-  bind_rows(WONDER_10Yr_Cenus_Region_2006_2010,WONDER_10Yr_Cenus_Region_2011_2016,WONDER_10Yr_Cenus_Region_2017_2020)|>
-  filter(!is.na(`Census Division Code`)) |> select(`Census Division Code`, `Month Code`, `Ten-Year Age Groups Code` ,`Deaths`)
-
-WONDER_5Yr_Cenus_Region <- WONDER_5Yr_Cenus_Region_2017_2020 |>
-  bind_rows(WONDER_5Yr_Cenus_Region_2010_2016,WONDER_5Yr_Cenus_Region_1999_2003,WONDER_5Yr_Cenus_Region_2004_2009) |>
-  filter(!is.na(`Census Division Code`)) |> select(`Census Division Code`, `Month Code`, `Five-Year Age Groups Code` ,`Deaths`)
-
-
-
-#All values are not suppressed
-WONDER_Cenus_Region_Sex <- fread("Cenus Region Specific/WONDER-YM-Cenus Region-Sex-1999-2020.csv", fill = T) |> 
-  select(`Census Division Code`, `Month Code`, `Sex Code` ,`Deaths`)
-
-
-rm(
-  WONDER_5Yr_Cenus_Region_2010_2016,WONDER_5Yr_Cenus_Region_1999_2003,
-  WONDER_5Yr_Cenus_Region_2004_2009,WONDER_5Yr_Cenus_Region_2017_2020,
-   WONDER_10Yr_Cenus_Region_2006_2010,WONDER_10Yr_Cenus_Region_2011_2016,
-  WONDER_10Yr_Cenus_Region_2017_2020,WONDER_10Yr_Cenus_Region_1999_2005,
-  main_data_10, main_data_5
-  )
-```
-
-
-
-
-```{r}
-library(dplyr)
-library(tidyr)
-library(purrr)
-library(stringr)
-
-#============================#
-# 0) Helpers and normalization
-#============================#
-
-to_num_deaths <- function(x) {
-  x <- as.character(x)
-  out <- suppressWarnings(as.numeric(x))
-  out[is.na(out) & x != "Suppressed"] <- NA_real_
-  out
-}
-
-must_be_suppressed_1_to_9 <- function(x) {
-  ifelse(!is.na(x) & x >= 1 & x <= 9 & abs(x - round(x)) < 1e-9,
-         as.integer(round(x)), NA_integer_)
-}
-
-# Map 5-year ages into 10-year buckets
-age_map <- tribble(
-  ~Age5,   ~Age10,
-  "1",     "1",
-  "1-4",   "1-4",
-  "5-9",   "5-14",
-  "10-14", "5-14",
-  "15-19", "15-24",
-  "20-24", "15-24",
-  "25-29", "25-34",
-  "30-34", "25-34",
-  "35-39", "35-44",
-  "40-44", "35-44",
-  "45-49", "45-54",
-  "50-54", "45-54",
-  "55-59", "55-64",
-  "60-64", "55-64",
-  "65-69", "65-74",
-  "70-74", "65-74",
-  "75-79", "75-84",
-  "80-84", "75-84",
-  "85-89", "85+",
-  "90-94", "85+",
-  "95-99", "85+",
-  "100+",  "85+",
-  "NS",    "NS"
+## define which codes are 10-year (or broader) aggregates
+age10_codes <- c(
+  "1", "1-4","5-14","15-24","25-34","35-44","45-54",
+  "55-64","65-74","75-84","85+", "NS"
 )
 
-# Standardize each of the five input frames
-norm_5yr_sex <- function(df) {
-  df %>%
-    mutate(
-      `Census Division Code` = as.character(`Census Division Code`),
-      `Month Code`           = as.character(`Month Code`),
-      `Sex Code`             = as.character(`Sex Code`),
-      Age5                   = as.character(`Five-Year Age Groups Code`),
-      Deaths_num             = to_num_deaths(Deaths),
-      Deaths_chr             = as.character(Deaths)
-    ) %>%
-    left_join(age_map, by = "Age5") %>%
-    mutate(
-      was_suppressed = is.na(Deaths_num) & Deaths_chr == "Suppressed",
-      fill_source    = NA_character_
-    )
-}
+age5_codes <- c(
+  "1", "5-9","15-19","20-24","25-29", "30-34" ,"35-39" ,"40-44", "45-49", "50-54", "55-59" ,"60-64", "65-69" ,"70-74" ,"75-79", "80-84" ,"85-89" ,"90-94" ,"95-99" ,"100+" , "NS"  ,  "1-4"  , "10-14"
+)
 
-norm_5yr_total <- function(df) {
-  df %>%
-    mutate(
-      `Census Division Code` = as.character(`Census Division Code`),
-      `Month Code`           = as.character(`Month Code`),
-      Age5                   = as.character(`Five-Year Age Groups Code`),
-      Deaths_num_5tot        = to_num_deaths(Deaths)
-    ) %>%
-    select(`Census Division Code`,`Month Code`, Age5, Deaths_num_5tot)
-}
+## keep:
+##  - rows grouped by sex (Sex Code not NA)
+##  - rows with an age group code that is NOT a 10-year aggregate
+##    (this captures the 5-year bands plus "1", "1-4", "NS", etc.,
+##     consistent with your stacked structure)
+five_by_sex <- res[
+  !is.na(`Sex Code`) &
+  !is.na(`Age Group Code`) &
+  (`Age Group Code` %in% age5_codes)
+]
 
-norm_10yr_sex <- function(df) {
-  df %>%
-    mutate(
-      `Census Division Code` = as.character(`Census Division Code`),
-      `Month Code`           = as.character(`Month Code`),
-      `Sex Code`             = as.character(`Sex Code`),
-      Age10                  = as.character(`Ten-Year Age Groups Code`),
-      Deaths_num             = to_num_deaths(Deaths)
-    ) %>%
-    select(`Census Division Code`,`Month Code`, Age10, `Sex Code`, Deaths_num)
-}
-
-norm_10yr_total <- function(df) {
-  df %>%
-    mutate(
-      `Census Division Code` = as.character(`Census Division Code`),
-      `Month Code`           = as.character(`Month Code`),
-      Age10                  = as.character(`Ten-Year Age Groups Code`),
-      Deaths_num_10tot       = to_num_deaths(Deaths)
-    ) %>%
-    select(`Census Division Code`,`Month Code`, Age10, Deaths_num_10tot)
-}
-
-norm_allages_sex <- function(df) {
-  df %>%
-    mutate(
-      `Census Division Code` = as.character(`Census Division Code`),
-      `Month Code`           = as.character(`Month Code`),
-      `Sex Code`             = as.character(`Sex Code`),
-      Deaths_num_sex_all     = to_num_deaths(Deaths)
-    ) %>%
-    select(`Census Division Code`,`Month Code`,`Sex Code`, Deaths_num_sex_all)
-}
-
-# Input data frames (as named in your environment):
-# WONDER_5Yr_Cenus_Region_Sex
-# WONDER_5Yr_Cenus_Region
-# WONDER_10Yr_Cenus_Region_Sex
-# WONDER_10Yr_Cenus_Region
-# WONDER_Cenus_Region_Sex
-
-w5sex <- norm_5yr_sex(WONDER_5Yr_Cenus_Region_Sex)
-w5    <- norm_5yr_total(WONDER_5Yr_Cenus_Region)
-w10s  <- norm_10yr_sex(WONDER_10Yr_Cenus_Region_Sex)
-w10   <- norm_10yr_total(WONDER_10Yr_Cenus_Region)
-wsex  <- norm_allages_sex(WONDER_Cenus_Region_Sex)
-
-#=====================================#
-# 1) Rule A: 5-year total = F + M
-#=====================================#
-
-wide_A <- w5sex %>%
-  select(`Census Division Code`, `Month Code`, Age5, `Sex Code`, Deaths_num) %>%
-  pivot_wider(names_from = `Sex Code`, values_from = Deaths_num)
-
-wide_A <- wide_A %>%
-  left_join(w5, by = c("Census Division Code","Month Code","Age5")) %>%
-  mutate(
-    fill_F = must_be_suppressed_1_to_9(ifelse(is.na(F) & !is.na(M) & !is.na(Deaths_num_5tot),
-                                              Deaths_num_5tot - M, NA_real_)),
-    fill_M = must_be_suppressed_1_to_9(ifelse(is.na(M) & !is.na(F) & !is.na(Deaths_num_5tot),
-                                              Deaths_num_5tot - F, NA_real_))
-  ) %>%
-  pivot_longer(cols = c(F, M), names_to = "Sex Code", values_to = "Deaths_num") %>%
-  mutate(candidate_fill = ifelse(`Sex Code`=="F", fill_F, fill_M)) %>%
-  select(`Census Division Code`,`Month Code`, Age5, `Sex Code`, candidate_fill)
-
-w5sex <- w5sex %>%
-  left_join(wide_A, by = c("Census Division Code","Month Code","Age5","Sex Code")) %>%
-  mutate(
-    new_val    = ifelse(is.na(Deaths_num) & !is.na(candidate_fill), candidate_fill, NA_integer_),
-    Deaths_num = ifelse(!is.na(new_val), new_val, Deaths_num),
-    fill_source= ifelse(!is.na(new_val), "A_5yr_total_minus_other_sex", fill_source)
-  ) %>%
-  select(-candidate_fill, -new_val)
-
-#================================================#
-# 2) Enhance 10-yr-by-sex totals via 10-yr totals
-#    (10yr_total = F10 + M10)
-#================================================#
-
-w10_enhanced_long <- w10s %>%
-  pivot_wider(names_from = `Sex Code`, values_from = Deaths_num) %>%
-  left_join(w10, by = c("Census Division Code","Month Code","Age10")) %>%
-  mutate(
-    fill_F = must_be_suppressed_1_to_9(ifelse(is.na(F) & !is.na(M) & !is.na(Deaths_num_10tot),
-                                              Deaths_num_10tot - M, NA_real_)),
-    fill_M = must_be_suppressed_1_to_9(ifelse(is.na(M) & !is.na(F) & !is.na(Deaths_num_10tot),
-                                              Deaths_num_10tot - F, NA_real_)),
-    F = ifelse(is.na(F) & !is.na(fill_F), fill_F, F),
-    M = ifelse(is.na(M) & !is.na(fill_M), fill_M, M)
-  ) %>%
-  select(-Deaths_num_10tot, -fill_F, -fill_M) %>%
-  pivot_longer(cols = c(F, M), names_to = "Sex Code", values_to = "Deaths_num_10sex_enh")
-
-#=========================================================#
-# 3) Rule B: inside each (Age10, Sex), if exactly one Age5
-#    cell is missing, fill by subtraction.
-#=========================================================#
-
-w5sex <- w5sex %>%
-  left_join(w10_enhanced_long,
-            by = c("Census Division Code","Month Code","Age10","Sex Code"))
-
-group_status <- w5sex %>%
-  group_by(`Census Division Code`,`Month Code`, Age10, `Sex Code`) %>%
-  summarise(
-    grp_total_10sex = first(Deaths_num_10sex_enh),
-    sum_known       = sum(Deaths_num, na.rm = TRUE),
-    n_missing       = sum(is.na(Deaths_num)),
-    .groups = "drop"
-  ) %>%
-  mutate(
-    candidate_fill_group = must_be_suppressed_1_to_9(
-      ifelse(!is.na(grp_total_10sex) & n_missing == 1,
-             grp_total_10sex - sum_known, NA_real_)
-    )
+## split into division-level and region-level
+div_5y_by_sex <- five_by_sex[geo_type == "division"][
+  ,
+  .(
+    `Census Division Code`,
+    `Month Code`,
+    `Sex Code`,
+    `Age Group Code`,
+    Deaths,
+    Deaths_inferred
   )
+]
 
-w5sex <- w5sex %>%
-  left_join(group_status %>%
-              select(`Census Division Code`,`Month Code`, Age10, `Sex Code`, candidate_fill_group),
-            by = c("Census Division Code","Month Code", "Age10","Sex Code")) %>%
-  mutate(
-    new_val    = ifelse(is.na(Deaths_num) & !is.na(candidate_fill_group),
-                        candidate_fill_group, NA_integer_),
-    Deaths_num = ifelse(!is.na(new_val), new_val, Deaths_num),
-    fill_source= ifelse(!is.na(new_val) & is.na(fill_source),
-                        "B_10yr_sex_total_minus_other_5yr", fill_source)
-  ) %>%
-  select(-candidate_fill_group, -new_val)
-
-#=======================================================#
-# 4) Rule D: last unknown across ages for a given (Sex,
-#    Month, Region) using all-ages-by-sex totals
-#=======================================================#
-
-allages_status <- w5sex %>%
-  group_by(`Census Division Code`,`Month Code`,`Sex Code`) %>%
-  summarise(
-    sum_known = sum(Deaths_num, na.rm = TRUE),
-    n_missing = sum(is.na(Deaths_num)),
-    .groups = "drop"
-  ) %>%
-  left_join(wsex, by = c("Census Division Code","Month Code","Sex Code")) %>%
-  mutate(
-    candidate_fill_allages = must_be_suppressed_1_to_9(
-      ifelse(!is.na(Deaths_num_sex_all) & n_missing == 1,
-             Deaths_num_sex_all - sum_known, NA_real_)
-    )
+reg_5y_by_sex <- five_by_sex[geo_type == "region"][
+  ,
+  .(
+    `Census Region Code`,
+    `Month Code`,
+    `Sex Code`,
+    `Age Group Code`,
+    Deaths,
+    Deaths_inferred
   )
+]
 
-w5sex <- w5sex %>%
-  left_join(allages_status %>% select(`Census Division Code`,`Month Code`,`Sex Code`,
-                                     candidate_fill_allages),
-            by = c("Census Division Code","Month Code","Sex Code")) %>%
-  mutate(
-    new_val    = ifelse(is.na(Deaths_num) & !is.na(candidate_fill_allages),
-                        candidate_fill_allages, NA_integer_),
-    Deaths_num = ifelse(!is.na(new_val), new_val, Deaths_num),
-    fill_source= ifelse(!is.na(new_val) & is.na(fill_source),
-                        "D_all_ages_sex_total_minus_other_ages", fill_source)
-  ) %>%
-  select(-candidate_fill_allages, -new_val)
+div_5y_by_sex_final <- div_5y_by_sex |> 
+  mutate(Deaths = ifelse(Deaths == "Suppressed" & !is.na(Deaths_inferred), Deaths_inferred, Deaths),
+         Year = substr(`Month Code`,1,4)) |> 
+  select(-Deaths_inferred) |> 
+  left_join(Cenus_Division_Code, by = join_by(`Census Division Code`)) |>
+  left_join(Age_Group_Code, by = join_by(`Age Group Code` == `Age Code`))
 
-#================================================#
-# 5) One more quick cascade pass for A and B
-#================================================#
+reg_5y_by_sex_final <- reg_5y_by_sex |> 
+  mutate(Deaths = ifelse(Deaths == "Suppressed" & !is.na(Deaths_inferred), Deaths_inferred, Deaths),
+         Year = substr(`Month Code`,1,4)) |> 
+  select(-Deaths_inferred)|> 
+  left_join(Cenus_Region_Code, by = join_by(`Census Region Code`)) |>
+  left_join(Age_Group_Code, by = join_by(`Age Group Code` == `Age Code`))
 
-iterate_once <- function(df, w5_totals) {
-  # Rule A again
-  wideA <- df %>%
-    select(`Census Division Code`, `Month Code`, Age5, `Sex Code`, Deaths_num) %>%
-    pivot_wider(names_from = `Sex Code`, values_from = Deaths_num) %>%
-    left_join(w5_totals, by = c("Census Division Code","Month Code","Age5")) %>%
-    mutate(
-      fill_F = must_be_suppressed_1_to_9(ifelse(is.na(F) & !is.na(M) & !is.na(Deaths_num_5tot),
-                                                Deaths_num_5tot - M, NA_real_)),
-      fill_M = must_be_suppressed_1_to_9(ifelse(is.na(M) & !is.na(F) & !is.na(Deaths_num_5tot),
-                                                Deaths_num_5tot - F, NA_real_))
-    ) %>%
-    pivot_longer(cols = c(F, M), names_to = "Sex Code", values_to = "Deaths_num") %>%
-    mutate(candidate_fill = ifelse(`Sex Code`=="F", fill_F, fill_M)) %>%
-    select(`Census Division Code`,`Month Code`, Age5, `Sex Code`, candidate_fill)
-
-  df <- df %>%
-    left_join(wideA, by = c("Census Division Code","Month Code","Age5","Sex Code")) %>%
-    mutate(
-      new_val    = ifelse(is.na(Deaths_num) & !is.na(candidate_fill), candidate_fill, NA_integer_),
-      Deaths_num = ifelse(!is.na(new_val), new_val, Deaths_num),
-      fill_source= ifelse(!is.na(new_val) & is.na(fill_source),
-                          "A_5yr_total_minus_other_sex", fill_source)
-    ) %>%
-    select(-candidate_fill, -new_val)
-
-  # Rule B again
-  group_status2 <- df %>%
-    group_by(`Census Division Code`,`Month Code`, Age10, `Sex Code`) %>%
-    summarise(
-      grp_total_10sex = first(Deaths_num_10sex_enh),
-      sum_known       = sum(Deaths_num, na.rm = TRUE),
-      n_missing       = sum(is.na(Deaths_num)),
-      .groups = "drop"
-    ) %>%
-    mutate(
-      candidate_fill_group = must_be_suppressed_1_to_9(
-        ifelse(!is.na(grp_total_10sex) & n_missing == 1,
-               grp_total_10sex - sum_known, NA_real_)
-      )
-    )
-
-  df %>%
-    left_join(group_status2 %>%
-                select(`Census Division Code`,`Month Code`, Age10, `Sex Code`, candidate_fill_group),
-              by = c("Census Division Code","Month Code","Age10","Sex Code")) %>%
-    mutate(
-      new_val    = ifelse(is.na(Deaths_num) & !is.na(candidate_fill_group),
-                          candidate_fill_group, NA_integer_),
-      Deaths_num = ifelse(!is.na(new_val), new_val, Deaths_num),
-      fill_source= ifelse(!is.na(new_val) & is.na(fill_source),
-                          "B_10yr_sex_total_minus_other_5yr", fill_source)
-    ) %>%
-    select(-candidate_fill_group, -new_val)
-}
-
-w5sex <- iterate_once(w5sex, w5)
-
-#=====================================#
-# 6) Final output and summary
-#=====================================#
-
-WONDER_5Yr_Cenus_Region_Sex_filled <- w5sex %>%
-  mutate(
-    Deaths_final = ifelse(!is.na(Deaths_num), as.character(Deaths_num), Deaths_chr)
-  ) %>%
-  select(`Census Division Code`,`Month Code`, Age5, Age10,
-         `Sex Code`, Deaths = Deaths_final, fill_source, was_suppressed)
-
-filled_rows <- WONDER_5Yr_Cenus_Region_Sex_filled %>%
-  filter(was_suppressed, Deaths != "Suppressed")
-
-fill_summary <- filled_rows %>%
-  count(fill_source, name = "n_filled") %>%
-  arrange(desc(n_filled))
-
-print(fill_summary)
-cat("\nTotal suppressed cells inferred with certainty: ",
-    sum(fill_summary$n_filled), "\n", sep = "")
-
-
-label <- read_csv("WONDER-SEX-5Yr-Cenus Division.csv", show_col_types = F)|> 
-  select(`Census Division Code`, `Census Division`, `Five-Year Age Groups Code`, `Five-Year Age Groups`) |> unique()
-
-
-final_data <- WONDER_5Yr_Cenus_Region_Sex_filled |> select(-Age10, - fill_source, -was_suppressed) |> 
-  rename("Five-Year Age Groups Code" = Age5) |> 
-  left_join(label, by= join_by(`Five-Year Age Groups Code`, `Census Division Code`))
-
-final_data |> write_csv("WONDER-SEX-5Yr-Cenus Division-Cleaned.csv")
+div_5y_by_sex_final |> write_csv("Inferred-WONDER-Census Division-Sex-5Yr.csv")
+reg_5y_by_sex_final |> write_csv("Inferred-WONDER-Census Region-Sex-5Yr.csv")
 ```
 
 
