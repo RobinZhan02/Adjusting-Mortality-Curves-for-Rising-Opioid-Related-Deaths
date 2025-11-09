@@ -1,0 +1,122 @@
+"Notes","Sex","Sex Code","Year","Year Code",Deaths,Population,Crude Rate,Crude Rate Lower 95% Confidence Interval,Crude Rate Upper 95% Confidence Interval,Crude Rate Standard Error,Age Adjusted Rate,Age Adjusted Rate Lower 95% Confidence Interval,Age Adjusted Rate Upper 95% Confidence Interval,Age Adjusted Rate Standard Error
+,"Female","F","1999","1999",1276,142237295,0.9,0.8,0.9,0.0,0.9,0.9,1.0,0.0
+,"Female","F","2000","2000",1447,143368343,1.0,1.0,1.1,0.0,1.0,1.0,1.1,0.0
+,"Female","F","2001","2001",1777,145077463,1.2,1.2,1.3,0.0,1.2,1.2,1.3,0.0
+,"Female","F","2002","2002",2517,146394634,1.7,1.7,1.8,0.0,1.7,1.7,1.8,0.0
+,"Female","F","2003","2003",2918,147679036,2.0,1.9,2.0,0.0,2.0,1.9,2.1,0.0
+,"Female","F","2004","2004",3310,148977286,2.2,2.1,2.3,0.0,2.3,2.2,2.3,0.0
+,"Female","F","2005","2005",3773,150319521,2.5,2.4,2.6,0.0,2.5,2.4,2.6,0.0
+,"Female","F","2006","2006",4523,151732647,3.0,2.9,3.1,0.0,3.0,2.9,3.1,0.0
+,"Female","F","2007","2007",4984,153166353,3.3,3.2,3.3,0.0,3.3,3.2,3.4,0.0
+,"Female","F","2008","2008",5240,154604015,3.4,3.3,3.5,0.0,3.4,3.3,3.5,0.0
+,"Female","F","2009","2009",5633,155964075,3.6,3.5,3.7,0.0,3.6,3.5,3.7,0.0
+,"Female","F","2010","2010",6096,156964212,3.9,3.8,4.0,0.0,3.9,3.8,4.0,0.1
+,"Female","F","2011","2011",6769,158301098,4.3,4.2,4.4,0.1,4.3,4.2,4.4,0.1
+,"Female","F","2012","2012",6881,159421973,4.3,4.2,4.4,0.1,4.3,4.2,4.4,0.1
+,"Female","F","2013","2013",7424,160477237,4.6,4.5,4.7,0.1,4.6,4.5,4.8,0.1
+,"Female","F","2014","2014",8510,161920569,5.3,5.1,5.4,0.1,5.3,5.2,5.4,0.1
+,"Female","F","2015","2015",9682,163189523,5.9,5.8,6.1,0.1,6.0,5.9,6.1,0.1
+,"Female","F","2016","2016",11745,164048590,7.2,7.0,7.3,0.1,7.3,7.2,7.4,0.1
+,"Female","F","2017","2017",13264,165311059,8.0,7.9,8.2,0.1,8.2,8.1,8.3,0.1
+,"Female","F","2018","2018",12900,166038755,7.8,7.6,7.9,0.1,8.0,7.8,8.1,0.1
+,"Female","F","2019","2019",13358,166582199,8.0,7.9,8.2,0.1,8.2,8.1,8.4,0.1
+,"Female","F","2020","2020",18192,167227921,10.9,10.7,11.0,0.1,11.3,11.1,11.5,0.1
+"Total","Female","F",,,152219,3429003804,4.4,4.4,4.5,0.0,4.5,4.4,4.5,0.0
+,"Male","M","1999","1999",4592,136802873,3.4,3.3,3.5,0.0,3.3,3.2,3.4,0.0
+,"Male","M","2000","2000",4743,138053563,3.4,3.3,3.5,0.0,3.4,3.3,3.5,0.0
+,"Male","M","2001","2001",5061,139891492,3.6,3.5,3.7,0.1,3.5,3.5,3.6,0.0
+,"Male","M","2002","2002",6333,141230559,4.5,4.4,4.6,0.1,4.4,4.3,4.5,0.1
+,"Male","M","2003","2003",6833,142428897,4.8,4.7,4.9,0.1,4.7,4.6,4.9,0.1
+,"Male","M","2004","2004",7259,143828012,5.0,4.9,5.2,0.1,5.0,4.9,5.1,0.1
+,"Male","M","2005","2005",8157,145197078,5.6,5.5,5.7,0.1,5.6,5.4,5.7,0.1
+,"Male","M","2006","2006",9738,146647265,6.6,6.5,6.8,0.1,6.6,6.4,6.7,0.1
+,"Male","M","2007","2007",10056,148064854,6.8,6.7,6.9,0.1,6.7,6.6,6.9,0.1
+,"Male","M","2008","2008",10935,149489951,7.3,7.2,7.5,0.1,7.2,7.1,7.4,0.1
+,"Male","M","2009","2009",11188,150807454,7.4,7.3,7.6,0.1,7.3,7.2,7.5,0.1
+,"Male","M","2010","2010",11560,151781326,7.6,7.5,7.8,0.1,7.6,7.4,7.7,0.1
+,"Male","M","2011","2011",12739,153290819,8.3,8.2,8.5,0.1,8.3,8.2,8.4,0.1
+,"Male","M","2012","2012",13028,154492067,8.4,8.3,8.6,0.1,8.5,8.3,8.6,0.1
+,"Male","M","2013","2013",14309,155651602,9.2,9.0,9.3,0.1,9.2,9.0,9.3,0.1
+,"Male","M","2014","2014",16527,156936487,10.5,10.4,10.7,0.1,10.6,10.4,10.7,0.1
+,"Male","M","2015","2015",19700,158229297,12.5,12.3,12.6,0.1,12.5,12.4,12.7,0.1
+,"Male","M","2016","2016",26069,159078923,16.4,16.2,16.6,0.1,16.6,16.4,16.8,0.1
+,"Male","M","2017","2017",29772,160408119,18.6,18.3,18.8,0.1,18.8,18.6,19.0,0.1
+,"Male","M","2018","2018",29618,161128679,18.4,18.2,18.6,0.1,18.6,18.4,18.8,0.1
+,"Male","M","2019","2019",32131,161657324,19.9,19.7,20.1,0.1,20.2,19.9,20.4,0.1
+,"Male","M","2020","2020",45991,162256202,28.3,28.1,28.6,0.1,28.8,28.5,29.1,0.1
+"Total","Male","M",,,336339,3317352843,10.1,10.1,10.2,0.0,10.1,10.1,10.2,0.0
+"Total",,,,,488558,6746356647,7.2,7.2,7.3,0.0,7.3,7.3,7.3,0.0
+"---"
+"Dataset: Multiple Cause of Death, 1999-2020"
+"Query Parameters:"
+"Title: Sex-Unintentional"
+"MCD - ICD-10 Codes: T40.0 (Opium); T40.1 (Heroin); T40.2 (Other opioids); T40.3 (Methadone); T40.4 (Other synthetic narcotics);"
+"T40.6 (Other and unspecified narcotics)"
+"UCD - ICD-10 Codes: X40 (Accidental poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics); X41"
+"(Accidental poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not"
+"elsewhere classified); X42 (Accidental poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not"
+"elsewhere classified); X43 (Accidental poisoning by and exposure to other drugs acting on the autonomic nervous system); X44"
+"(Accidental poisoning by and exposure to other and unspecified drugs, medicaments and biological substances)"
+"Group By: Sex; Year"
+"Show Totals: True"
+"Show Zero Values: True"
+"Show Suppressed: True"
+"Standard Population: 2000 U.S. Std. Population"
+"Calculate Rates Per: 100,000"
+"Rate Options: Default intercensal populations for years 2001-2009 (except Infant Age Groups)"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/mcd.html for more information."
+"---"
+"Query Date: Nov 9, 2025 12:52:56 AM"
+"---"
+"Suggested Citation: Centers for Disease Control and Prevention, National Center for Health Statistics. National Vital Statistics"
+"System, Mortality 1999-2020 on CDC WONDER Online Database, released in 2021. Data are from the Multiple Cause of Death Files,"
+"1999-2020, as compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative"
+"Program. Accessed at http://wonder.cdc.gov/mcd-icd10.html on Nov 9, 2025 12:52:56 AM"
+"---"
+Caveats:
+"1. As of April 3, 2017, the underlying cause of death has been revised for 125 deaths in 2014. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#2014-Revision."
+"2. Circumstances in Georgia for the years 2008 and 2009 have resulted in unusually high death counts for the ICD-10 cause of"
+"death code R99, ""Other ill-defined and unspecified causes of mortality."" Caution should be used in interpreting these data."
+"More information: http://wonder.cdc.gov/wonder/help/mcd.html#Georgia-Reporting-Anomalies."
+"3. Circumstances in New Jersey for the year 2009 have resulted in unusually high death counts for the ICD-10 cause of death code"
+"R99, ""Other ill-defined and unspecified causes of mortality"" and therefore unusually low death counts in other ICD-10 codes,"
+"most notably R95, ""Sudden Infant Death Syndrome"" and X40-X49, ""Unintentional poisoning."" Caution should be used in"
+"interpreting these data. More information: http://wonder.cdc.gov/wonder/help/mcd.html#New-Jersey-Reporting-Anomalies."
+"4. Circumstances in California resulted in unusually high death counts for the ICD-10 cause of death code R99, ""Other"
+"ill-defined and unspecified causes of mortality"" for deaths occurring in years 2000 and 2001. Caution should be used in"
+"interpreting these data. More information: http://wonder.cdc.gov/wonder/help/mcd.html#California-Reporting-Anomalies."
+"5. The populations used to calculate standard age-adjusted rates are documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#2000 Standard Population."
+"6. The method used to calculate age-adjusted rates is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Age-Adjusted Rates."
+"7. Deaths for persons of unknown age are included in counts and crude rates, but are not included in age-adjusted rates."
+"8. The method used to calculate 95% confidence intervals is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Confidence-Intervals."
+"9. The method used to calculate standard errors is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Standard-Errors."
+"10. The population figures for year 2020 are bridged-race estimates of the July 1 resident population, from the Vintage 2020"
+"postcensal series released by NCHS on September 22, 2021. The population figures for year 2019 are bridged-race estimates of the"
+"July 1 resident population, from the Vintage 2019 postcensal series released by NCHS on July 9, 2020. The population figures for"
+"year 2018 are bridged-race estimates of the July 1 resident population, from the Vintage 2018 postcensal series released by NCHS"
+"on June 25, 2019. The population figures for year 2017 are bridged-race estimates of the July 1 resident population, from the"
+"Vintage 2017 postcensal series released by NCHS on June 27, 2018. The population figures for year 2016 are bridged-race"
+"estimates of the July 1 resident population, from the Vintage 2016 postcensal series released by NCHS on June 26, 2017. The"
+"population figures for year 2015 are bridged-race estimates of the July 1 resident population, from the Vintage 2015 postcensal"
+"series released by NCHS on June 28, 2016. The population figures for year 2014 are bridged-race estimates of the July 1 resident"
+"population, from the Vintage 2014 postcensal series released by NCHS on June 30, 2015. The population figures for year 2013 are"
+"bridged-race estimates of the July 1 resident population, from the Vintage 2013 postcensal series released by NCHS on June 26,"
+"2014. The population figures for year 2012 are bridged-race estimates of the July 1 resident population, from the Vintage 2012"
+"postcensal series released by NCHS on June 13, 2013. Population figures for 2011 are bridged-race estimates of the July 1"
+"resident population, from the county-level postcensal Vintage 2011 series released by NCHS on July 18, 2012. Population figures"
+"for 2010 are April 1 Census counts. The population figures for years 2001 - 2009, are bridged-race estimates of the July 1"
+"resident population, from the revised intercensal county-level 2000 - 2009 series released by NCHS on October 26, 2012."
+"Population figures for 2000 are April 1 Census counts. Population figures for 1999 are from the 1990-1999 intercensal series of"
+"July 1 estimates. Population figures for Infant Age Groups are the number of live births. <br/><b>Note:</b> Rates and population"
+"figures for years 2001 - 2009 differ slightly from previously published reports, due to use of the population estimates which"
+"were available at the time of release."
+"11. The population figures used in the calculation of death rates for the age group 'under 1 year' are the estimates of the"
+"resident population that is under one year of age. More information: http://wonder.cdc.gov/wonder/help/mcd.html#Age Group."
+"12. Changes to cause of death classification affect reporting trends. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#ICD-10 Changes."

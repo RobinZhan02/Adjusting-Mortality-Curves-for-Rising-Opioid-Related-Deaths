@@ -19,10 +19,88 @@ library(lubridate)
 library(tseries)
 ```
 
-## Distribution of Missing Data
+## Missing Data Analysis
 
-- Missing data distribution for each of the 4 datasets
-- Missing data comparison (before vs. after inferred)
+```{r}
+#define a function to analyze missing data
+analyze_suppression <- function(data, sex_var = "sex", age_var = "age_group", geo_var = "geo", time_var = "time") {
+
+  summary_df <- data %>%
+    mutate(is_suppressed = Deaths == "Suppressed") %>%
+    group_by(across(all_of(c(sex_var, age_var, geo_var, time_var)))) %>%
+    summarise(
+      n_total = n(),
+      n_suppressed = sum(is_suppressed, na.rm = TRUE),
+      pct_suppressed = 100 * n_suppressed / n_total,
+      .groups = "drop"
+    )
+  
+  age_levels <- summary_df %>%
+    distinct(!!sym(age_var)) %>%
+    mutate(
+      num_start = as.numeric(str_extract(!!sym(age_var), "\\d+")),
+      num_start = ifelse(grepl("^< ?1", !!sym(age_var)), -1, num_start)
+    ) %>%
+    arrange(num_start) %>%
+    pull(!!sym(age_var))
+  
+  summary_df <- summary_df %>%
+    mutate(
+      !!age_var := factor(.data[[age_var]], levels = age_levels),
+      !!geo_var := factor(.data[[geo_var]], levels = sort(unique(.data[[geo_var]])))
+    )
+  
+  heatmap_plot <- ggplot(summary_df,
+                         aes(x = .data[[geo_var]],
+                             y = .data[[age_var]],
+                             fill = pct_suppressed)) +
+    geom_tile(color = "white", linewidth = 0.2) +
+    scale_fill_gradient(
+      low = "lightgreen", high = "lightpink",
+      name = "% Suppressed"
+    ) +
+    facet_wrap(as.formula(paste("~", sex_var))) +
+    theme_minimal(base_size = 12) +
+    labs(
+      title = "Suppression Heatmap by Sex, Age, and Geography",
+      x = "Geography",
+      y = "Age Group"
+    ) +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+      axis.text.y = element_text(size = 8),
+      legend.position = "bottom",
+      panel.grid = element_blank()
+    )
+  
+  time_df <- summary_df %>%
+    group_by(across(all_of(time_var))) %>%
+    summarise(pct_suppressed = mean(pct_suppressed, na.rm = TRUE), .groups = "drop") %>%
+    arrange(.data[[time_var]])
+  
+  line_plot <- ggplot(time_df, aes(x = .data[[time_var]], y = pct_suppressed)) +
+    geom_line(color = "#4c5fd7", linewidth = 1) +
+    geom_point(color = "#4c5fd7", size = 1.5) +
+    theme_minimal(base_size = 12) +
+    labs(
+      title = "Overall Suppression Over Time (Monthly)",
+      x = "Time (YYYY/MM)",
+      y = "% Suppressed"
+    ) +
+    theme(
+      axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 2),
+      panel.grid.minor = element_blank()
+    )
+  
+  return(list(summary = summary_df, heatmap = heatmap_plot, line = line_plot))
+}
+```
+
+```{r}
+dataset_1 <- read.csv("../data/missing_data/WONDER-Sex-10Yr-Census Region-Clean.csv")
+
+analyze_suppression(dataset_1, "Sex", "Five.Year.Age.Groups", "Census.Division", "Month.Code")
+```
 
 # Exploratory Data Analysis
 
@@ -46,8 +124,10 @@ ggplot(census_region, aes(x = Year, y = Age.Adjusted.Rate, color = Census.Region
     caption = "Data Source: CDC WONDER Online Database") +
   theme(plot.title = element_text(size = 18), 
         legend.title = element_blank(),
-        legend.position = c(0.15, 0.85),
-        plot.caption = element_text(hjust = 0.5))
+        legend.position = c(0.2, 0.85),
+        plot.caption = element_text(hjust = 0.5),
+        axis.title = element_text(size = 12),
+        legend.text = element_text(size = 10))
 ```
 
 ## Census Division
@@ -80,7 +160,9 @@ ggplot(census_division, aes(x = Year, y = Age.Adjusted.Rate, color = Census.Divi
   theme(plot.title = element_text(size = 18), 
         legend.title = element_blank(),
         legend.position = "right",
-        plot.caption = element_text(hjust = 0.5))
+        plot.caption = element_text(hjust = 0.5),
+        axis.title = element_text(size = 12),
+        legend.text = element_text(size = 10))
 ```
 
 ## Sex
@@ -104,7 +186,9 @@ ggplot(sex, aes(x = Year, y = Age.Adjusted.Rate, color = Sex, group = Sex)) +
   theme(plot.title = element_text(size = 18), 
         legend.title = element_blank(),
         legend.position = "bottom",
-        plot.caption = element_text(hjust = 0.5))
+        plot.caption = element_text(hjust = 0.5),
+        axis.title = element_text(size = 12),
+        legend.text = element_text(size = 10))
 ```
 
 ## Race
@@ -128,7 +212,9 @@ ggplot(race, aes(x = Year, y = Age.Adjusted.Rate, color = Race, group = Race)) +
   theme(plot.title = element_text(size = 18), 
         legend.title = element_blank(),
         legend.position = "bottom",
-        plot.caption = element_text(hjust = 0.5))
+        plot.caption = element_text(hjust = 0.5),
+        axis.title = element_text(size = 12),
+        legend.text = element_text(size = 9))
 ```
 
 ## Five Year Age Group
@@ -160,7 +246,9 @@ ggplot(five_year, aes(x = Year, y = Crude.Rate, color = Five.Year.Age.Groups, gr
   theme(plot.title = element_text(size = 18), 
         legend.title = element_blank(),
         legend.position = "right",
-        plot.caption = element_text(hjust = 0.5))
+        plot.caption = element_text(hjust = 0.5),
+        axis.title = element_text(size = 12),
+        legend.text = element_text(size = 10))
 ```
 
 ## Ten Year Age Group
@@ -193,7 +281,9 @@ ggplot(ten_year, aes(x = Year, y = Crude.Rate, color = Ten.Year.Age.Groups, grou
   theme(plot.title = element_text(size = 18), 
         legend.title = element_blank(),
         legend.position = "right",
-        plot.caption = element_text(hjust = 0.5))
+        plot.caption = element_text(hjust = 0.5),
+        axis.title = element_text(size = 12),
+        legend.text = element_text(size = 10))
 ```
 
 ## Census Division x Sex
@@ -215,7 +305,9 @@ ggplot(division_sex, aes(x = Year, y = Age.Adjusted.Rate, color = Census.Divisio
         legend.key.size = unit(0.4, "lines"),
         legend.title = element_blank(),
         plot.caption = element_text(hjust = 0.5),
-        plot.title = element_text(size = 18)) + 
+        plot.title = element_text(size = 18),
+        axis.title = element_text(size = 12),
+        legend.text = element_text(size = 9)) + 
   guides(color = guide_legend(nrow = 3))
 ```
 
@@ -240,5 +332,7 @@ ggplot(ten_year_region, aes(x = Year, y = as.numeric(Crude.Rate), color = Census
         legend.key.size = unit(0.4, "lines"),
         legend.title = element_blank(),
         plot.caption = element_text(hjust = 0.5),
-        plot.title = element_text(size = 18))
+        plot.title = element_text(size = 18),
+        axis.title = element_text(size = 12),
+        legend.text = element_text(size = 9))
 ```
