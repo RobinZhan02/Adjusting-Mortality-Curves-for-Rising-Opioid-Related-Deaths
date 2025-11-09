@@ -123,11 +123,6 @@ analyze_suppression(dataset_1, "Sex", "Ten.Year.Age.Groups", "Census.Region", "M
 ```
 
 
-
-```
-
-
-
 # Exploratory Data Analysis
 
 ## Census Region
