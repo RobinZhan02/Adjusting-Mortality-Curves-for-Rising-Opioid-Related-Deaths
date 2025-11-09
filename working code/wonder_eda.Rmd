@@ -23,18 +23,22 @@ library(tseries)
 
 ```{r}
 #define a function to analyze missing data
-analyze_suppression <- function(data, sex_var = "sex", age_var = "age_group", geo_var = "geo", time_var = "time") {
+analyze_suppression <- function(data,
+                                sex_var = "sex",
+                                age_var = "age_group",
+                                geo_var = "geo",
+                                time_var = "time") {
 
   summary_df <- data %>%
     mutate(is_suppressed = Deaths == "Suppressed") %>%
-    group_by(across(all_of(c(sex_var, age_var, geo_var, time_var)))) %>%
+    group_by(across(all_of(c(sex_var, age_var, geo_var)))) %>%  
     summarise(
-      n_total = n(),
+      n_total      = n(),
       n_suppressed = sum(is_suppressed, na.rm = TRUE),
       pct_suppressed = 100 * n_suppressed / n_total,
       .groups = "drop"
     )
-  
+
   age_levels <- summary_df %>%
     distinct(!!sym(age_var)) %>%
     mutate(
@@ -43,21 +47,24 @@ analyze_suppression <- function(data, sex_var = "sex", age_var = "age_group", ge
     ) %>%
     arrange(num_start) %>%
     pull(!!sym(age_var))
-  
+
   summary_df <- summary_df %>%
     mutate(
       !!age_var := factor(.data[[age_var]], levels = age_levels),
       !!geo_var := factor(.data[[geo_var]], levels = sort(unique(.data[[geo_var]])))
     )
-  
+
   heatmap_plot <- ggplot(summary_df,
                          aes(x = .data[[geo_var]],
                              y = .data[[age_var]],
                              fill = pct_suppressed)) +
-    geom_tile(color = "white", linewidth = 0.2) +
-    scale_fill_gradient(
-      low = "lightgreen", high = "lightpink",
-      name = "% Suppressed"
+     geom_tile(color = "grey90", linewidth = 0.3) +
+  scale_fill_gradientn(
+    colors = c("#004c99", "#007acc","#26b4f0", "#80e0ff", "#e0faff"),
+    limits = c(0, 100),
+    name = "% Suppressed",
+    breaks = seq(0, 100, 25),
+    labels = function(x) paste0(x, "%")
     ) +
     facet_wrap(as.formula(paste("~", sex_var))) +
     theme_minimal(base_size = 12) +
@@ -72,35 +79,54 @@ analyze_suppression <- function(data, sex_var = "sex", age_var = "age_group", ge
       legend.position = "bottom",
       panel.grid = element_blank()
     )
-  
-  time_df <- summary_df %>%
-    group_by(across(all_of(time_var))) %>%
-    summarise(pct_suppressed = mean(pct_suppressed, na.rm = TRUE), .groups = "drop") %>%
-    arrange(.data[[time_var]])
-  
-  line_plot <- ggplot(time_df, aes(x = .data[[time_var]], y = pct_suppressed)) +
-    geom_line(color = "#4c5fd7", linewidth = 1) +
-    geom_point(color = "#4c5fd7", size = 1.5) +
-    theme_minimal(base_size = 12) +
-    labs(
-      title = "Overall Suppression Over Time (Monthly)",
-      x = "Time (YYYY/MM)",
-      y = "% Suppressed"
-    ) +
-    theme(
-      axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 2),
-      panel.grid.minor = element_blank()
-    )
-  
-  return(list(summary = summary_df, heatmap = heatmap_plot, line = line_plot))
+
+  # overall suppression over time if a valid time_var is given
+  if (!is.null(time_var) && time_var %in% names(data)) {
+    time_df <- data %>%
+      mutate(is_suppressed = Deaths == "Suppressed") %>%
+      group_by(.data[[time_var]]) %>%
+      summarise(
+        pct_suppressed = 100 * mean(is_suppressed, na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
+      arrange(.data[[time_var]])
+
+    line_plot <- ggplot(time_df, aes(x = .data[[time_var]], y = pct_suppressed)) +
+      geom_line(color = "#4c5fd7", linewidth = 1) +
+      geom_point(color = "#4c5fd7", size = 1.5) +
+      theme_minimal(base_size = 12) +
+      labs(
+        title = "Overall Suppression Over Time",
+        x = time_var,
+        y = "% Suppressed"
+      ) +
+      theme(
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 2),
+        panel.grid.minor = element_blank()
+      )
+  } else {
+    time_df   <- NULL
+    line_plot <- NULL
+  }
+
+  list(summary = summary_df, heatmap = heatmap_plot, line = line_plot)
 }
 ```
 
-```{r}
-dataset_1 <- read.csv("../data/missing_data/WONDER-Sex-10Yr-Census Region-Clean.csv")
 
-analyze_suppression(dataset_1, "Sex", "Five.Year.Age.Groups", "Census.Division", "Month.Code")
+```{r}
+dataset_1 <- read.csv("../data/missing_data/data_for_infer/WONDER-Sex-10Yr-Census-Region-Clean.csv")
+
+analyze_suppression(dataset_1, "Sex", "Ten.Year.Age.Groups", "Census.Region", "Month.Code")
+
+#change file above to reflect old data (that is actually used) and compare with inferred data (to compare heatmaps of both)
 ```
+
+
+
+```
+
+
 
 # Exploratory Data Analysis
 
