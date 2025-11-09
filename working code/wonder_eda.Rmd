@@ -13,10 +13,12 @@ knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(ggplot2)
 library(stringr)
-library(readxl)
-library(forecast)
-library(lubridate)
-library(tseries)
+#library(readxl)
+#library(forecast)
+#library(lubridate)
+#library(tseries)
+library(patchwork)
+library(demography)
 ```
 
 ## Missing Data Analysis
@@ -59,8 +61,7 @@ analyze_suppression <- function(data,
                              y = .data[[age_var]],
                              fill = pct_suppressed)) +
      geom_tile(color = "grey90", linewidth = 0.3) +
-  scale_fill_gradientn(
-    colors = c("#004c99", "#007acc","#26b4f0", "#80e0ff", "#e0faff"),
+  scale_fill_gradientn(colors = c( "#e0faff", "#80e0ff","#26b4f0", "#007acc", "#004c99"),
     limits = c(0, 100),
     name = "% Suppressed",
     breaks = seq(0, 100, 25),
@@ -115,12 +116,238 @@ analyze_suppression <- function(data,
 
 
 ```{r}
-dataset_1 <- read.csv("../data/missing_data/data_for_infer/WONDER-Sex-10Yr-Census-Region-Clean.csv")
+# original WONDER data (used for suppression)
+dataset_1 <- read.csv("../data/missing_data/data_for_infer/WONDER-Sex-5Yr-Census-Region-Clean.csv",
+                      stringsAsFactors = FALSE) %>%
+  mutate(
+    Deaths = trimws(Deaths)
+  )
 
-analyze_suppression(dataset_1, "Sex", "Ten.Year.Age.Groups", "Census.Region", "Month.Code")
+# inferred data
+inferred <- read.csv("../data/missing_data/Inferred-WONDER-Census Region-Sex-5Yr.csv",
+                     stringsAsFactors = FALSE) %>%
+  mutate(
+    Deaths = trimws(Deaths)
+  )
+```
+
+```{r}
+# suppression in original data
+supp_orig <- analyze_suppression(
+  dataset_1,
+  sex_var = "Sex",
+  age_var = "Five.Year.Age.Groups",
+  geo_var = "Census.Region",
+  time_var = "Month.Code"
+)
+
+# suppression in inferred data
+supp_inf <- analyze_suppression(
+  inferred,
+  sex_var = "Sex.Code",
+  age_var = "Age.Groups",
+  geo_var = "Census.Region",
+  time_var = "Month.Code"
+)
+
+# show heatmaps side by side
+supp_orig$heatmap + ggtitle("Suppr. Heatmap – Original Data") +
+supp_inf$heatmap + ggtitle("Suppr. Heatmap – Inferred Data")
 
 #change file above to reflect old data (that is actually used) and compare with inferred data (to compare heatmaps of both)
 ```
+
+
+```{r}
+#dataset_1 <- read.csv("../data/missing_data/data_for_infer/WONDER-Sex-5Yr-Census-Region-Clean.csv")
+
+#nalyze_suppression(dataset_1, "Sex", "Five.Year.Age.Groups", "Census.Region", "Month.Code")
+
+#change file above to reflect old data (that is actually used) and compare with inferred data (to compare heatmaps of both)
+```
+
+
+```{r}
+#heatmap for inferred data
+#inferred_region <- read.csv("../data/missing_data/Inferred-WONDER-Census Region-Sex-5Yr.csv")
+
+#analyze_suppression(inferred_region, "Sex.Code", "Age.Groups", "Census.Region", "Month.Code")
+
+
+#inferred_division <- read.csv("../data/missing_data/Inferred-WONDER-Census Division-Sex-5Yr.csv")
+
+#analyze_suppression(inferred_division, "Sex.Code", "Age.Groups", "Census.Division", "Month.Code")
+
+```
+
+
+# Demographic Analysis
+
+
+```{r}
+#using hmd for population distribution
+
+US_data <- hmd.mx(country="USA", username="amandahuang@ucsb.edu", password="Ilovepstat296!")
+US_data99 <- extract.years(US_data, 1999:2020)
+
+female_df <- as.data.frame(as.table(US_data99$pop$female))
+colnames(female_df) <- c("Age", "Year", "Exposure")
+female_df$Sex <- "Female"
+
+male_df <- as.data.frame(as.table(US_data99$pop$male))
+colnames(male_df) <- c("Age", "Year", "Exposure")
+male_df$Sex <- "Male"
+
+total_df <- as.data.frame(as.table(US_data99$pop$total))
+colnames(total_df) <- c("Age", "Year", "Exposure")
+total_df$Sex <- "Total"
+
+usa_exposure_df <- bind_rows(female_df, male_df, total_df) %>%
+  mutate(
+    Age  = as.numeric(as.character(Age)),
+    Year = as.numeric(as.character(Year))
+  )
+
+age_order <- c(
+  "< 1 year","1-4 years","5-9 years","10-14 years","15-19 years",
+  "20-24 years","25-29 years","30-34 years","35-39 years","40-44 years",
+  "45-49 years","50-54 years","55-59 years","60-64 years","65-69 years",
+  "70-74 years","75-79 years","80-84 years","85-89 years","90-94 years",
+  "95-99 years","100+ years"
+)
+
+hmd_5yr <- usa_exposure_df %>%
+  filter(Sex %in% c("Male", "Female")) %>%   #removes total
+  mutate(
+    Five.Year.Age.Groups = dplyr::case_when(
+      Age == 0                      ~ "< 1 year",
+      Age >= 1   & Age <= 4         ~ "1-4 years",
+      Age >= 5   & Age <= 9         ~ "5-9 years",
+      Age >= 10  & Age <= 14        ~ "10-14 years",
+      Age >= 15  & Age <= 19        ~ "15-19 years",
+      Age >= 20  & Age <= 24        ~ "20-24 years",
+      Age >= 25  & Age <= 29        ~ "25-29 years",
+      Age >= 30  & Age <= 34        ~ "30-34 years",
+      Age >= 35  & Age <= 39        ~ "35-39 years",
+      Age >= 40  & Age <= 44        ~ "40-44 years",
+      Age >= 45  & Age <= 49        ~ "45-49 years",
+      Age >= 50  & Age <= 54        ~ "50-54 years",
+      Age >= 55  & Age <= 59        ~ "55-59 years",
+      Age >= 60  & Age <= 64        ~ "60-64 years",
+      Age >= 65  & Age <= 69        ~ "65-69 years",
+      Age >= 70  & Age <= 74        ~ "70-74 years",
+      Age >= 75  & Age <= 79        ~ "75-79 years",
+      Age >= 80  & Age <= 84        ~ "80-84 years",
+      Age >= 85  & Age <= 89        ~ "85-89 years",
+      Age >= 90  & Age <= 94        ~ "90-94 years",
+      Age >= 95  & Age <= 99        ~ "95-99 years",
+      Age >= 100                    ~ "100+ years",
+      TRUE                          ~ NA_character_
+    )
+  ) %>%
+  filter(!is.na(Five.Year.Age.Groups)) %>%
+  group_by(Year, Five.Year.Age.Groups, Sex) %>%
+  summarise(Exposure = sum(Exposure, na.rm = TRUE), .groups = "drop") %>%
+  mutate(
+    Five.Year.Age.Groups = factor(Five.Year.Age.Groups, levels = age_order)
+  )
+
+hmd_age10 <- usa_exposure_df %>%
+  filter(Age <= 100) %>%
+  mutate(
+    Ten.Year.Age.Groups = cut(
+      Age,
+      breaks = seq(0, 100, 10),
+      right = FALSE,
+      labels = c("0–9", "10–19", "20–29", "30–39", "40–49",
+                 "50–59", "60–69", "70–79", "80–89", "90+")
+    )
+  ) %>%
+  group_by(Year, Ten.Year.Age.Groups, Sex) %>%
+  summarise(Exposure = sum(Exposure, na.rm = TRUE), .groups = "drop")
+```
+
+```{r}
+#not pyramid -- population exposures
+# ggplot(hmd_5yr, aes(x = Five.Year.Age.Groups, y = Exposure, fill = Sex)) +
+#   geom_col(position = "dodge") +
+#   coord_flip() +
+#   scale_y_continuous(labels = scales::comma) +
+#   scale_fill_manual(values = c("#007acc", "#26b4f0", "grey70")) +
+#   theme_minimal(base_size = 12) +
+#   labs(
+#     title = "U.S. Population Exposures by Age Group and Sex (HMD, 1999–2020)",
+#     x = "Age Group",
+#     y = "Exposure (person-years)"
+#   )
+# 
+# 
+# 
+# ggplot(hmd_age10, aes(x = Ten.Year.Age.Groups, y = Exposure, fill = Sex)) +
+#   geom_col(position = "dodge") +
+#   coord_flip() +
+#   scale_y_continuous(labels = scales::comma) +
+#   scale_fill_manual(values = c("#007acc", "#26b4f0", "grey70")) +
+#   theme_minimal(base_size = 12) +
+#   labs(
+#     title = "U.S. Population Exposures by Age Group and Sex (HMD, 1999–2020)",
+#     x = "Age Group",
+#     y = "Exposure (person-years)"
+#   )
+```
+
+```{r}
+hmd_5yr %>%
+  mutate(
+    ExposurePlot = ifelse(Sex == "Male", -Exposure, Exposure)
+  ) %>%
+  ggplot(aes(x = Five.Year.Age.Groups, y = ExposurePlot, fill = Sex)) +
+  geom_col(width = 0.9) +
+  coord_flip() +
+  scale_y_continuous(labels = function(x) scales::comma(abs(x))) +
+  scale_fill_manual(values = c("Male" = "#007acc", "Female" = "#26b4f0")) +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "U.S. Population Pyramid by Age Group and Sex (HMD, 1999–2020)",
+    x = "Age Group",
+    y = "Exposure (person-years)"
+  ) +
+  theme(legend.position = "bottom")
+```
+
+```{r}
+hmd_5yr_time <- hmd_5yr %>%
+  group_by(Year, Five.Year.Age.Groups) %>%
+  summarise(Exposure = sum(Exposure, na.rm = TRUE), .groups = "drop")
+```
+
+```{r, fig.width=12, fig.height=7}
+ggplot(hmd_5yr_time, aes(x = Year, y = Exposure)) +
+  geom_line(linewidth = 0.9, color = "#004c99") +
+  facet_wrap(~ Five.Year.Age.Groups, ncol = 4, scales = "free_y") +
+  scale_y_continuous(labels = scales::label_number(
+    accuracy = 1, scale_cut = scales::cut_short_scale()
+  )) +
+  theme_minimal(base_size = 9) +
+  theme(
+    plot.margin   = margin(10, 20, 25, 25),
+    panel.spacing = unit(1, "lines"),
+    strip.text    = element_text(size = 9, face = "bold"),
+    axis.text.x   = element_text(size = 7, angle = 45, hjust = 1),
+    axis.text.y   = element_text(size = 7),
+    axis.title.x  = element_text(size = 9, margin = margin(t = 10)),
+    axis.title.y  = element_text(size = 9, margin = margin(r = 10)),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "grey85", linewidth = 0.3),
+    plot.title    = element_text(size = 13, hjust = 0.5, face = "bold")
+  ) +
+  labs(
+    title = "HMD Exposures Over Time by 5-Year Age Group",
+    x = "Year",
+    y = "Exposure (person-years)"
+  )
+```
+
 
 
 # Exploratory Data Analysis
@@ -130,6 +357,46 @@ analyze_suppression(dataset_1, "Sex", "Ten.Year.Age.Groups", "Census.Region", "M
 ```{r}
 census_region <- read.csv("../data/wonder_opioid/Census-Region.csv") %>%
   filter(Year != 'NA')
+```
+
+```{r} 
+#shira added (temp)
+census_region <- census_region %>%
+  mutate(
+    Population_num = as.numeric(gsub(",", "", Population))
+  )
+
+pop_region <- census_region %>%
+  group_by(Census.Region) %>%
+  summarise(TotalPop = sum(Population_num, na.rm = TRUE), .groups = "drop")
+
+ggplot(pop_region, aes(x = reorder(Census.Region, -TotalPop), y = TotalPop)) +
+  geom_col(fill = "#007acc") +
+  theme_minimal() +
+  labs(title = "Total Population by Census Region",
+       x = "Census Region", y = "Total Population") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(census_region, aes(x = Year, y = Population_num, color = Census.Region)) +
+  geom_line(linewidth = 0.9) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "Population by Census Region Over Time",
+    x = "Year",
+    y = "Population"
+  )
+
+pop_region <- pop_region %>%
+  mutate(share = 100 * TotalPop / sum(TotalPop))
+
+ggplot(pop_region, aes(x = "", y = share, fill = Census.Region)) +
+  geom_col(width = 1, color = "white") +
+  coord_polar(theta = "y") +
+  theme_void() +
+  scale_fill_brewer(palette = "Blues") +
+  labs(title = "Share of Total U.S. Population by Census Region", fill = "Region")
+
 ```
 
 ```{r}
