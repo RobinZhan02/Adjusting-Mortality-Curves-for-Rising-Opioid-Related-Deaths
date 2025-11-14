@@ -11,33 +11,82 @@ library(readxl)
 library(forecast)
 library(lubridate)
 library(tseries)
+library(strucchange)
+library(purrr)
 ```
+
+## All Deaths
 
 ```{r}
 year_month <- read.csv("../data/time_series/WONDER-YearMonth.csv") %>%
-  filter(Month != "NA" & Notes != "Total" & Year != "NA") %>%
+  filter(Notes != "Total" & Year != "NA") %>%
   mutate(Date = as.Date(paste0(Month.Code, "/01"), format = "%Y/%m/%d"))
 
-ggplot(year_month, aes(x = Date, y = Deaths)) +
-  geom_line(color = "#3b5b92", linewidth = 1) +
-  geom_point(size = 0.5, color = "#3b5b92") +
-  theme_minimal(base_size = 13) +
-  labs(
-    title = "Monthly Time Series of Opioid Deaths",
-    x = "Year",
-    y = "Number of Deaths"
-  )
+plot(year_month$Date, year_month$Deaths, type = "l",
+     xlab = "Date", ylab = "# of Deaths", main = "Opioid-Related Death Counts Over Time")
 ```
+
 ```{r}
-ts_data <- ts(year_month$Deaths, start = c(year(min(year_month$Date)), month(min(year_month$Date))), frequency = 12)
+breakpoints(Deaths ~ Date, data = year_month, breaks = 1)
+```
 
-adf.test(ts_data)
-acf(ts_data, lag.max = 36, main = "ACF Plot: Checking for Seasonality")
 
-ts_diff_12 <- diff(ts_data, lag = 12)
-adf.test(ts_diff_12)
-acf(ts_diff_12, lag.max = 36, main = "ACF of Seasonally Differenced Data")
+```{r}
+pre <- year_month %>% filter(Year < 2014)
+post <- year_month %>% filter(Year >= 2014)
 
-adf.test(diff(ts_diff_12))
-acf(diff(ts_diff_12), lag.max=36)
+acf(diff(pre$Deaths), lag.max = 36)
+acf(diff(post$Deaths, differences = 2), lag.max = 36)
+```
+
+```{r}
+six_month <- year_month %>%
+  mutate(group6 = ceiling(row_number() / 6)) %>%
+  group_by(group6) %>%
+  summarise(
+    start_date = first(Date),
+    deaths_6mo = sum(Deaths)
+  ) %>%
+  mutate(
+    total_deaths = sum(deaths_6mo),
+    lambda_6mo = deaths_6mo / total_deaths,
+    fitted_6mo = lambda_6mo * total_deaths
+  )
+
+ggplot() +
+  geom_line(data = year_month, aes(x = Date, y = Deaths),
+            color = "black", size = 1, alpha = 0.8) +
+  geom_step(data = six_month, aes(x = start_date, y = fitted_6mo/6),
+            color = "blue", size = 0.8) +
+  labs(
+    title = "Original Monthly Deaths vs 6-Month Fitted Intensity Model",
+    y = "Deaths", x = "Date"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+twelve_month <- year_month %>%
+  mutate(group12 = ceiling(row_number() / 12)) %>%
+  group_by(group12) %>%
+  summarise(
+    start_date = first(Date),
+    deaths_12mo = sum(Deaths)
+  ) %>%
+  mutate(
+    total_deaths = sum(deaths_12mo),
+    lambda_12mo = deaths_12mo / total_deaths,
+    fitted_12mo = lambda_12mo * total_deaths
+  )
+
+ggplot() +
+  geom_line(data = year_month, aes(x = Date, y = Deaths),
+            color = "black", size = 1, alpha = 0.8) +
+  geom_step(data = twelve_month, aes(x = start_date, y = fitted_12mo/12),
+            color = "red", size = 0.8) +
+  labs(
+    title = "Original Monthly Deaths vs 12-Month Fitted Intensity Model",
+    y = "Deaths", x = "Date"
+  ) +
+  theme_minimal()
 ```
