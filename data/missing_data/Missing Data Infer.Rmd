@@ -12,7 +12,7 @@ library(lubridate)
 ```
 # load and check the data
 ```{r}
-file_list <- list.files("Data For Infer")
+file_list <- list.files("data_for_infer")
 
 # constants
 n_years   <- 22
@@ -34,9 +34,9 @@ expected_rows_for_file <- function(fname) {
     1L
   }
   # geography: exactly one of Division or Region; otherwise fallback to 1
-  geo_factor <- if (str_detect(fname, fixed("Cenus Division"))) {
+  geo_factor <- if (str_detect(fname, fixed("Census-Division"))) {
     n_div
-  } else if (str_detect(fname, fixed("Cenus Region"))) {
+  } else if (str_detect(fname, fixed("Census-Region"))) {
     n_region
   } else {
     1L
@@ -54,7 +54,7 @@ data <- tibble()
 # main loop
 for (i in file_list) {
   # read
-  tmp <- fread(paste0("Data For Infer/", i))
+  tmp <- fread(paste0("data_for_infer/", i))
 
   # filter Month Code present
   tmp <- tmp |>
@@ -103,8 +103,8 @@ rm(data);gc()
 
 # Load the Code for later mapping
 ```{r}
-Cenus_Region_Code <- read_csv("Cenus Region_Code.csv", show_col_types = F)
-Cenus_Division_Code <- read_csv("Cenus Division_Code.csv", show_col_types = F)
+Cenus_Region_Code <- read_csv("Census-Region_Code.csv", show_col_types = F)
+Cenus_Division_Code <- read_csv("Census-Division_Code.csv", show_col_types = F)
 Age_Group_Code <- read_csv("Age Group_Code.csv", show_col_types = F)
 
 
@@ -532,7 +532,13 @@ infer_suppressed_iterative <- function(data_prepared,
 result <- infer_suppressed_iterative(data_prepared)
 result |> write_csv("inferred_data_raw.csv")
 ```
+
+
 ```{r}
+
+result <- fread(
+  "inferred_data_raw.csv"
+)
 ## start from the inference result
 res <- as.data.table(result)
 
@@ -560,6 +566,8 @@ five_by_sex <- res[
   !is.na(`Age Group Code`) &
   (`Age Group Code` %in% age5_codes)
 ]
+
+
 
 ## split into division-level and region-level
 div_5y_by_sex <- five_by_sex[geo_type == "division"][
@@ -602,6 +610,57 @@ reg_5y_by_sex_final <- reg_5y_by_sex |>
 
 div_5y_by_sex_final |> write_csv("Inferred-WONDER-Census Division-Sex-5Yr.csv")
 reg_5y_by_sex_final |> write_csv("Inferred-WONDER-Census Region-Sex-5Yr.csv")
+
+
+ten_by_sex <- res[
+  !is.na(`Sex Code`) &
+  !is.na(`Age Group Code`) &
+  (`Age Group Code` %in% age10_codes)
+]
+
+
+
+## split into division-level and region-level
+div_10y_by_sex <- ten_by_sex[geo_type == "division"][
+  ,
+  .(
+    `Census Division Code`,
+    `Month Code`,
+    `Sex Code`,
+    `Age Group Code`,
+    Deaths,
+    Deaths_inferred
+  )
+]
+
+reg_10y_by_sex <- ten_by_sex[geo_type == "region"][
+  ,
+  .(
+    `Census Region Code`,
+    `Month Code`,
+    `Sex Code`,
+    `Age Group Code`,
+    Deaths,
+    Deaths_inferred
+  )
+]
+
+div_10y_by_sex_final <- div_10y_by_sex |> 
+  mutate(Deaths = ifelse(Deaths == "Suppressed" & !is.na(Deaths_inferred), Deaths_inferred, Deaths),
+         Year = substr(`Month Code`,1,4)) |> 
+  select(-Deaths_inferred) |> 
+  left_join(Cenus_Division_Code, by = join_by(`Census Division Code`)) |>
+  left_join(Age_Group_Code, by = join_by(`Age Group Code` == `Age Code`))
+
+reg_10y_by_sex_final <- reg_10y_by_sex |> 
+  mutate(Deaths = ifelse(Deaths == "Suppressed" & !is.na(Deaths_inferred), Deaths_inferred, Deaths),
+         Year = substr(`Month Code`,1,4)) |> 
+  select(-Deaths_inferred)|> 
+  left_join(Cenus_Region_Code, by = join_by(`Census Region Code`)) |>
+  left_join(Age_Group_Code, by = join_by(`Age Group Code` == `Age Code`))
+
+div_10y_by_sex_final |> write_csv("Inferred-WONDER-Census Division-Sex-10Yr.csv")
+reg_10y_by_sex_final |> write_csv("Inferred-WONDER-Census Region-Sex-10Yr.csv")
 ```
 
 
