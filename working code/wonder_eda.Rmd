@@ -166,48 +166,37 @@ analyze_suppression <- function(data,
 }
 ```
 
-
-```{r}
-# original WONDER data (used for suppression)
-dataset_1 <- read.csv("../data/missing_data/data_for_infer/WONDER-Sex-5Yr-Census-Region-Clean.csv",
-                      stringsAsFactors = FALSE) %>%
-  mutate(
-    Deaths = trimws(Deaths)
-  )
-
-# inferred data
-inferred <- read.csv("../data/missing_data/Inferred-WONDER-Census Region-Sex-5Yr.csv",
-                     stringsAsFactors = FALSE) %>%
-  mutate(
-    Deaths = trimws(Deaths),
-    Sex = dplyr::recode(Sex.Code,
-                        "F" = "Female",
-                        "M" = "Male")
-  )
-```
-
 ```{r, warning=FALSE, fig.width = 12, fig.height = 6}
 # suppression in original data
+make_suppression_plot <- function(dataset_orig,
+                                  dataset_inf,
+                                  sex_var,
+                                  age_var_orig,
+                                  age_var_inf,
+                                  geo_var,
+                                  time_var = "Month",
+                                  plot_title = "") {
+
 supp_orig <- analyze_suppression(
-  dataset_1,
-  sex_var = "Sex",
-  age_var = "Five.Year.Age.Groups",
-  geo_var = "Census.Region",
-  time_var = "Month.Code"
+  dataset_orig,
+  sex_var = sex_var,
+  age_var = age_var_orig,
+  geo_var = geo_var,
+  time_var = time_var
 )
 
 # suppression in inferred data
 supp_inf <- analyze_suppression(
-  inferred,
-  sex_var = "Sex",
-  age_var = "Age.Groups",
-  geo_var = "Census.Region",
-  time_var = "Month.Code"
+  dataset_inf,
+  sex_var = sex_var,
+  age_var = age_var_inf,
+  geo_var = geo_var,
+  time_var = time_var
 )
 
 # show heatmaps side by side
-p1 <- supp_orig$heatmap + ggtitle("Suppression Heatmap – Original Data")  + theme(axis.title.x = element_blank(), legend.position = "none")
-p2 <- supp_inf$heatmap + ggtitle("Suppression Heatmap – Inferred Data") + theme(axis.title.x   = element_blank(), legend.position = "none") 
+p1 <- supp_orig$heatmap + ggtitle("Suppression Heatmap – Original Data", subtitle = plot_title)  + theme(axis.title.x = element_blank(), legend.position = "none")
+p2 <- supp_inf$heatmap + ggtitle("Suppression Heatmap – Inferred Data", subtitle = plot_title) + theme(axis.title.x   = element_blank(), legend.position = "none") 
 
 
 p_for_legend <- supp_orig$heatmap +
@@ -248,37 +237,207 @@ final_plot <- cowplot::plot_grid(
 )
 
 final_plot
+}
+```
 
-#change file above to reflect old data (that is actually used) and compare with inferred data (to compare heatmaps of both)
+```{r, warning=FALSE, fig.width = 12, fig.height = 6}
+## ---------- 5-year Census Region ----------
+# original WONDER data (used for suppression)
+dataset_reg_5 <- read.csv("../data/missing_data/data_for_infer/WONDER-Sex-5Yr-Census-Region-Clean.csv",
+                      stringsAsFactors = FALSE) %>%
+  mutate(
+    Deaths = trimws(Deaths)
+  )
+
+# inferred data
+inferred_reg_5 <- read.csv("../data/missing_data/Inferred-WONDER-Census Region-Sex-5Yr.csv",
+                     stringsAsFactors = FALSE) %>%
+  mutate(
+    Deaths = trimws(Deaths),
+    Sex = dplyr::recode(Sex.Code,
+                        "F" = "Female",
+                        "M" = "Male")
+  )
+
+plot_reg_5yr <- make_suppression_plot(
+  dataset_orig = dataset_reg_5,
+  dataset_inf  = inferred_reg_5,
+  sex_var      = "Sex",
+  age_var_orig = "Five.Year.Age.Groups",
+  age_var_inf  = "Age.Groups",
+  geo_var      = "Census.Region",
+  time_var     = "Month.Code",
+  plot_title   = "Census Region – 5-Year Age Groups"
+)
+
+plot_reg_5yr
 ```
 
 
-```{r}
-#dataset_1 <- read.csv("../data/missing_data/data_for_infer/WONDER-Sex-5Yr-Census-Region-Clean.csv")
+```{r, warning=FALSE, fig.width = 12, fig.height = 6}
+## ---------- 5-year Census Division ----------
+dataset_div_5 <- read.csv(
+  "../data/missing_data/data_for_infer/WONDER-5Yr-Census-Division-Sex-Clean.csv",
+  stringsAsFactors = FALSE
+) |>
+  mutate(
+    Deaths   = trimws(Deaths),
+    Sex      = dplyr::recode(Sex.Code,
+                             "F" = "Female",
+                             "M" = "Male"),
+    AgeGroup = Age.Group.Code,
+    Geo      = Census.Division.Code,
+    Month    = Month.Code
+  ) |>
+  select(Sex, AgeGroup, Geo, Month, Deaths)
 
-#nalyze_suppression(dataset_1, "Sex", "Five.Year.Age.Groups", "Census.Region", "Month.Code")
+inferred_div_5 <- read.csv(
+  "../data/missing_data/Inferred-WONDER-Census Division-Sex-5Yr.csv",
+  stringsAsFactors = FALSE
+) |>
+  mutate(
+    Deaths   = trimws(Deaths),
+    Sex      = dplyr::recode(Sex.Code, "F" = "Female", "M" = "Male"),
+    AgeGroup = Age.Groups,
+    Geo      = Census.Division,
+    Month    = Month.Code
+  ) |>
+  select(Sex, AgeGroup, Geo, Month, Deaths)
 
-#change file above to reflect old data (that is actually used) and compare with inferred data (to compare heatmaps of both)
+dataset_div_5 <- dataset_div_5 |>
+  left_join(
+    Census_Division_Code,
+    by = c("Geo" = "Census Division Code")
+  ) |>
+  mutate(
+    Geo = `Census Division`  
+  ) |>
+  
+  left_join(
+    Age_Group_Code,
+    by = c("AgeGroup" = "Age Code")
+  ) |>
+  mutate(
+    AgeGroup = `Age Groups`  
+  )
+
+plot_div_5yr <- make_suppression_plot(
+  dataset_orig = dataset_div_5,
+  dataset_inf  = inferred_div_5,
+  sex_var      = "Sex",
+  age_var_orig = "AgeGroup",
+  age_var_inf  = "AgeGroup",
+  geo_var      = "Geo",
+  time_var     = "Month",
+  plot_title   = "Census Division – 5-Year Age Groups"
+)
+
+plot_div_5yr
 ```
 
+```{r, warning=FALSE, fig.width = 12, fig.height = 6}
+## ---------- 10-year Census Region ----------
+dataset_reg_10 <- read.csv(
+  "../data/missing_data/data_for_infer/WONDER-Sex-10Yr-Census-Region-Clean.csv",
+  stringsAsFactors = FALSE
+) |>
+  mutate(
+    Deaths   = trimws(Deaths),
+    Sex      = Sex,
+    AgeGroup = Ten.Year.Age.Groups,
+    Geo      = Census.Region,
+    Month    = Month.Code
+  ) |>
+  select(Sex, AgeGroup, Geo, Month, Deaths)
 
-```{r}
-#heatmap for inferred data
-#inferred_region <- read.csv("../data/missing_data/Inferred-WONDER-Census Region-Sex-5Yr.csv")
+inferred_reg_10 <- read.csv(
+  "../data/missing_data/Inferred-WONDER-Census Region-Sex-10Yr.csv",
+  stringsAsFactors = FALSE
+) |>
+  mutate(
+    Deaths   = trimws(Deaths),
+    Sex      = dplyr::recode(Sex.Code, "F" = "Female", "M" = "Male"),
+    AgeGroup = Age.Groups,
+    Geo      = Census.Region,
+    Month    = Month.Code
+  ) |>
+  select(Sex, AgeGroup, Geo, Month, Deaths)
 
-#analyze_suppression(inferred_region, "Sex.Code", "Age.Groups", "Census.Region", "Month.Code")
+plot_reg_10yr <- make_suppression_plot(
+  dataset_orig = dataset_reg_10,
+  dataset_inf  = inferred_reg_10,
+  sex_var      = "Sex",
+  age_var_orig = "AgeGroup",
+  age_var_inf  = "AgeGroup",
+  geo_var      = "Geo",
+  time_var     = "Month",
+  plot_title   = "Census Region – 10-Year Age Groups"
+)
 
-
-#inferred_division <- read.csv("../data/missing_data/Inferred-WONDER-Census Division-Sex-5Yr.csv")
-
-#analyze_suppression(inferred_division, "Sex.Code", "Age.Groups", "Census.Division", "Month.Code")
-
+plot_reg_10yr
 ```
 
+```{r, warning=FALSE, fig.width = 12, fig.height = 6}
+## ---------- 10-year Census Division ----------
+dataset_div_10 <- read.csv(
+  "../data/missing_data/data_for_infer/WONDER-10Yr-Census-Division-Sex-Clean.csv",
+  stringsAsFactors = FALSE
+) |>
+  mutate(
+    Deaths   = trimws(Deaths),
+    Sex      = dplyr::recode(Sex.Code,
+                             "F" = "Female",
+                             "M" = "Male"),
+    AgeGroup = Age.Group.Code,
+    Geo      = Census.Division.Code,
+    Month    = Month.Code
+  ) |>
+  select(Sex, AgeGroup, Geo, Month, Deaths)
+
+inferred_div_10 <- read.csv(
+  "../data/missing_data/Inferred-WONDER-Census Division-Sex-10Yr.csv",
+  stringsAsFactors = FALSE
+) |>
+  mutate(
+    Deaths   = trimws(Deaths),
+    Sex      = dplyr::recode(Sex.Code, "F" = "Female", "M" = "Male"),
+    AgeGroup = Age.Groups,
+    Geo      = Census.Division,
+    Month    = Month.Code
+  ) |>
+  select(Sex, AgeGroup, Geo, Month, Deaths)
+
+dataset_div_10 <- dataset_div_10 |>
+  left_join(
+    Census_Division_Code,
+    by = c("Geo" = "Census Division Code")
+  ) |>
+  mutate(
+    Geo = `Census Division`
+  ) |>
+  left_join(
+    Age_Group_Code,
+    by = c("AgeGroup" = "Age Code")
+  ) |>
+  mutate(
+    AgeGroup = `Age Groups`
+  )
+
+plot_div_10yr <- make_suppression_plot(
+  dataset_orig = dataset_div_10,
+  dataset_inf  = inferred_div_10,
+  sex_var      = "Sex",
+  age_var_orig = "AgeGroup",
+  age_var_inf  = "AgeGroup",
+  geo_var      = "Geo",
+  time_var     = "Month",
+  plot_title   = "Census Division – 10-Year Age Groups"
+)
+
+plot_div_10yr
+```
 
 # Demographic Analysis
-
-
 ```{r}
 #using hmd for population distribution
 
