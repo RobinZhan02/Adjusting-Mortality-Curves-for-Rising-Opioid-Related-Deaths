@@ -24,12 +24,12 @@ year_month <- read.csv("../data/time_series/WONDER-YearMonth.csv") %>%
 
 plot(year_month$Date, year_month$Deaths, type = "l",
      xlab = "Date", ylab = "# of Deaths", main = "Opioid-Related Death Counts Over Time")
+abline(v=as.numeric(as.Date("2014-01-01")), col="red", lty="dotted")
 ```
 
 ```{r}
 breakpoints(Deaths ~ Date, data = year_month, breaks = 1)
 ```
-
 
 ```{r}
 pre <- year_month %>% filter(Year < 2014)
@@ -85,8 +85,159 @@ ggplot() +
   geom_step(data = twelve_month, aes(x = start_date, y = fitted_12mo/12),
             color = "red", size = 0.8) +
   labs(
-    title = "Original Monthly Deaths vs 12-Month Fitted Intensity Model",
-    y = "Deaths", x = "Date"
-  ) +
-  theme_minimal()
+    title = "Fit of Non-homogenous Poisson Modeled Death Counts",
+    y = "Deaths", x = "Date") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 18),
+        axis.title = element_text(size = 12))
+```
+
+```{r}
+year_month <- year_month %>%
+  mutate(mean = NA,
+         variance = NA)
+```
+
+```{r}
+last_ma <- nrow(year_month) - 7
+
+for(i in 7:last_ma){
+  
+  idx_full <- (i-5):(i+5)
+  idx_left  <- i-6            
+  idx_right <- i+6
+  
+  x_vals <- c(year_month$Deaths[idx_full],
+              year_month$Deaths[idx_left],
+              year_month$Deaths[idx_right])
+  
+  w_vals <- c(rep(1, 11), 0.5, 0.5)
+  
+  mu <- weighted.mean(x_vals, w_vals)
+  year_month$mean[i] <- mu
+  
+  year_month$variance[i] <- sum(w_vals * (x_vals - mu)^2) / sum(w_vals)
+}
+```
+
+```{r}
+dispersion_set <- year_month %>%
+  filter(mean != 'NA') %>%
+  mutate(cv = sqrt(variance) / mean)
+
+ggplot() +
+  geom_line(data = dispersion_set,
+            aes(x = Date, y = Deaths, color = "Original"), 
+            size = 1, alpha = 0.8) +
+  geom_step(data = dispersion_set,
+            aes(x = Date, y = mean, color = "13-Month Moving Average"),
+            size = 0.8) +
+  labs(
+    title = "13-Month Moving Average of Opioid Death Counts",
+    y = "Deaths", x = "Date",
+    color = "Legend") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        plot.title = element_text(size = 18))
+
+plot(dispersion_set$Date, dispersion_set$cv, type = "l",
+     xlab = "Date", ylab = "Coefficient of Variation", main = "Test for Over/Underdispersion",
+     ylim = c(0,2))
+abline(h = 1, col = "red", lty = 2)
+
+#less than 1 means under-dispersion, more than 1 means over-dispersion
+```
+
+## Dispersion Function
+
+```{r}
+dispersion_calc <- function(dataset, title) {
+  dataset <- dataset %>%
+  mutate(mean = NA,
+         variance = NA)
+  
+  last_ma <- nrow(dataset) - 1
+
+  for(i in 2:last_ma){
+  
+    idx_full <- i
+    idx_left  <- i-1            
+    idx_right <- i+1
+  
+    x_vals <- c(dataset$Deaths[idx_full],
+                dataset$Deaths[idx_left],
+                dataset$Deaths[idx_right])
+  
+    w_vals <- c(1,0.5,0.5)
+  
+    mu <- weighted.mean(x_vals, w_vals)
+    dataset$mean[i] <- mu
+  
+    dataset$variance[i] <- sum(w_vals * (x_vals - mu)^2) / sum(w_vals)
+  }
+
+  dispersion_set <- dataset %>%
+    filter(mean != 'NA') %>%
+    mutate(cv = sqrt(variance) / mean)
+
+  plot(dispersion_set$Year, dispersion_set$cv, type = "l",
+      xlab = "Date", ylab = "Coefficient of Variation", main = paste(title, ": Dispersion"),
+      ylim = c(0,2))
+  abline(h = 1, col = "red", lty = 2)
+}
+```
+
+```{r}
+par(mfrow = c(2,2))
+
+ten_year <- read.csv("../data/wonder_opioid/Ten-Year-Age-Group.csv") %>%
+  filter(Notes != "Total" & Year != "NA")
+
+ten_25to34 <- ten_year %>%
+  filter(Ten.Year.Age.Groups.Code == '25-34') %>%
+  mutate(Deaths = as.numeric(Deaths))
+dispersion_calc(ten_25to34, "Age Group 25-34")
+
+ten_35to44 <- ten_year %>%
+  filter(Ten.Year.Age.Groups.Code == '35-44') %>%
+  mutate(Deaths = as.numeric(Deaths))
+dispersion_calc(ten_35to44, "Age Group 35-44")
+
+ten_45to54 <- ten_year %>%
+  filter(Ten.Year.Age.Groups.Code == '45-54') %>%
+  mutate(Deaths = as.numeric(Deaths))
+dispersion_calc(ten_45to54, "Age Group 45-54")
+
+ten_55to64 <- ten_year %>%
+  filter(Ten.Year.Age.Groups.Code == '55-64') %>%
+  mutate(Deaths = as.numeric(Deaths))
+dispersion_calc(ten_55to64, "Age Group 55-64")
+```
+
+```{r}
+par(mfrow = c(2,2))
+
+census_region <- read.csv("../data/wonder_opioid/Census-Region.csv") %>%
+  filter(Notes != "Total" & Year != "NA")
+
+region_1 <- census_region %>%
+  filter(Census.Region.Code == 'CENS-R1') %>%
+  mutate(Deaths = as.numeric(Deaths))
+dispersion_calc(region_1, "Northeast Region")
+
+region_2 <- census_region %>%
+  filter(Census.Region.Code == 'CENS-R2') %>%
+  mutate(Deaths = as.numeric(Deaths))
+dispersion_calc(region_2, "Midwest Region")
+
+region_3 <- census_region %>%
+  filter(Census.Region.Code == 'CENS-R3') %>%
+  mutate(Deaths = as.numeric(Deaths))
+dispersion_calc(region_3, "South Region")
+
+region_4 <- census_region %>%
+  filter(Census.Region.Code == 'CENS-R4') %>%
+  mutate(Deaths = as.numeric(Deaths))
+dispersion_calc(region_4, "West Region")
 ```
