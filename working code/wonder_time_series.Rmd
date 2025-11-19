@@ -123,7 +123,7 @@ for(i in 7:last_ma){
 ```{r}
 dispersion_set <- year_month %>%
   filter(mean != 'NA') %>%
-  mutate(cv = sqrt(variance) / mean)
+  mutate(dispersion = variance / mean)
 
 ggplot() +
   geom_line(data = dispersion_set,
@@ -141,10 +141,10 @@ ggplot() +
         legend.title = element_blank(),
         plot.title = element_text(size = 18))
 
-plot(dispersion_set$Date, dispersion_set$cv, type = "l",
-     xlab = "Date", ylab = "Coefficient of Variation", main = "Test for Over/Underdispersion",
-     ylim = c(0,2))
-abline(h = 1, col = "red", lty = 2)
+plot(dispersion_set$Date, log(dispersion_set$dispersion), type = "l",
+     xlab = "Date", ylab = "Log of Dispersion", main = "Test for Over/Underdispersion",
+     ylim = c(0,6))
+abline(h = log(1), col = "red", lty = 2)
 
 #less than 1 means under-dispersion, more than 1 means over-dispersion
 ```
@@ -179,12 +179,12 @@ dispersion_calc <- function(dataset, title) {
 
   dispersion_set <- dataset %>%
     filter(mean != 'NA') %>%
-    mutate(cv = sqrt(variance) / mean)
+    mutate(dispersion = variance / mean)
 
-  plot(dispersion_set$Year, dispersion_set$cv, type = "l",
-      xlab = "Date", ylab = "Coefficient of Variation", main = paste(title, ": Dispersion"),
-      ylim = c(0,2))
-  abline(h = 1, col = "red", lty = 2)
+  plot(dispersion_set$Year, log(dispersion_set$dispersion), type = "l",
+      xlab = "Date", ylab = "Log of Dispersion", main = paste(title, ": Dispersion"),
+      ylim = c(-9,9))
+  abline(h = log(1), col = "red", lty = 2)
 }
 ```
 
