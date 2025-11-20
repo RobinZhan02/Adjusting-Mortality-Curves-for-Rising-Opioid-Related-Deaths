@@ -17,9 +17,12 @@ library(stringr)
 #library(forecast)
 #library(lubridate)
 #library(tseries)
+library(demography)
 library(ggnewscale)
 library(cowplot)
 library(grid)
+library(StMoMo)
+library(patchwork)
 ```
 
 ## Missing Data Analysis
@@ -450,7 +453,7 @@ plot_div_10yr
 #using hmd for population distribution
 
 US_data <- hmd.mx(country="USA", username="amandahuang@ucsb.edu", password="Ilovepstat296!")
-US_data99 <- extract.years(US_data, 1999:2020)
+US_data99 <- extract.years(US_data, 1995:2020)
 
 female_df <- as.data.frame(as.table(US_data99$pop$female))
 colnames(female_df) <- c("Age", "Year", "Exposure")
@@ -558,24 +561,211 @@ hmd_age10 <- usa_exposure_df %>%
 #   )
 ```
 
-```{r}
-hmd_5yr %>%
+```{r, fig.width = 12, fig.height = 6}
+p_expo <- hmd_5yr %>%
+  filter(Year %in% c(2000, 2010, 2020)) %>%
   mutate(
-    ExposurePlot = ifelse(Sex == "Male", -Exposure, Exposure)
+    Sex = factor(Sex, levels = c("Male", "Female")),
+    ExposurePlot = ifelse(Sex == "Male", -Exposure, Exposure),
+    Year = factor(Year, levels = c(2000, 2010, 2020))
   ) %>%
   ggplot(aes(x = Five.Year.Age.Groups, y = ExposurePlot, fill = Sex)) +
   geom_col(width = 0.9) +
   coord_flip() +
   scale_y_continuous(labels = function(x) scales::comma(abs(x))) +
-  scale_fill_manual(values = c("Male" = "#007acc", "Female" = "#26b4f0")) +
+  scale_fill_manual(values = c("Male" = "#007acc", "Female" = "#ff8ab8")) +
+  facet_wrap(~ Year, nrow = 1) +  
   theme_minimal(base_size = 12) +
   labs(
-    title = "U.S. Population Pyramid by Age Group and Sex (HMD, 1999–2020)",
+    title = "U.S. Population Pyramids (1995–2020)",
     x = "Age Group",
     y = "Exposure (person-years)"
   ) +
-  theme(legend.position = "bottom")
+  theme(
+    legend.position = "bottom",
+    strip.text = element_text(size = 14, face = "bold"),
+    panel.spacing = unit(1.5, "lines")
+  )
+
+p_expo
 ```
+
+```{r, fig.width = 12, fig.height = 6}
+US_mort_M <- StMoMoData(US_data99, series = "male",   type = "central")
+US_mort_F <- StMoMoData(US_data99, series = "female", type = "central")
+
+
+make_deaths_df <- function(x, sex_label) {
+  as.data.frame(as.table(x$Dxt)) %>%
+    rename(
+      Age    = Var1,
+      Year   = Var2,
+      Deaths = Freq
+    ) %>%
+    mutate(
+      Age  = as.numeric(as.character(Age)),
+      Year = as.numeric(as.character(Year)),
+      Sex  = sex_label
+    )
+}
+
+deaths_M <- make_deaths_df(US_mort_M, "Male")
+deaths_F <- make_deaths_df(US_mort_F, "Female")
+
+deaths_all <- bind_rows(deaths_M, deaths_F)
+
+deaths_5yr_sex <- deaths_all %>%
+  mutate(
+    Five.Year.Age.Groups = dplyr::case_when(
+      Age == 0                      ~ "< 1 year",
+      Age >= 1   & Age <= 4         ~ "1-4 years",
+      Age >= 5   & Age <= 9         ~ "5-9 years",
+      Age >= 10  & Age <= 14        ~ "10-14 years",
+      Age >= 15  & Age <= 19        ~ "15-19 years",
+      Age >= 20  & Age <= 24        ~ "20-24 years",
+      Age >= 25  & Age <= 29        ~ "25-29 years",
+      Age >= 30  & Age <= 34        ~ "30-34 years",
+      Age >= 35  & Age <= 39        ~ "35-39 years",
+      Age >= 40  & Age <= 44        ~ "40-44 years",
+      Age >= 45  & Age <= 49        ~ "45-49 years",
+      Age >= 50  & Age <= 54        ~ "50-54 years",
+      Age >= 55  & Age <= 59        ~ "55-59 years",
+      Age >= 60  & Age <= 64        ~ "60-64 years",
+      Age >= 65  & Age <= 69        ~ "65-69 years",
+      Age >= 70  & Age <= 74        ~ "70-74 years",
+      Age >= 75  & Age <= 79        ~ "75-79 years",
+      Age >= 80  & Age <= 84        ~ "80-84 years",
+      Age >= 85  & Age <= 89        ~ "85-89 years",
+      Age >= 90  & Age <= 94        ~ "90-94 years",
+      Age >= 95  & Age <= 99        ~ "95-99 years",
+      Age >= 100                    ~ "100+ years",
+      TRUE                          ~ NA_character_
+    )
+  ) %>%
+  filter(!is.na(Five.Year.Age.Groups)) %>%
+  group_by(Year, Five.Year.Age.Groups, Sex) %>%
+  summarise(Deaths = sum(Deaths, na.rm = TRUE), .groups = "drop") %>%
+  mutate(
+    Five.Year.Age.Groups = factor(Five.Year.Age.Groups, levels = age_order)
+  )
+
+p_deaths <- deaths_5yr_sex %>%
+  filter(Year %in% c(2000, 2010, 2020)) %>%
+  mutate(
+    Sex = factor(Sex, levels = c("Male", "Female")),
+    DeathsPlot = ifelse(Sex == "Male", -Deaths, Deaths),
+    Year = factor(Year, levels = c(2000, 2010, 2020))
+  ) %>%
+  ggplot(aes(x = Five.Year.Age.Groups, y = DeathsPlot, fill = Sex)) +
+  geom_col(width = 0.9) +
+  coord_flip() +
+  scale_y_continuous(labels = function(x) scales::comma(abs(x))) +
+  scale_fill_manual(values = c("Male" = "#007acc", "Female" = "#ff8ab8")) +
+  facet_wrap(~ Year, nrow = 1) +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "U.S. Deaths by Age Group and Sex (2000, 2010, 2020)",
+    x = "Age Group",
+    y = "Deaths"
+  ) +
+  theme(
+    legend.position = "bottom",
+    strip.text      = element_text(size = 14, face = "bold"),
+    panel.spacing   = unit(1.5, "lines")
+  )
+
+p_deaths
+```
+
+```{r}
+age_levels <- levels(deaths_5yr_sex$Five.Year.Age.Groups)
+
+expo_df <- hmd_5yr %>%
+  filter(Year %in% c(2000, 2010, 2020)) %>%
+  mutate(
+    Sex = factor(Sex, levels = c("Male", "Female")),
+    ExposurePlot = ifelse(Sex == "Male", -Exposure, Exposure),
+    Year         = factor(Year, levels = c(2000, 2010, 2020))
+  )
+
+# deaths (StMoMo) for overlay
+deaths_df <- deaths_5yr_sex %>%
+  filter(Year %in% c(2000, 2010, 2020)) %>%
+  mutate(
+    Sex = factor(Sex, levels = c("Male", "Female")),
+    DeathsPlot = ifelse(Sex == "Male", -Deaths, Deaths),
+    Year       = factor(Year, levels = c(2000, 2010, 2020))
+  )
+
+# compute one scaling factor for all years
+scale_factor <- max(abs(expo_df$ExposurePlot), na.rm = TRUE) /
+                max(abs(deaths_df$DeathsPlot),  na.rm = TRUE)
+
+# apply scaling
+deaths_df <- deaths_df %>%
+  mutate(DeathsPlot_scaled = DeathsPlot * scale_factor)
+```
+
+
+```{r, fig.width = 12, fig.height = 6}
+ggplot() +
+  geom_col(
+    data = expo_df,
+    aes(x = Five.Year.Age.Groups, y = ExposurePlot, fill = Sex),
+    width = 0.9,
+    alpha = 0.30
+  ) +
+  geom_col(
+    data = deaths_df,
+    aes(x = Five.Year.Age.Groups, y = DeathsPlot_scaled, fill = Sex),
+    width = 0.55,
+    alpha = 0.95
+  ) +
+  coord_flip() +
+  scale_y_continuous(labels = function(x) scales::comma(abs(x))) +
+  scale_fill_manual(values = c("Male" = "#007acc", "Female" = "#ff8ab8")) +
+  facet_wrap(~ Year, nrow = 1) +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "Exposure (faded) and Deaths (rescaled solid)\nU.S. Population (2000, 2010, 2020)",
+    x = "Age Group",
+    y = "Count (deaths rescaled for visibility)"
+  ) +
+  theme(
+    legend.position = "bottom",
+    strip.text    = element_text(size = 14, face = "bold"),
+    panel.spacing = unit(1.5, "lines")
+  )
+```
+
+```{r, fig.width = 12, fig.height = 8}
+p_expo_noleg <- p_expo + theme(legend.position = "none")
+p_deaths_noleg <- p_deaths + theme(legend.position = "none")
+
+legend <- cowplot::get_legend(
+  p_expo + theme(legend.position = "bottom")
+)
+
+top_bottom <- cowplot::plot_grid(
+  p_expo_noleg,
+  p_deaths_noleg,
+  ncol = 1,
+  align = "v",
+  rel_heights = c(1, 1)  # adjust if you want one row taller
+)
+
+final_plot <- cowplot::plot_grid(
+  top_bottom,
+  legend,
+  ncol = 1,
+  rel_heights = c(1, 0.1)
+)
+
+final_plot
+```
+
+
+
 
 ```{r}
 hmd_5yr_time <- hmd_5yr %>%
