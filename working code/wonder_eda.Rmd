@@ -195,9 +195,16 @@ supp_inf <- analyze_suppression(
 )
 
 # show heatmaps side by side
-p1 <- supp_orig$heatmap + ggtitle("Suppression Heatmap – Original Data", subtitle = plot_title)  + theme(axis.title.x = element_blank(), legend.position = "none")
-p2 <- supp_inf$heatmap + ggtitle("Suppression Heatmap – Inferred Data", subtitle = plot_title) + theme(axis.title.x   = element_blank(), legend.position = "none") 
-
+p1 <- supp_orig$heatmap + ggtitle("Suppression Heatmap – Original Data", subtitle = plot_title)  + theme(axis.title.x = element_blank(), 
+                                                                                                         legend.position = "none",
+                                                                                                         strip.text = element_text(size = 14),
+                                                                                                         axis.text.x = element_text(size = 12)
+                                                                                                         )
+p2 <- supp_inf$heatmap + ggtitle("Suppression Heatmap – Inferred Data", subtitle = plot_title) + theme(axis.title.x   = element_blank(), 
+                                                                                                       legend.position = "none",
+                                                                                                       strip.text = element_text(size = 14), 
+                                                                                                       axis.text.x = element_text(size = 12)
+                                                                                                       ) 
 
 p_for_legend <- supp_orig$heatmap +
   ggtitle("Suppr. Heatmap – Original Data") +
@@ -217,7 +224,7 @@ top_row <- cowplot::plot_grid(
 geo_row <- cowplot::ggdraw() +
   cowplot::draw_grob(
     grid::textGrob(
-      "Geography",
+      "Census Region",
       gp = grid::gpar(fontsize = 16),
       x  = 0.5,
       hjust = 0.5
@@ -246,7 +253,8 @@ final_plot
 dataset_reg_5 <- read.csv("../data/missing_data/data_for_infer/WONDER-Sex-5Yr-Census-Region-Clean.csv",
                       stringsAsFactors = FALSE) %>%
   mutate(
-    Deaths = trimws(Deaths)
+    Deaths = trimws(Deaths),
+    Census.Region = stringr::str_replace(Census.Region, "^Census Region \\d+:\\s*", "")
   )
 
 # inferred data
@@ -256,7 +264,8 @@ inferred_reg_5 <- read.csv("../data/missing_data/Inferred-WONDER-Census Region-S
     Deaths = trimws(Deaths),
     Sex = dplyr::recode(Sex.Code,
                         "F" = "Female",
-                        "M" = "Male")
+                        "M" = "Male"),
+    Census.Region = stringr::str_replace(Census.Region, "^Census Region \\d+:\\s*", "")
   )
 
 plot_reg_5yr <- make_suppression_plot(
@@ -266,8 +275,7 @@ plot_reg_5yr <- make_suppression_plot(
   age_var_orig = "Five.Year.Age.Groups",
   age_var_inf  = "Age.Groups",
   geo_var      = "Census.Region",
-  time_var     = "Month.Code",
-  plot_title   = "Census Region – 5-Year Age Groups"
+  time_var     = "Month.Code"
 )
 
 plot_reg_5yr
