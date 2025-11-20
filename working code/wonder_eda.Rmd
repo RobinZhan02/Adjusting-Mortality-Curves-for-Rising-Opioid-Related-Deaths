@@ -287,6 +287,11 @@ plot_reg_5yr
 
 ```{r, warning=FALSE, fig.width = 12, fig.height = 6}
 ## ---------- 5-year Census Division ----------
+division_lookup <- read.csv(
+  "../data/missing_data/Census-Division_Code.csv",
+  stringsAsFactors = FALSE
+)
+
 dataset_div_5 <- read.csv(
   "../data/missing_data/data_for_infer/WONDER-5Yr-Census-Division-Sex-Clean.csv",
   stringsAsFactors = FALSE
@@ -297,10 +302,17 @@ dataset_div_5 <- read.csv(
                              "F" = "Female",
                              "M" = "Male"),
     AgeGroup = Age.Group.Code,
-    Geo      = Census.Division.Code,
     Month    = Month.Code
   ) |>
+  left_join(
+    division_lookup,
+    by = "Census.Division.Code"
+  ) |>
+  mutate(
+    Geo = Census.Division
+  ) |>
   select(Sex, AgeGroup, Geo, Month, Deaths)
+
 
 inferred_div_5 <- read.csv(
   "../data/missing_data/Inferred-WONDER-Census Division-Sex-5Yr.csv",
@@ -315,22 +327,6 @@ inferred_div_5 <- read.csv(
   ) |>
   select(Sex, AgeGroup, Geo, Month, Deaths)
 
-dataset_div_5 <- dataset_div_5 |>
-  left_join(
-    Census_Division_Code,
-    by = c("Geo" = "Census Division Code")
-  ) |>
-  mutate(
-    Geo = `Census Division`  
-  ) |>
-  
-  left_join(
-    Age_Group_Code,
-    by = c("AgeGroup" = "Age Code")
-  ) |>
-  mutate(
-    AgeGroup = `Age Groups`  
-  )
 
 plot_div_5yr <- make_suppression_plot(
   dataset_orig = dataset_div_5,
@@ -403,6 +399,13 @@ dataset_div_10 <- read.csv(
     Geo      = Census.Division.Code,
     Month    = Month.Code
   ) |>
+  left_join(
+    division_lookup,
+    by = "Census.Division.Code"
+  ) |>
+  mutate(
+    Geo = Census.Division
+  ) |>
   select(Sex, AgeGroup, Geo, Month, Deaths)
 
 inferred_div_10 <- read.csv(
@@ -417,22 +420,6 @@ inferred_div_10 <- read.csv(
     Month    = Month.Code
   ) |>
   select(Sex, AgeGroup, Geo, Month, Deaths)
-
-dataset_div_10 <- dataset_div_10 |>
-  left_join(
-    Census_Division_Code,
-    by = c("Geo" = "Census Division Code")
-  ) |>
-  mutate(
-    Geo = `Census Division`
-  ) |>
-  left_join(
-    Age_Group_Code,
-    by = c("AgeGroup" = "Age Code")
-  ) |>
-  mutate(
-    AgeGroup = `Age Groups`
-  )
 
 plot_div_10yr <- make_suppression_plot(
   dataset_orig = dataset_div_10,
@@ -763,6 +750,77 @@ final_plot <- cowplot::plot_grid(
 
 final_plot
 ```
+
+
+
+```{r, fig.width = 12, fig.height = 6}
+mort_5yr <- deaths_5yr_sex %>%
+  left_join(hmd_5yr,
+            by = c("Year","Five.Year.Age.Groups","Sex"),
+            suffix = c("_D","_E")) %>%
+  mutate(Rate = 1e5 * Deaths / Exposure)   # per 100k
+
+mort_5yr_plot <- mort_5yr %>%
+  filter(Year %in% c(2000, 2010, 2020)) %>%
+  mutate(
+    RatePlot = ifelse(Sex == "Male", -Rate, Rate),
+    Year = factor(Year)
+  ) %>%
+  ggplot(aes(x = Five.Year.Age.Groups, y = RatePlot, fill = Sex)) +
+  geom_col(width = 0.9) +
+  coord_flip() +
+  scale_y_continuous(labels = function(x) round(abs(x), 1)) +
+  scale_fill_manual(values = c(Male="#007acc", Female="#ff8ab8")) +
+  facet_wrap(~ Year, nrow=1) +
+  labs(
+    title="Death Rates per 100k by Age & Sex",
+    y="Rate per 100k", x="Age Group"
+  ) +
+  theme_minimal()
+
+mort_5yr_plot
+```
+
+```{r, fig.width = 12, fig.height = 6}
+hmd_age_time <- hmd_5yr %>%
+  group_by(Year, Five.Year.Age.Groups) %>%
+  summarise(Total = sum(Exposure), .groups="drop")
+
+ggplot(hmd_age_time, aes(x=Year, y=Total, color=Five.Year.Age.Groups)) +
+  geom_line(linewidth=0.8) +
+  theme_minimal() +
+  labs(title="Population Exposure by Age Group Over Time",
+       y="Exposure (person-years)", x="Year") +
+  theme(legend.position="none")
+```
+
+```{r, fig.width = 12, fig.height = 6}
+#exposure heatmap by age and year
+ggplot(hmd_5yr, aes(x=Year, y=Five.Year.Age.Groups, fill=Exposure)) +
+  geom_tile() +
+  scale_fill_gradient(low = "#deebf7", high = "#08519c") +
+  labs(
+    title="Exposure Heatmap by Age & Year",
+    x="Year", y="Age Group"
+  ) +
+  theme_minimal()
+```
+
+
+
+```{r}
+mort_scatter <- mort_5yr %>%
+  filter(Year == 2020)
+
+ggplot(mort_scatter, aes(x=Exposure, y=Rate, color=Sex)) +
+  geom_point(size=3) +
+  scale_x_log10() +
+  labs(title="Mortality vs Population Exposure (2020)",
+       x="Exposure (log scale)", y="Death Rate per 100k") +
+  theme_minimal()
+```
+
+stop
 
 
 
