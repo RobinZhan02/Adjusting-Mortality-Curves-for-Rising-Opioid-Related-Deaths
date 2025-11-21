@@ -1,0 +1,95 @@
+---
+title: "Wonder EDA Final 2"
+author: "PSTAT 296A"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(readr)
+```
+
+```{r}
+sex_unintent <- read.csv("../data/wonder_opioid/Sex-Unintentional.csv")
+sex_intent   <- read.csv("../data/wonder_opioid/Sex-Intentional.csv")
+
+census_region_all <- read.csv("../data/wonder_opioid/Census-Region-Drug-Overdose.csv")
+
+
+ggplot(suicide_by_sex, aes(x = Sex, y = deaths, fill = Sex)) +
+  geom_col() +
+  labs(
+    title = paste("Intentional (suicide) opioid deaths by sex,", year_focus),
+    x = "Sex",
+    y = "Deaths"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+sex_unintent <- clean_years(sex_unintent)
+sex_intent   <- clean_years(sex_intent)
+census_region_all <- clean_years(census_region_all)
+
+# combine opioid files
+opioid_sex <- bind_rows(
+  sex_unintent %>% mutate(Intent = "Unintentional"),
+  sex_intent   %>% mutate(Intent = "Intentional")
+)
+
+```
+
+```{r}
+year_focus <- 2020
+
+suicide_by_sex <- opioid_sex %>%
+  filter(Intent == "Intentional", Year == year_focus) %>%
+  group_by(Sex) %>%
+  summarise(
+    deaths = sum(Deaths, na.rm = TRUE),
+    pop = sum(Population, na.rm = TRUE),
+    rate = 100000 * deaths / pop,
+    .groups = "drop"
+  ) %>%
+  mutate(prop_within_intent = deaths / sum(deaths))
+
+suicide_by_sex
+```
+```{r}
+intent_compare <- opioid_sex %>%
+  filter(Year == year_focus) %>%
+  group_by(Intent) %>%
+  summarise(
+    deaths = sum(Deaths, na.rm = TRUE),
+    pop = sum(Population, na.rm = TRUE),
+    rate = 100000 * deaths / pop,
+    .groups = "drop"
+  ) %>%
+  mutate(prop_of_total = deaths / sum(deaths))
+
+intent_compare
+```
+
+
+```{r}
+opioid_trend <- opioid_sex %>%
+  group_by(Year, Intent, Sex) %>%
+  summarise(
+    deaths = sum(Deaths),
+    pop = sum(Population),
+    rate = 100000 * deaths / pop,
+    .groups = "drop"
+  )
+
+ggplot(opioid_trend, aes(x = Year, y = rate, color = Intent)) +
+  geom_line() +
+  facet_wrap(~ Sex) +
+  labs(
+    title = "Opioid death rates 2000–2020 by sex and intent",
+    y = "Deaths per 100k",
+    x = "Year"
+  ) +
+  theme_minimal()
+```
+
