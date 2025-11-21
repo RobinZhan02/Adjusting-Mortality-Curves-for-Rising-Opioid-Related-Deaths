@@ -19,7 +19,7 @@ library(stringr)
 #library(tseries)
 library(demography)
 library(ggnewscale)
-library(cowplot)
+#library(cowplot)
 library(grid)
 library(StMoMo)
 library(patchwork)
@@ -504,19 +504,19 @@ hmd_5yr <- usa_exposure_df %>%
     Five.Year.Age.Groups = factor(Five.Year.Age.Groups, levels = age_order)
   )
 
-hmd_age10 <- usa_exposure_df %>%
-  filter(Age <= 100) %>%
-  mutate(
-    Ten.Year.Age.Groups = cut(
-      Age,
-      breaks = seq(0, 100, 10),
-      right = FALSE,
-      labels = c("0–9", "10–19", "20–29", "30–39", "40–49",
-                 "50–59", "60–69", "70–79", "80–89", "90+")
-    )
-  ) %>%
-  group_by(Year, Ten.Year.Age.Groups, Sex) %>%
-  summarise(Exposure = sum(Exposure, na.rm = TRUE), .groups = "drop")
+# hmd_age10 <- usa_exposure_df %>%
+#   filter(Age <= 100) %>%
+#   mutate(
+#     Ten.Year.Age.Groups = cut(
+#       Age,
+#       breaks = seq(0, 100, 10),
+#       right = FALSE,
+#       labels = c("0–9", "10–19", "20–29", "30–39", "40–49",
+#                  "50–59", "60–69", "70–79", "80–89", "90+")
+#     )
+#   ) %>%
+#   group_by(Year, Ten.Year.Age.Groups, Sex) %>%
+#   summarise(Exposure = sum(Exposure, na.rm = TRUE), .groups = "drop")
 ```
 
 ```{r}
@@ -549,32 +549,45 @@ hmd_age10 <- usa_exposure_df %>%
 ```
 
 ```{r, fig.width = 12, fig.height = 6}
+expo_max  <- max(hmd_5yr$Exposure, na.rm = TRUE)
+expo_max  <- ceiling(expo_max / 1e6) * 1e6   # nicer round value
+
+expo_breaks <- c(-expo_max, -expo_max/2, 0, expo_max/2, expo_max)
+
 p_expo <- hmd_5yr %>%
   filter(Year %in% c(2000, 2010, 2020)) %>%
   mutate(
     Sex = factor(Sex, levels = c("Male", "Female")),
     ExposurePlot = ifelse(Sex == "Male", -Exposure, Exposure),
+    Five.Year.Age.Groups = factor(Five.Year.Age.Groups, levels = age_order),
     Year = factor(Year, levels = c(2000, 2010, 2020))
   ) %>%
   ggplot(aes(x = Five.Year.Age.Groups, y = ExposurePlot, fill = Sex)) +
   geom_col(width = 0.9) +
   coord_flip() +
-  scale_y_continuous(labels = function(x) scales::comma(abs(x))) +
+  scale_y_continuous(limits = c(-expo_max, expo_max),
+                    breaks = expo_breaks,
+                    labels = function(x) scales::comma(abs(x))) +
   scale_fill_manual(values = c("Male" = "#007acc", "Female" = "#ff8ab8")) +
   facet_wrap(~ Year, nrow = 1) +  
   theme_minimal(base_size = 12) +
   labs(
-    title = "U.S. Population Pyramids (1995–2020)",
+    title = "U.S. Population Pyramids (2000, 2010, 2020)",
     x = "Age Group",
     y = "Exposure (person-years)"
   ) +
   theme(
     legend.position = "bottom",
     strip.text = element_text(size = 14, face = "bold"),
-    panel.spacing = unit(1.5, "lines")
+    axis.text.y  = element_text(size = 10, margin = margin(r = 12)),
+    axis.title.y = element_text(size = 12, margin = margin(r = 18)),
+    axis.title.x = element_text(size = 12, margin = margin(t = 10)),
+    panel.spacing = unit(1.25, "lines"),
+    panel.spacing.x = unit(40, "pt"),
+    panel.spacing.y = unit(12, "pt"), 
   )
 
-p_expo
+#p_expo
 ```
 
 ```{r, fig.width = 12, fig.height = 6}
@@ -636,6 +649,11 @@ deaths_5yr_sex <- deaths_all %>%
     Five.Year.Age.Groups = factor(Five.Year.Age.Groups, levels = age_order)
   )
 
+death_max <- max(deaths_5yr_sex$Deaths, na.rm = TRUE)
+death_max <- ceiling(death_max / 1e5) * 1e5  # round to nicer tick
+
+death_breaks <- c(-death_max, -death_max/2, 0, death_max/2, death_max)
+
 p_deaths <- deaths_5yr_sex %>%
   filter(Year %in% c(2000, 2010, 2020)) %>%
   mutate(
@@ -646,7 +664,9 @@ p_deaths <- deaths_5yr_sex %>%
   ggplot(aes(x = Five.Year.Age.Groups, y = DeathsPlot, fill = Sex)) +
   geom_col(width = 0.9) +
   coord_flip() +
-  scale_y_continuous(labels = function(x) scales::comma(abs(x))) +
+  scale_y_continuous(limits = c(-death_max, death_max),
+                  breaks = death_breaks,
+                    labels = function(x) scales::comma(abs(x))) +
   scale_fill_manual(values = c("Male" = "#007acc", "Female" = "#ff8ab8")) +
   facet_wrap(~ Year, nrow = 1) +
   theme_minimal(base_size = 12) +
@@ -657,11 +677,17 @@ p_deaths <- deaths_5yr_sex %>%
   ) +
   theme(
     legend.position = "bottom",
-    strip.text      = element_text(size = 14, face = "bold"),
-    panel.spacing   = unit(1.5, "lines")
+    strip.text = element_text(size = 14, face = "bold"),
+    axis.text.y  = element_text(size = 10, margin = margin(r = 12)),
+    axis.title.y = element_text(size = 12, margin = margin(r = 18)),
+    axis.title.x = element_text(size = 12, margin = margin(t = 10)),
+    panel.spacing = unit(1.25, "lines"), 
+    plot.margin = margin(5,5,5,5), 
+    panel.spacing.x = unit(40, "pt"),
+    panel.spacing.y = unit(12, "pt"), 
   )
 
-p_deaths
+#p_deaths
 ```
 
 ```{r}
@@ -693,8 +719,9 @@ deaths_df <- deaths_df %>%
   mutate(DeathsPlot_scaled = DeathsPlot * scale_factor)
 ```
 
-
 ```{r, fig.width = 12, fig.height = 6}
+### overlayed
+
 ggplot() +
   geom_col(
     data = expo_df,
@@ -725,32 +752,19 @@ ggplot() +
   )
 ```
 
-```{r, fig.width = 12, fig.height = 8}
-p_expo_noleg <- p_expo + theme(legend.position = "none")
-p_deaths_noleg <- p_deaths + theme(legend.position = "none")
 
-legend <- cowplot::get_legend(
-  p_expo + theme(legend.position = "bottom")
-)
+```{r}
+p_expo_clean   <- p_expo   + theme(legend.position = "none")
+p_deaths_clean <- p_deaths + theme(legend.position = "none")
 
-top_bottom <- cowplot::plot_grid(
-  p_expo_noleg,
-  p_deaths_noleg,
-  ncol = 1,
-  align = "v",
-  rel_heights = c(1, 1)  # adjust if you want one row taller
-)
-
-final_plot <- cowplot::plot_grid(
-  top_bottom,
-  legend,
-  ncol = 1,
-  rel_heights = c(1, 0.1)
-)
-
-final_plot
+final_plot <- (p_expo_clean / p_deaths_clean) +
+  plot_layout(heights = c(1, 1), guides = "collect") &
+  theme(legend.position = "bottom")
 ```
 
+```{r, fig.width = 14, fig.height = 10}
+final_plot
+```
 
 
 ```{r, fig.width = 12, fig.height = 6}
