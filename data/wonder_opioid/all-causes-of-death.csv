@@ -1,0 +1,149 @@
+"Notes","Census Region","Census Region Code","Year","Year Code",Deaths,Population,Crude Rate,Crude Rate Lower 95% Confidence Interval,Crude Rate Upper 95% Confidence Interval,Crude Rate Standard Error,Age Adjusted Rate,Age Adjusted Rate Lower 95% Confidence Interval,Age Adjusted Rate Upper 95% Confidence Interval,Age Adjusted Rate Standard Error
+,"Census Region 1: Northeast","CENS-R1","1999","1999",485976,53343775,911.0,908.5,913.6,1.3,846.5,844.1,848.9,1.2
+,"Census Region 1: Northeast","CENS-R1","2000","2000",487831,53594378,910.2,907.7,912.8,1.3,839.8,837.4,842.1,1.2
+,"Census Region 1: Northeast","CENS-R1","2001","2001",487718,53915522,904.6,902.1,907.1,1.3,829.5,827.2,831.9,1.2
+,"Census Region 1: Northeast","CENS-R1","2002","2002",487268,54143915,899.9,897.4,902.5,1.3,818.7,816.4,821.0,1.2
+,"Census Region 1: Northeast","CENS-R1","2003","2003",482660,54334453,888.3,885.8,890.8,1.3,800.8,798.6,803.1,1.2
+,"Census Region 1: Northeast","CENS-R1","2004","2004",472835,54423533,868.8,866.3,871.3,1.3,777.6,775.4,779.8,1.1
+,"Census Region 1: Northeast","CENS-R1","2005","2005",475398,54451230,873.1,870.6,875.6,1.3,772.3,770.1,774.5,1.1
+,"Census Region 1: Northeast","CENS-R1","2006","2006",464503,54522659,851.9,849.5,854.4,1.3,745.4,743.3,747.6,1.1
+,"Census Region 1: Northeast","CENS-R1","2007","2007",461712,54653362,844.8,842.4,847.2,1.2,730.3,728.2,732.4,1.1
+,"Census Region 1: Northeast","CENS-R1","2008","2008",466256,54875926,849.7,847.2,852.1,1.2,726.8,724.7,728.9,1.1
+,"Census Region 1: Northeast","CENS-R1","2009","2009",457548,55133101,829.9,827.5,832.3,1.2,704.4,702.3,706.4,1.1
+,"Census Region 1: Northeast","CENS-R1","2010","2010",459708,55317240,831.0,828.6,833.4,1.2,698.6,696.5,700.6,1.0
+,"Census Region 1: Northeast","CENS-R1","2011","2011",470043,55521598,846.6,844.2,849.0,1.2,701.7,699.6,703.7,1.0
+,"Census Region 1: Northeast","CENS-R1","2012","2012",467444,55761091,838.3,835.9,840.7,1.2,686.3,684.3,688.3,1.0
+,"Census Region 1: Northeast","CENS-R1","2013","2013",475519,55943073,850.0,847.6,852.4,1.2,687.2,685.2,689.2,1.0
+,"Census Region 1: Northeast","CENS-R1","2014","2014",475173,56152333,846.2,843.8,848.6,1.2,678.2,676.2,680.2,1.0
+,"Census Region 1: Northeast","CENS-R1","2015","2015",489383,56283891,869.5,867.1,871.9,1.2,690.4,688.5,692.4,1.0
+,"Census Region 1: Northeast","CENS-R1","2016","2016",490086,56209510,871.9,869.5,874.3,1.2,686.6,684.6,688.5,1.0
+,"Census Region 1: Northeast","CENS-R1","2017","2017",499319,56470581,884.2,881.8,886.7,1.3,683.5,681.6,685.4,1.0
+,"Census Region 1: Northeast","CENS-R1","2018","2018",501631,56111079,894.0,891.5,896.5,1.3,679.2,677.2,681.1,1.0
+,"Census Region 1: Northeast","CENS-R1","2019","2019",499764,55982803,892.7,890.2,895.2,1.3,669.5,667.6,671.4,1.0
+,"Census Region 1: Northeast","CENS-R1","2020","2020",608684,55849869,1089.9,1087.1,1092.6,1.4,809.6,807.5,811.7,1.1
+"Total","Census Region 1: Northeast","CENS-R1",,,10666459,1212994922,879.3,878.8,879.9,0.3,735.7,735.3,736.2,0.2
+,"Census Region 2: Midwest","CENS-R2","1999","1999",582146,64100061,908.2,905.9,910.5,1.2,891.3,889.1,893.6,1.2
+,"Census Region 2: Midwest","CENS-R2","2000","2000",576843,64392776,895.8,893.5,898.1,1.2,876.3,874.1,878.6,1.2
+,"Census Region 2: Midwest","CENS-R2","2001","2001",575007,64776531,887.7,885.4,890.0,1.2,862.9,860.6,865.1,1.1
+,"Census Region 2: Midwest","CENS-R2","2002","2002",582582,65018293,896.0,893.7,898.3,1.2,864.9,862.7,867.2,1.1
+,"Census Region 2: Midwest","CENS-R2","2003","2003",577852,65276954,885.2,882.9,887.5,1.2,846.7,844.5,848.8,1.1
+,"Census Region 2: Midwest","CENS-R2","2004","2004",562728,65532305,858.7,856.5,860.9,1.1,815.6,813.5,817.8,1.1
+,"Census Region 2: Midwest","CENS-R2","2005","2005",574733,65751872,874.1,871.8,876.4,1.2,822.3,820.1,824.4,1.1
+,"Census Region 2: Midwest","CENS-R2","2006","2006",568288,66028555,860.7,858.4,862.9,1.1,800.3,798.2,802.4,1.1
+,"Census Region 2: Midwest","CENS-R2","2007","2007",564665,66293689,851.8,849.5,854.0,1.1,782.4,780.3,784.4,1.0
+,"Census Region 2: Midwest","CENS-R2","2008","2008",582258,66523935,875.3,873.0,877.5,1.1,794.7,792.7,796.8,1.0
+,"Census Region 2: Midwest","CENS-R2","2009","2009",566666,66748437,849.0,846.7,851.2,1.1,763.8,761.8,765.8,1.0
+,"Census Region 2: Midwest","CENS-R2","2010","2010",575429,66927001,859.8,857.6,862.0,1.1,765.4,763.4,767.4,1.0
+,"Census Region 2: Midwest","CENS-R2","2011","2011",587176,67158835,874.3,872.1,876.5,1.1,766.3,764.3,768.2,1.0
+,"Census Region 2: Midwest","CENS-R2","2012","2012",591222,67316297,878.3,876.0,880.5,1.1,759.3,757.4,761.3,1.0
+,"Census Region 2: Midwest","CENS-R2","2013","2013",601688,67547890,890.8,888.5,893.0,1.1,760.1,758.1,762.0,1.0
+,"Census Region 2: Midwest","CENS-R2","2014","2014",609364,67745108,899.5,897.2,901.8,1.2,758.8,756.8,760.7,1.0
+,"Census Region 2: Midwest","CENS-R2","2015","2015",623806,67907403,918.6,916.3,920.9,1.2,766.7,764.8,768.7,1.0
+,"Census Region 2: Midwest","CENS-R2","2016","2016",627149,67941429,923.1,920.8,925.4,1.2,763.9,762.0,765.9,1.0
+,"Census Region 2: Midwest","CENS-R2","2017","2017",644378,68179351,945.1,942.8,947.4,1.2,772.2,770.3,774.1,1.0
+,"Census Region 2: Midwest","CENS-R2","2018","2018",649652,68308744,951.1,948.7,953.4,1.2,765.8,763.9,767.7,1.0
+,"Census Region 2: Midwest","CENS-R2","2019","2019",650493,68329004,952.0,949.7,954.3,1.2,757.7,755.8,759.6,1.0
+,"Census Region 2: Midwest","CENS-R2","2020","2020",766131,68316744,1121.4,1118.9,1124.0,1.3,885.6,883.6,887.6,1.0
+"Total","Census Region 2: Midwest","CENS-R2",,,13240256,1466121214,903.1,902.6,903.6,0.2,799.0,798.6,799.4,0.2
+,"Census Region 3: South","CENS-R3","1999","1999",879903,99164460,887.3,885.5,889.2,0.9,918.0,916.1,919.9,1.0
+,"Census Region 3: South","CENS-R3","2000","2000",894012,100236820,891.9,890.1,893.7,0.9,920.5,918.5,922.4,1.0
+,"Census Region 3: South","CENS-R3","2001","2001",899013,101849575,882.7,880.9,884.5,0.9,909.7,907.8,911.6,1.0
+,"Census Region 3: South","CENS-R3","2002","2002",911668,103150787,883.8,882.0,885.6,0.9,908.7,906.8,910.6,1.0
+,"Census Region 3: South","CENS-R3","2003","2003",917423,104380188,878.9,877.1,880.7,0.9,898.8,896.9,900.6,0.9
+,"Census Region 3: South","CENS-R3","2004","2004",903221,105883977,853.0,851.3,854.8,0.9,868.8,867.0,870.6,0.9
+,"Census Region 3: South","CENS-R3","2005","2005",925170,107479771,860.8,859.0,862.5,0.9,869.8,868.0,871.6,0.9
+,"Census Region 3: South","CENS-R3","2006","2006",918847,109076933,842.4,840.7,844.1,0.9,843.8,842.1,845.6,0.9
+,"Census Region 3: South","CENS-R3","2007","2007",924360,110688742,835.1,833.4,836.8,0.9,829.9,828.2,831.6,0.9
+,"Census Region 3: South","CENS-R3","2008","2008",944536,112184930,841.9,840.2,843.6,0.9,828.4,826.7,830.1,0.9
+,"Census Region 3: South","CENS-R3","2009","2009",936670,113548615,824.9,823.2,826.6,0.9,803.2,801.6,804.8,0.8
+,"Census Region 3: South","CENS-R3","2010","2010",952654,114555744,831.6,829.9,833.3,0.9,802.6,801.0,804.3,0.8
+,"Census Region 3: South","CENS-R3","2011","2011",963512,116046736,830.3,828.6,831.9,0.8,786.8,785.2,788.4,0.8
+,"Census Region 3: South","CENS-R3","2012","2012",983701,117257221,838.9,837.3,840.6,0.8,782.4,780.9,784.0,0.8
+,"Census Region 3: South","CENS-R3","2013","2013",1006376,118383453,850.1,848.4,851.8,0.8,779.3,777.8,780.9,0.8
+,"Census Region 3: South","CENS-R3","2014","2014",1025281,119771934,856.0,854.4,857.7,0.8,773.9,772.4,775.4,0.8
+,"Census Region 3: South","CENS-R3","2015","2015",1058274,121182847,873.3,871.6,875.0,0.8,778.5,777.0,780.0,0.8
+,"Census Region 3: South","CENS-R3","2016","2016",1076471,122319574,880.0,878.4,881.7,0.8,773.5,772.1,775.0,0.8
+,"Census Region 3: South","CENS-R3","2017","2017",1106032,123658624,894.4,892.8,896.1,0.9,777.0,775.5,778.4,0.7
+,"Census Region 3: South","CENS-R3","2018","2018",1120965,124753948,898.5,896.9,900.2,0.8,767.6,766.2,769.1,0.7
+,"Census Region 3: South","CENS-R3","2019","2019",1129532,125580448,899.4,897.8,901.1,0.8,757.1,755.7,758.5,0.7
+,"Census Region 3: South","CENS-R3","2020","2020",1335538,126662754,1054.4,1052.6,1056.2,0.9,876.9,875.4,878.5,0.8
+"Total","Census Region 3: South","CENS-R3",,,21813159,2497818081,873.3,872.9,873.7,0.2,823.4,823.1,823.8,0.2
+,"Census Region 4: West","CENS-R4","1999","1999",443374,62431872,710.2,708.1,712.3,1.1,811.4,809.0,813.8,1.2
+,"Census Region 4: West","CENS-R4","2000","2000",444665,63197932,703.6,701.5,705.7,1.1,798.8,796.4,801.1,1.2
+,"Census Region 4: West","CENS-R4","2001","2001",454687,64427327,705.7,703.7,707.8,1.0,794.7,792.3,797.0,1.2
+,"Census Region 4: West","CENS-R4","2002","2002",461869,65312198,707.2,705.1,709.2,1.0,790.2,787.9,792.5,1.2
+,"Census Region 4: West","CENS-R4","2003","2003",470353,66116338,711.4,709.4,713.4,1.0,785.7,783.5,788.0,1.1
+,"Census Region 4: West","CENS-R4","2004","2004",458831,66965483,685.2,683.2,687.2,1.0,750.3,748.2,752.5,1.1
+,"Census Region 4: West","CENS-R4","2005","2005",472716,67833726,696.9,694.9,698.9,1.0,752.4,750.2,754.6,1.1
+,"Census Region 4: West","CENS-R4","2006","2006",474626,68751765,690.3,688.4,692.3,1.0,736.4,734.3,738.5,1.1
+,"Census Region 4: West","CENS-R4","2007","2007",472975,69595414,679.6,677.7,681.5,1.0,714.9,712.9,717.0,1.0
+,"Census Region 4: West","CENS-R4","2008","2008",478934,70509175,679.3,677.3,681.2,1.0,705.8,703.7,707.8,1.0
+,"Census Region 4: West","CENS-R4","2009","2009",476279,71341376,667.6,665.7,669.5,1.0,683.2,681.3,685.2,1.0
+,"Census Region 4: West","CENS-R4","2010","2010",480644,71945553,668.1,666.2,670.0,1.0,676.2,674.2,678.1,1.0
+,"Census Region 4: West","CENS-R4","2011","2011",494727,72864748,679.0,677.1,680.9,1.0,672.3,670.4,674.2,1.0
+,"Census Region 4: West","CENS-R4","2012","2012",500912,73579431,680.8,678.9,682.7,1.0,661.7,659.9,663.6,0.9
+,"Census Region 4: West","CENS-R4","2013","2013",513410,74254423,691.4,689.5,693.3,1.0,660.9,659.0,662.7,0.9
+,"Census Region 4: West","CENS-R4","2014","2014",516600,75187681,687.1,685.2,689.0,1.0,645.8,644.0,647.5,0.9
+,"Census Region 4: West","CENS-R4","2015","2015",541167,76044679,711.6,709.7,713.5,1.0,657.9,656.2,659.7,0.9
+,"Census Region 4: West","CENS-R4","2016","2016",550542,76657000,718.2,716.3,720.1,1.0,653.6,651.9,655.4,0.9
+,"Census Region 4: West","CENS-R4","2017","2017",563774,77410622,728.3,726.4,730.2,1.0,656.8,655.1,658.6,0.9
+,"Census Region 4: West","CENS-R4","2018","2018",566957,77993663,726.9,725.0,728.8,1.0,644.2,642.5,645.9,0.9
+,"Census Region 4: West","CENS-R4","2019","2019",575049,78347268,734.0,732.1,735.9,1.0,640.4,638.7,642.0,0.9
+,"Census Region 4: West","CENS-R4","2020","2020",673376,78654756,856.1,854.1,858.2,1.0,736.1,734.3,737.9,0.9
+"Total","Census Region 4: West","CENS-R4",,,11086467,1569422430,706.4,706.0,706.8,0.2,702.9,702.5,703.3,0.2
+"Total",,,,,56806341,6746356647,842.0,841.8,842.2,0.1,775.3,775.1,775.5,0.1
+"---"
+"Dataset: Multiple Cause of Death, 1999-2020"
+"Query Parameters:"
+"Title: all-causes-of-death"
+"Group By: Census Region; Year"
+"Show Totals: True"
+"Show Zero Values: True"
+"Show Suppressed: True"
+"Standard Population: 2000 U.S. Std. Population"
+"Calculate Rates Per: 100,000"
+"Rate Options: Default intercensal populations for years 2001-2009 (except Infant Age Groups)"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/mcd.html for more information."
+"---"
+"Query Date: Nov 23, 2025 10:37:40 PM"
+"---"
+"Suggested Citation: Centers for Disease Control and Prevention, National Center for Health Statistics. National Vital Statistics"
+"System, Mortality 1999-2020 on CDC WONDER Online Database, released in 2021. Data are from the Multiple Cause of Death Files,"
+"1999-2020, as compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative"
+"Program. Accessed at http://wonder.cdc.gov/mcd-icd10.html on Nov 23, 2025 10:37:40 PM"
+"---"
+Caveats:
+"1. As of April 3, 2017, the underlying cause of death has been revised for 125 deaths in 2014. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#2014-Revision."
+"2. The populations used to calculate standard age-adjusted rates are documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#2000 Standard Population."
+"3. The method used to calculate age-adjusted rates is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Age-Adjusted Rates."
+"4. Deaths for persons of unknown age are included in counts and crude rates, but are not included in age-adjusted rates."
+"5. The method used to calculate 95% confidence intervals is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Confidence-Intervals."
+"6. The method used to calculate standard errors is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Standard-Errors."
+"7. The population figures for year 2020 are bridged-race estimates of the July 1 resident population, from the Vintage 2020"
+"postcensal series released by NCHS on September 22, 2021. The population figures for year 2019 are bridged-race estimates of the"
+"July 1 resident population, from the Vintage 2019 postcensal series released by NCHS on July 9, 2020. The population figures for"
+"year 2018 are bridged-race estimates of the July 1 resident population, from the Vintage 2018 postcensal series released by NCHS"
+"on June 25, 2019. The population figures for year 2017 are bridged-race estimates of the July 1 resident population, from the"
+"Vintage 2017 postcensal series released by NCHS on June 27, 2018. The population figures for year 2016 are bridged-race"
+"estimates of the July 1 resident population, from the Vintage 2016 postcensal series released by NCHS on June 26, 2017. The"
+"population figures for year 2015 are bridged-race estimates of the July 1 resident population, from the Vintage 2015 postcensal"
+"series released by NCHS on June 28, 2016. The population figures for year 2014 are bridged-race estimates of the July 1 resident"
+"population, from the Vintage 2014 postcensal series released by NCHS on June 30, 2015. The population figures for year 2013 are"
+"bridged-race estimates of the July 1 resident population, from the Vintage 2013 postcensal series released by NCHS on June 26,"
+"2014. The population figures for year 2012 are bridged-race estimates of the July 1 resident population, from the Vintage 2012"
+"postcensal series released by NCHS on June 13, 2013. Population figures for 2011 are bridged-race estimates of the July 1"
+"resident population, from the county-level postcensal Vintage 2011 series released by NCHS on July 18, 2012. Population figures"
+"for 2010 are April 1 Census counts. The population figures for years 2001 - 2009, are bridged-race estimates of the July 1"
+"resident population, from the revised intercensal county-level 2000 - 2009 series released by NCHS on October 26, 2012."
+"Population figures for 2000 are April 1 Census counts. Population figures for 1999 are from the 1990-1999 intercensal series of"
+"July 1 estimates. Population figures for Infant Age Groups are the number of live births. <br/><b>Note:</b> Rates and population"
+"figures for years 2001 - 2009 differ slightly from previously published reports, due to use of the population estimates which"
+"were available at the time of release."
+"8. The population figures used in the calculation of death rates for the age group 'under 1 year' are the estimates of the"
+"resident population that is under one year of age. More information: http://wonder.cdc.gov/wonder/help/mcd.html#Age Group."

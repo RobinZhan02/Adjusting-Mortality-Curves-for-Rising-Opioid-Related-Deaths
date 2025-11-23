@@ -36,7 +36,6 @@ opioid_sex <- bind_rows(
   sex_unintent %>% mutate(Intent = "Unintentional"),
   sex_intent   %>% mutate(Intent = "Intentional")
 )
-
 ```
 
 ```{r}
@@ -55,6 +54,8 @@ suicide_by_sex <- opioid_sex %>%
 
 suicide_by_sex
 ```
+
+
 ```{r}
 ggplot(suicide_by_sex, aes(x = Sex, y = deaths, fill = Sex)) +
   geom_col() +
@@ -132,25 +133,34 @@ ggplot() +
 ```
 ```{r}
 region_trend <- census_region_all %>%
+  mutate(
+    rate  = Age.Adjusted.Rate,
+    lower = Age.Adjusted.Rate.Lower.95..Confidence.Interval,
+    upper = Age.Adjusted.Rate.Upper.95..Confidence.Interval
+  ) %>%
   group_by(Census.Region, Year) %>%
   summarise(
-    deaths = sum(Deaths, na.rm = TRUE),
-    pop = sum(Population, na.rm = TRUE),
-    rate = 100000 * deaths / pop,
+    rate  = first(rate),
+    lower = first(lower),
+    upper = first(upper),
     .groups = "drop"
   )
 ```
 
 ```{r, fig.width = 12, fig.height = 6}
-all_drug_census <- ggplot(region_trend, aes(x = Year, y = rate, color = Census.Region)) +
+all_drug_census <- ggplot(region_trend,
+                          aes(x = Year, y = rate, color = Census.Region)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper, fill = Census.Region),
+              alpha = 0.12, color = NA) +
   geom_line() +
   facet_wrap(~ Census.Region, scales = "free_y") +
   labs(
-    title = "All-drug overdose rates 2000–2020 by Census Region",
-    y = "Deaths per 100k",
+    title = "All-drug age-adjusted overdose rates 2000–2020 by Census Region",
+    y = "Age-adjusted deaths per 100k",
     x = "Year"
   ) +
-  theme_minimal()
+  theme_minimal() +
+  scale_fill_discrete(guide = "none")  # hide separate fill legend
 
 all_drug_census
 ```
@@ -177,31 +187,38 @@ census_region_opioid <- census_region_opioid %>%
   mutate(
     Year = as.numeric(Year),
     Deaths = as.numeric(Deaths),
-    Population = as.numeric(Population)
+    Population = as.numeric(Population),
+    rate_aa  = Age.Adjusted.Rate,
+    lower_aa = Age.Adjusted.Rate.Lower.95..Confidence.Interval,
+    upper_aa = Age.Adjusted.Rate.Upper.95..Confidence.Interval
   ) %>%
   filter(Year >= 2000, Year <= 2020)
 
 opioid_region <- census_region_opioid %>%
   group_by(Census.Region, Year) %>%
   summarise(
-    deaths = sum(Deaths, na.rm = TRUE),
-    pop    = sum(Population, na.rm = TRUE),
-    rate   = 100000 * deaths / pop,
+    rate  = weighted.mean(rate_aa,  w = Population, na.rm = TRUE),
+    lower = weighted.mean(lower_aa, w = Population, na.rm = TRUE),
+    upper = weighted.mean(upper_aa, w = Population, na.rm = TRUE),
     .groups = "drop"
   )
 ```
 
 ```{r, fig.width = 12, fig.height = 6}
-opioid_census_region <- ggplot(opioid_region, aes(x = Year, y = rate, color = Census.Region)) +
+opioid_census_region <- ggplot(opioid_region,
+                               aes(x = Year, y = rate, color = Census.Region)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper, fill = Census.Region),
+              alpha = 0.12, color = NA) +
   geom_line(linewidth = 1) +
   facet_wrap(~ Census.Region, scales = "free_y") +
   labs(
-    title = "Opioid-Related Death Rates 2000–2020 by Census Region",
+    title = "Opioid age-adjusted death rates 2000–2020 by Census Region",
     x = "Year",
-    y = "Deaths per 100k",
+    y = "Age-adjusted deaths per 100k",
     color = "Census Region"
   ) +
-  theme_minimal()
+  theme_minimal() +
+  scale_fill_discrete(guide = "none")
 
 opioid_census_region
 ```
@@ -217,21 +234,15 @@ opioid_region_growth <- opioid_region %>%
     .groups = "drop"
   )
 
-opioid_region_growth
 ```
 
-<<<<<<< HEAD
 ```{r}
 peak_years <- opioid_region %>%
   group_by(Census.Region) %>%
   slice_max(rate, n = 1)
-
-peak_years
 ```
 
 
-=======
->>>>>>> 28b7d5ff5c96ab10f6bd6e2cb707594af6a0233b
 ```{r, fig.width = 12, fig.height = 6}
 opioid_region_sex <- census_region_opioid %>%
   group_by(Census.Region, Year, Sex) %>%
@@ -259,52 +270,86 @@ ggplot(opioid_region_sex,
   theme_minimal()
 ```
 
-```{r, fig.width = 12, fig.height = 6}
-opioid_share <- opioid_region %>%
-  inner_join(region_trend, 
-             by = c("Census.Region" = "Census.Region",
-                    "Year" = "Year"),
-             suffix = c("_opioid", "_all")) %>%
-  mutate(share = deaths_opioid / deaths_all)
 
-ggplot(opioid_share,
-       aes(x = Year, y = share, color = Census.Region)) +
-  geom_line(size = 1) +
-  facet_wrap(~ Census.Region, scales = "free_y") +
-  labs(
-    title = "Share of All-Drug Overdose Deaths Attributed to Opioids",
-    y = "Proportion opioid",
-    x = "Year"
-  ) +
-  theme_minimal()
-```
 ```{r}
-compare <- bind_rows(
-  opioid_region %>% mutate(Type = "Opioid"),
-  region_trend %>% mutate(Type = "All-drug")
+all_causes <- read.csv("../data/wonder_opioid/all-causes-of-death.csv")
+
+allcause_df <- all_causes %>%
+  mutate(
+    Year = as.numeric(Year),
+    Deaths = as.numeric(Deaths),
+    Population = as.numeric(Population),
+    rate_aa  = Age.Adjusted.Rate,
+    lower_aa = Age.Adjusted.Rate.Lower.95..Confidence.Interval,
+    upper_aa = Age.Adjusted.Rate.Upper.95..Confidence.Interval
+  ) %>%
+  filter(Year >= 2000, Year <= 2020)
+
+allcause_region <- allcause_df %>%
+  group_by(Census.Region, Year) %>%
+  summarise(
+    rate  = first(rate_aa),
+    lower = first(lower_aa),
+    upper = first(upper_aa),
+    .groups = "drop"
+  )
+```
+
+
+
+```{r, fig.width=12, fig.height=6}
+scale_factor <- max(allcause_region$rate, na.rm = TRUE) /
+                max(bind_rows(opioid_region, region_trend)$rate, na.rm = TRUE)
+
+combined_ci <- bind_rows(
+  opioid_region %>%
+    mutate(Type = "Opioid"),
+  region_trend %>%
+    mutate(Type = "All-drug"),
+  allcause_region %>%
+    mutate(
+      Type = "All-cause",
+      rate  = rate  / scale_factor,
+      lower = lower / scale_factor,
+      upper = upper / scale_factor
+    )
 )
 
-<<<<<<< HEAD
-opioid_vs_drug <- ggplot(compare,
-=======
-ggplot(compare,
->>>>>>> 28b7d5ff5c96ab10f6bd6e2cb707594af6a0233b
-       aes(x = Year, y = rate, color = Type)) +
-  geom_line(size = 1) +
+opioid_vs_drug_vs_all <- ggplot(combined_ci,
+                                aes(x = Year, y = rate, color = Type, fill = Type)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper),
+              alpha = 0.2, color = NA) +
+  geom_line(linewidth = 0.8) +
   facet_wrap(~ Census.Region, scales = "free_y") +
+  scale_y_continuous(
+    name = "Opioid / All-drug age-adjusted deaths per 100k",
+    sec.axis = sec_axis(
+      ~ . * scale_factor,
+      name = "All-cause age-adjusted deaths per 100k"
+    )
+  ) +
+  scale_color_manual(values = c(
+    "Opioid"    = "#007acc",
+    "All-drug"  = "#00b050",
+    "All-cause" = "#cc0000"
+  )) +
+  scale_fill_manual(values = c(
+    "Opioid"    = "#007acc",
+    "All-drug"  = "#00b050",
+    "All-cause" = "#cc0000"
+  )) +
   labs(
-    title = "Opioid vs All-Drug Overdose Rates 2000–2020",
-    y = "Deaths per 100k",
+    title = "Opioid vs All-Drug vs All-Cause Age-Adjusted Mortality 2000–2020",
     x = "Year",
     color = "Type"
   ) +
-  theme_minimal()
-<<<<<<< HEAD
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    axis.title.y.right = element_text(margin = margin(l = 10))
+  )
 
-opioid_vs_drug
-
-
-=======
->>>>>>> 28b7d5ff5c96ab10f6bd6e2cb707594af6a0233b
+opioid_vs_drug_vs_all
+#opioid_vs_drug
 ```
 
