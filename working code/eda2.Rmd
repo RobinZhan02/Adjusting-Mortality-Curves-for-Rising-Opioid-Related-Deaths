@@ -220,6 +220,7 @@ opioid_region_growth <- opioid_region %>%
 opioid_region_growth
 ```
 
+<<<<<<< HEAD
 ```{r}
 peak_years <- opioid_region %>%
   group_by(Census.Region) %>%
@@ -229,6 +230,8 @@ peak_years
 ```
 
 
+=======
+>>>>>>> 28b7d5ff5c96ab10f6bd6e2cb707594af6a0233b
 ```{r, fig.width = 12, fig.height = 6}
 opioid_region_sex <- census_region_opioid %>%
   group_by(Census.Region, Year, Sex) %>%
@@ -281,7 +284,11 @@ compare <- bind_rows(
   region_trend %>% mutate(Type = "All-drug")
 )
 
+<<<<<<< HEAD
 opioid_vs_drug <- ggplot(compare,
+=======
+ggplot(compare,
+>>>>>>> 28b7d5ff5c96ab10f6bd6e2cb707594af6a0233b
        aes(x = Year, y = rate, color = Type)) +
   geom_line(size = 1) +
   facet_wrap(~ Census.Region, scales = "free_y") +
@@ -292,9 +299,12 @@ opioid_vs_drug <- ggplot(compare,
     color = "Type"
   ) +
   theme_minimal()
+<<<<<<< HEAD
 
 opioid_vs_drug
 
 
+=======
+>>>>>>> 28b7d5ff5c96ab10f6bd6e2cb707594af6a0233b
 ```
 
