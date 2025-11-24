@@ -241,3 +241,130 @@ region_4 <- census_region %>%
   mutate(Deaths = as.numeric(Deaths))
 dispersion_calc(region_4, "West Region")
 ```
+
+## All Causes Of Death
+
+```{r}
+year_month <- read.csv("../data/time_series/all-causes.csv") %>%
+  filter(Notes != "Total" & Year != "NA") %>%
+  mutate(Date = as.Date(paste0(Month.Code, "/01"), format = "%Y/%m/%d"))
+
+year_month <- year_month %>%
+  mutate(mean = NA,
+         variance = NA)
+```
+
+```{r}
+last_ma <- nrow(year_month) - 5
+
+for(i in 7:last_ma){
+  
+  idx_full <- (i-5):(i+5)
+  idx_left  <- i-6            
+  idx_right <- i+6
+  
+  x_vals <- c(year_month$Deaths[idx_full],
+              year_month$Deaths[idx_left],
+              year_month$Deaths[idx_right])
+  
+  w_vals <- c(rep(1, 11), 0.5, 0.5)
+  
+  mu <- weighted.mean(x_vals, w_vals)
+  year_month$mean[i] <- mu
+  
+  year_month$variance[i] <- sum(w_vals * (x_vals - mu)^2) / sum(w_vals)
+}
+```
+
+```{r}
+dispersion_set <- year_month %>%
+  filter(mean != 'NA') %>%
+  mutate(dispersion = variance / mean)
+
+ggplot() +
+  geom_line(data = dispersion_set,
+            aes(x = Date, y = Deaths, color = "Original"), 
+            size = 1, alpha = 0.8) +
+  geom_step(data = dispersion_set,
+            aes(x = Date, y = mean, color = "13-Month Moving Average"),
+            size = 0.8) +
+  labs(
+    title = "13-Month Moving Average of US Death Counts",
+    y = "Deaths", x = "Date",
+    color = "Legend") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        plot.title = element_text(size = 18))
+
+plot(dispersion_set$Date, log(dispersion_set$dispersion), type = "l",
+     xlab = "Date", ylab = "Log of Dispersion", main = "Test for Over/Underdispersion",
+     ylim = c(0,10))
+abline(h = log(1), col = "red", lty = 2)
+
+#less than 1 means under-dispersion, more than 1 means over-dispersion
+```
+
+```{r}
+x <- ts(year_month, start=c(1999,1), end=c(2020,12), frequency=12)
+m <- decompose(x)
+plot(m$seasonal)
+```
+
+## Isotonic Regression Plot
+
+```{r}
+iso <- read.csv("../data/time_series/single-year-region.csv") %>%
+  filter(Deaths != "NA" & Census.Region.Code == "CENS-R4" & Population != "Not Applicable")
+
+x <- as.numeric(iso$Single.Year.Ages.Code)
+y <- as.numeric(iso$Crude.Rate)
+
+# Focus on ages 25-45
+main_idx <- x >= 25 & x <= 45
+x_main <- x[main_idx]
+y_main <- y[main_idx]
+
+# Compute running maximum
+running_max <- cummax(y_main)
+
+# Flag points below running max (non-monotonic)
+non_monotonic <- y_main < running_max
+
+# Initialize
+segments_start <- 1
+in_segment <- non_monotonic[1]
+
+# Plot the base line (main curve)
+plot(x_main, y_main, type="n",
+     xlab = "Age",
+     ylab = "Crude Rate (Deaths per 100k)",
+     main = "Crude Rate by Age in Region 4 (West)")
+
+# Loop to draw segments
+for(i in 2:length(x_main)){
+  if(non_monotonic[i] == in_segment){
+    # Continue current segment
+    next
+  } else {
+    # Segment change: draw previous segment
+    if(in_segment){
+      # highlight entire segment in red
+      lines(x_main[segments_start:(i-1)], y_main[segments_start:(i-1)], col="red", lwd=3)
+    } else {
+      # normal segment in black
+      lines(x_main[segments_start:(i-1)], y_main[segments_start:(i-1)], col="black", lwd=2)
+    }
+    # Start new segment
+    segments_start <- i-1
+    in_segment <- non_monotonic[i]
+  }
+}
+
+# Draw last segment
+if(in_segment){
+  lines(x_main[segments_start:length(x_main)], y_main[segments_start:length(x_main)], col="red", lwd=3)
+} else {
+  lines(x_main[segments_start:length(x_main)], y_main[segments_start:length(x_main)], col="black", lwd=2)
+}
+```

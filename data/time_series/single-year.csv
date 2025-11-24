@@ -1,0 +1,157 @@
+"Notes","Single-Year Ages","Single-Year Ages Code",Deaths,Population,Crude Rate,Crude Rate Lower 95% Confidence Interval,Crude Rate Upper 95% Confidence Interval,Crude Rate Standard Error
+,"< 1 year","0",21467,3848208,557.8,550.4,565.3,3.8
+,"1 year","1",1448,3912900,37.0,35.1,38.9,1.0
+,"2 years","2",1047,3991437,26.2,24.6,27.8,0.8
+,"3 years","3",745,4036562,18.5,17.1,19.8,0.7
+,"4 years","4",590,4021168,14.7,13.5,15.9,0.6
+,"5 years","5",524,4010118,13.1,11.9,14.2,0.6
+,"6 years","6",460,4015259,11.5,10.4,12.5,0.5
+,"7 years","7",419,4059363,10.3,9.3,11.3,0.5
+,"8 years","8",457,4055624,11.3,10.2,12.3,0.5
+,"9 years","9",470,4055278,11.6,10.5,12.6,0.5
+,"10 years","10",471,4184077,11.3,10.2,12.3,0.5
+,"11 years","11",494,4203007,11.8,10.7,12.8,0.5
+,"12 years","12",589,4168485,14.1,13.0,15.3,0.6
+,"13 years","13",676,4156887,16.3,15.0,17.5,0.6
+,"14 years","14",890,4167071,21.4,20.0,22.8,0.7
+,"15 years","15",1186,4141218,28.6,27.0,30.3,0.8
+,"16 years","16",1493,4130744,36.1,34.3,38.0,0.9
+,"17 years","17",2028,4241936,47.8,45.7,49.9,1.1
+,"18 years","18",2701,4319722,62.5,60.2,64.9,1.2
+,"19 years","19",2972,4263601,69.7,67.2,72.2,1.3
+,"20 years","20",3273,4273822,76.6,74.0,79.2,1.3
+,"21 years","21",3721,4292514,86.7,83.9,89.5,1.4
+,"22 years","22",3960,4334743,91.4,88.5,94.2,1.5
+,"23 years","23",4252,4438724,95.8,92.9,98.7,1.5
+,"24 years","24",4568,4533776,100.8,97.8,103.7,1.5
+,"25 years","25",4844,4606281,105.2,102.2,108.1,1.5
+,"26 years","26",5230,4728714,110.6,107.6,113.6,1.5
+,"27 years","27",5699,4813980,118.4,115.3,121.5,1.6
+,"28 years","28",5829,4801711,121.4,118.3,124.5,1.6
+,"29 years","29",5859,4611070,127.1,123.8,130.3,1.7
+,"30 years","30",6100,4501282,135.5,132.1,138.9,1.7
+,"31 years","31",5959,4421549,134.8,131.3,138.2,1.7
+,"32 years","32",6299,4433749,142.1,138.6,145.6,1.8
+,"33 years","33",6478,4461246,145.2,141.7,148.7,1.8
+,"34 years","34",6547,4318192,151.6,147.9,155.3,1.9
+,"35 years","35",7090,4376401,162.0,158.2,165.8,1.9
+,"36 years","36",7205,4366923,165.0,161.2,168.8,1.9
+,"37 years","37",7463,4313086,173.0,169.1,177.0,2.0
+,"38 years","38",7835,4391406,178.4,174.5,182.4,2.0
+,"39 years","39",8024,4115771,195.0,190.7,199.2,2.2
+,"40 years","40",7907,4031314,196.1,191.8,200.5,2.2
+,"41 years","41",8185,3986156,205.3,200.9,209.8,2.3
+,"42 years","42",8293,3866067,214.5,209.9,219.1,2.4
+,"43 years","43",8902,3979609,223.7,219.0,228.3,2.4
+,"44 years","44",9476,3851155,246.1,241.1,251.0,2.5
+,"45 years","45",10509,3904041,269.2,264.0,274.3,2.6
+,"46 years","46",11925,4074459,292.7,287.4,297.9,2.7
+,"47 years","47",13249,4301318,308.0,302.8,313.3,2.7
+,"48 years","48",14182,4349714,326.0,320.7,331.4,2.7
+,"49 years","49",15008,4117603,364.5,358.7,370.3,3.0
+,"50 years","50",15823,4026474,393.0,386.9,399.1,3.1
+,"51 years","51",17543,4025069,435.8,429.4,442.3,3.3
+,"52 years","52",19504,4094079,476.4,469.7,483.1,3.4
+,"53 years","53",22113,4333375,510.3,503.6,517.0,3.4
+,"54 years","54",24981,4405567,567.0,560.0,574.1,3.6
+,"55 years","55",27310,4393983,621.5,614.2,628.9,3.8
+,"56 years","56",29857,4377130,682.1,674.4,689.9,3.9
+,"57 years","57",32543,4422810,735.8,727.8,743.8,4.1
+,"58 years","58",34611,4453038,777.2,769.1,785.4,4.2
+,"59 years","59",36642,4294024,853.3,844.6,862.1,4.5
+,"60 years","60",38701,4259361,908.6,899.6,917.7,4.6
+,"61 years","61",41292,4202894,982.5,973.0,991.9,4.8
+,"62 years","62",42834,4043396,1059.4,1049.3,1069.4,5.1
+,"63 years","63",45095,4000235,1127.3,1116.9,1137.7,5.3
+,"64 years","64",45951,3825765,1201.1,1190.1,1212.1,5.6
+,"65 years","65",47257,3669600,1287.8,1276.2,1299.4,5.9
+,"66 years","66",48642,3516436,1383.3,1371.0,1395.6,6.3
+,"67 years","67",49857,3398755,1466.9,1454.0,1479.8,6.6
+,"68 years","68",51107,3307833,1545.0,1531.6,1558.4,6.8
+,"69 years","69",54383,3194269,1702.5,1688.2,1716.8,7.3
+,"70 years","70",58141,3144466,1849.0,1834.0,1864.0,7.7
+,"71 years","71",63825,3260552,1957.5,1942.3,1972.7,7.7
+,"72 years","72",53943,2392283,2254.9,2235.8,2273.9,9.7
+,"73 years","73",56033,2344633,2389.8,2370.1,2409.6,10.1
+,"74 years","74",60590,2263489,2676.8,2655.5,2698.2,10.9
+,"75 years","75",66524,2293604,2900.4,2878.4,2922.5,11.2
+,"76 years","76",63365,1978012,3203.5,3178.5,3228.4,12.7
+,"77 years","77",63017,1786181,3528.0,3500.5,3555.6,14.1
+,"78 years","78",63188,1666402,3791.9,3762.3,3821.4,15.1
+,"79 years","79",65651,1542867,4255.1,4222.6,4287.7,16.6
+,"80 years","80",67987,1451583,4683.6,4648.4,4718.9,18.0
+,"81 years","81",68584,1311488,5229.5,5190.3,5268.6,20.0
+,"82 years","82",71290,1224165,5823.6,5780.8,5866.3,21.8
+,"83 years","83",73173,1143669,6398.1,6351.7,6444.5,23.7
+,"84 years","84",72426,996403,7268.7,7215.8,7321.7,27.0
+,"85 years","85",75023,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"86 years","86",76643,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"87 years","87",77989,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"88 years","88",79099,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"89 years","89",76362,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90 years","90",74794,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"91 years","91",70835,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"92 years","92",64200,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"93 years","93",58805,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"94 years","94",51435,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95 years","95",43573,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"96 years","96",36338,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"97 years","97",28908,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"98 years","98",21307,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"99 years","99",14720,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"100+ years","100",30249,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS",144,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+"Total",,,2839205,327167434,867.8,866.8,868.8,0.5
+"---"
+"Dataset: Multiple Cause of Death, 1999-2020"
+"Query Parameters:"
+"Title: single-year"
+"Year/Month: 2018"
+"Group By: Single-Year Ages"
+"Show Totals: True"
+"Show Zero Values: True"
+"Show Suppressed: True"
+"Calculate Rates Per: 100,000"
+"Rate Options: Default intercensal populations for years 2001-2009 (except Infant Age Groups)"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/mcd.html for more information."
+"---"
+"Query Date: Nov 24, 2025 5:44:18 AM"
+"---"
+"Suggested Citation: Centers for Disease Control and Prevention, National Center for Health Statistics. National Vital Statistics"
+"System, Mortality 1999-2020 on CDC WONDER Online Database, released in 2021. Data are from the Multiple Cause of Death Files,"
+"1999-2020, as compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative"
+"Program. Accessed at http://wonder.cdc.gov/mcd-icd10.html on Nov 24, 2025 5:44:18 AM"
+"---"
+Caveats:
+"1. Population and rates are labeled 'Not Applicable' when they include a subset of ages 85-100+ because populations are not"
+"available for those ages. More information: http://wonder.cdc.gov/wonder/help/mcd.html#Ages 85-100."
+"2. Deaths of persons with Age ""Not Stated"" are included in ""All"" counts and rates, but are not distributed among age groups,"
+"so are not included in age-specific counts, age-specific rates or in any age-adjusted rates. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Not Stated."
+"3. The method used to calculate 95% confidence intervals is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Confidence-Intervals."
+"4. The method used to calculate standard errors is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Standard-Errors."
+"5. The population figures for year 2020 are bridged-race estimates of the July 1 resident population, from the Vintage 2020"
+"postcensal series released by NCHS on September 22, 2021. The population figures for year 2019 are bridged-race estimates of the"
+"July 1 resident population, from the Vintage 2019 postcensal series released by NCHS on July 9, 2020. The population figures for"
+"year 2018 are bridged-race estimates of the July 1 resident population, from the Vintage 2018 postcensal series released by NCHS"
+"on June 25, 2019. The population figures for year 2017 are bridged-race estimates of the July 1 resident population, from the"
+"Vintage 2017 postcensal series released by NCHS on June 27, 2018. The population figures for year 2016 are bridged-race"
+"estimates of the July 1 resident population, from the Vintage 2016 postcensal series released by NCHS on June 26, 2017. The"
+"population figures for year 2015 are bridged-race estimates of the July 1 resident population, from the Vintage 2015 postcensal"
+"series released by NCHS on June 28, 2016. The population figures for year 2014 are bridged-race estimates of the July 1 resident"
+"population, from the Vintage 2014 postcensal series released by NCHS on June 30, 2015. The population figures for year 2013 are"
+"bridged-race estimates of the July 1 resident population, from the Vintage 2013 postcensal series released by NCHS on June 26,"
+"2014. The population figures for year 2012 are bridged-race estimates of the July 1 resident population, from the Vintage 2012"
+"postcensal series released by NCHS on June 13, 2013. Population figures for 2011 are bridged-race estimates of the July 1"
+"resident population, from the county-level postcensal Vintage 2011 series released by NCHS on July 18, 2012. Population figures"
+"for 2010 are April 1 Census counts. The population figures for years 2001 - 2009, are bridged-race estimates of the July 1"
+"resident population, from the revised intercensal county-level 2000 - 2009 series released by NCHS on October 26, 2012."
+"Population figures for 2000 are April 1 Census counts. Population figures for 1999 are from the 1990-1999 intercensal series of"
+"July 1 estimates. Population figures for Infant Age Groups are the number of live births. <br/><b>Note:</b> Rates and population"
+"figures for years 2001 - 2009 differ slightly from previously published reports, due to use of the population estimates which"
+"were available at the time of release."
+"6. The population figures used in the calculation of death rates for the age group 'under 1 year' are the estimates of the"
+"resident population that is under one year of age. More information: http://wonder.cdc.gov/wonder/help/mcd.html#Age Group."

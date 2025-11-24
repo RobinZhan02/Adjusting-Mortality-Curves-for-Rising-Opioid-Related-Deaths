@@ -1,0 +1,467 @@
+"Notes","Single-Year Ages","Single-Year Ages Code","Census Region","Census Region Code",Deaths,Population,Crude Rate,Crude Rate Lower 95% Confidence Interval,Crude Rate Upper 95% Confidence Interval,Crude Rate Standard Error
+,"< 1 year","0","Census Region 1: Northeast","CENS-R1",2804,610408,459.4,442.4,476.4,8.7
+,"< 1 year","0","Census Region 2: Midwest","CENS-R2",5020,801327,626.5,609.1,643.8,8.8
+,"< 1 year","0","Census Region 3: South","CENS-R3",9424,1494786,630.5,617.7,643.2,6.5
+,"< 1 year","0","Census Region 4: West","CENS-R4",4219,941687,448.0,434.5,461.5,6.9
+,"1 year","1","Census Region 1: Northeast","CENS-R1",178,617454,28.8,24.6,33.1,2.2
+,"1 year","1","Census Region 2: Midwest","CENS-R2",320,818083,39.1,34.8,43.4,2.2
+,"1 year","1","Census Region 3: South","CENS-R3",636,1525836,41.7,38.4,44.9,1.7
+,"1 year","1","Census Region 4: West","CENS-R4",314,951527,33.0,29.3,36.6,1.9
+,"2 years","2","Census Region 1: Northeast","CENS-R1",120,627858,19.1,15.7,22.5,1.7
+,"2 years","2","Census Region 2: Midwest","CENS-R2",226,836819,27.0,23.5,30.5,1.8
+,"2 years","2","Census Region 3: South","CENS-R3",487,1558257,31.3,28.5,34.0,1.4
+,"2 years","2","Census Region 4: West","CENS-R4",214,968503,22.1,19.1,25.1,1.5
+,"3 years","3","Census Region 1: Northeast","CENS-R1",93,632737,14.7,11.9,18.0,1.5
+,"3 years","3","Census Region 2: Midwest","CENS-R2",163,845906,19.3,16.3,22.2,1.5
+,"3 years","3","Census Region 3: South","CENS-R3",350,1572495,22.3,19.9,24.6,1.2
+,"3 years","3","Census Region 4: West","CENS-R4",139,985424,14.1,11.8,16.5,1.2
+,"4 years","4","Census Region 1: Northeast","CENS-R1",64,629301,10.2,7.8,13.0,1.3
+,"4 years","4","Census Region 2: Midwest","CENS-R2",134,843714,15.9,13.2,18.6,1.4
+,"4 years","4","Census Region 3: South","CENS-R3",280,1565438,17.9,15.8,20.0,1.1
+,"4 years","4","Census Region 4: West","CENS-R4",112,982715,11.4,9.3,13.5,1.1
+,"5 years","5","Census Region 1: Northeast","CENS-R1",66,631182,10.5,8.1,13.3,1.3
+,"5 years","5","Census Region 2: Midwest","CENS-R2",124,840956,14.7,12.1,17.3,1.3
+,"5 years","5","Census Region 3: South","CENS-R3",220,1553471,14.2,12.3,16.0,1.0
+,"5 years","5","Census Region 4: West","CENS-R4",114,984509,11.6,9.5,13.7,1.1
+,"6 years","6","Census Region 1: Northeast","CENS-R1",65,632561,10.3,7.9,13.1,1.3
+,"6 years","6","Census Region 2: Midwest","CENS-R2",101,841019,12.0,9.7,14.4,1.2
+,"6 years","6","Census Region 3: South","CENS-R3",194,1561109,12.4,10.7,14.2,0.9
+,"6 years","6","Census Region 4: West","CENS-R4",100,980570,10.2,8.2,12.2,1.0
+,"7 years","7","Census Region 1: Northeast","CENS-R1",66,641176,10.3,8.0,13.1,1.3
+,"7 years","7","Census Region 2: Midwest","CENS-R2",83,844002,9.8,7.8,12.2,1.1
+,"7 years","7","Census Region 3: South","CENS-R3",196,1573700,12.5,10.7,14.2,0.9
+,"7 years","7","Census Region 4: West","CENS-R4",74,1000485,7.4,5.8,9.3,0.9
+,"8 years","8","Census Region 1: Northeast","CENS-R1",65,634078,10.3,7.9,13.1,1.3
+,"8 years","8","Census Region 2: Midwest","CENS-R2",93,853439,10.9,8.8,13.3,1.1
+,"8 years","8","Census Region 3: South","CENS-R3",203,1577362,12.9,11.1,14.6,0.9
+,"8 years","8","Census Region 4: West","CENS-R4",96,990745,9.7,7.8,11.8,1.0
+,"9 years","9","Census Region 1: Northeast","CENS-R1",67,628594,10.7,8.3,13.5,1.3
+,"9 years","9","Census Region 2: Midwest","CENS-R2",108,853812,12.6,10.3,15.0,1.2
+,"9 years","9","Census Region 3: South","CENS-R3",204,1582339,12.9,11.1,14.7,0.9
+,"9 years","9","Census Region 4: West","CENS-R4",91,990533,9.2,7.4,11.3,1.0
+,"10 years","10","Census Region 1: Northeast","CENS-R1",71,647851,11.0,8.6,13.8,1.3
+,"10 years","10","Census Region 2: Midwest","CENS-R2",109,877184,12.4,10.1,14.8,1.2
+,"10 years","10","Census Region 3: South","CENS-R3",194,1634271,11.9,10.2,13.5,0.9
+,"10 years","10","Census Region 4: West","CENS-R4",97,1024771,9.5,7.7,11.5,1.0
+,"11 years","11","Census Region 1: Northeast","CENS-R1",69,652499,10.6,8.2,13.4,1.3
+,"11 years","11","Census Region 2: Midwest","CENS-R2",108,883992,12.2,9.9,14.5,1.2
+,"11 years","11","Census Region 3: South","CENS-R3",204,1640460,12.4,10.7,14.1,0.9
+,"11 years","11","Census Region 4: West","CENS-R4",113,1026056,11.0,9.0,13.0,1.0
+,"12 years","12","Census Region 1: Northeast","CENS-R1",85,652585,13.0,10.4,16.1,1.4
+,"12 years","12","Census Region 2: Midwest","CENS-R2",136,880849,15.4,12.8,18.0,1.3
+,"12 years","12","Census Region 3: South","CENS-R3",245,1622606,15.1,13.2,17.0,1.0
+,"12 years","12","Census Region 4: West","CENS-R4",123,1012445,12.1,10.0,14.3,1.1
+,"13 years","13","Census Region 1: Northeast","CENS-R1",80,659072,12.1,9.6,15.1,1.4
+,"13 years","13","Census Region 2: Midwest","CENS-R2",167,878952,19.0,16.1,21.9,1.5
+,"13 years","13","Census Region 3: South","CENS-R3",269,1611922,16.7,14.7,18.7,1.0
+,"13 years","13","Census Region 4: West","CENS-R4",160,1006941,15.9,13.4,18.4,1.3
+,"14 years","14","Census Region 1: Northeast","CENS-R1",110,668680,16.5,13.4,19.5,1.6
+,"14 years","14","Census Region 2: Midwest","CENS-R2",210,886932,23.7,20.5,26.9,1.6
+,"14 years","14","Census Region 3: South","CENS-R3",376,1608988,23.4,21.0,25.7,1.2
+,"14 years","14","Census Region 4: West","CENS-R4",194,1002471,19.4,16.6,22.1,1.4
+,"15 years","15","Census Region 1: Northeast","CENS-R1",130,671784,19.4,16.0,22.7,1.7
+,"15 years","15","Census Region 2: Midwest","CENS-R2",275,881085,31.2,27.5,34.9,1.9
+,"15 years","15","Census Region 3: South","CENS-R3",499,1594836,31.3,28.5,34.0,1.4
+,"15 years","15","Census Region 4: West","CENS-R4",282,993513,28.4,25.1,31.7,1.7
+,"16 years","16","Census Region 1: Northeast","CENS-R1",167,672508,24.8,21.1,28.6,1.9
+,"16 years","16","Census Region 2: Midwest","CENS-R2",370,878317,42.1,37.8,46.4,2.2
+,"16 years","16","Census Region 3: South","CENS-R3",617,1596454,38.6,35.6,41.7,1.6
+,"16 years","16","Census Region 4: West","CENS-R4",339,983465,34.5,30.8,38.1,1.9
+,"17 years","17","Census Region 1: Northeast","CENS-R1",219,692139,31.6,27.5,35.8,2.1
+,"17 years","17","Census Region 2: Midwest","CENS-R2",504,902422,55.8,51.0,60.7,2.5
+,"17 years","17","Census Region 3: South","CENS-R3",847,1637013,51.7,48.3,55.2,1.8
+,"17 years","17","Census Region 4: West","CENS-R4",458,1010362,45.3,41.2,49.5,2.1
+,"18 years","18","Census Region 1: Northeast","CENS-R1",304,745421,40.8,36.2,45.4,2.3
+,"18 years","18","Census Region 2: Midwest","CENS-R2",558,902189,61.8,56.7,67.0,2.6
+,"18 years","18","Census Region 3: South","CENS-R3",1216,1649612,73.7,69.6,77.9,2.1
+,"18 years","18","Census Region 4: West","CENS-R4",623,1022500,60.9,56.1,65.7,2.4
+,"19 years","19","Census Region 1: Northeast","CENS-R1",340,748098,45.4,40.6,50.3,2.5
+,"19 years","19","Census Region 2: Midwest","CENS-R2",650,914034,71.1,65.6,76.6,2.8
+,"19 years","19","Census Region 3: South","CENS-R3",1321,1617473,81.7,77.3,86.1,2.2
+,"19 years","19","Census Region 4: West","CENS-R4",661,983996,67.2,62.1,72.3,2.6
+,"20 years","20","Census Region 1: Northeast","CENS-R1",449,741822,60.5,54.9,66.1,2.9
+,"20 years","20","Census Region 2: Midwest","CENS-R2",691,921609,75.0,69.4,80.6,2.9
+,"20 years","20","Census Region 3: South","CENS-R3",1373,1617957,84.9,80.4,89.3,2.3
+,"20 years","20","Census Region 4: West","CENS-R4",760,992434,76.6,71.1,82.0,2.8
+,"21 years","21","Census Region 1: Northeast","CENS-R1",479,735068,65.2,59.3,71.0,3.0
+,"21 years","21","Census Region 2: Midwest","CENS-R2",803,922290,87.1,81.0,93.1,3.1
+,"21 years","21","Census Region 3: South","CENS-R3",1597,1618848,98.7,93.8,103.5,2.5
+,"21 years","21","Census Region 4: West","CENS-R4",842,1016308,82.8,77.3,88.4,2.9
+,"22 years","22","Census Region 1: Northeast","CENS-R1",581,724129,80.2,73.7,86.8,3.3
+,"22 years","22","Census Region 2: Midwest","CENS-R2",875,927960,94.3,88.0,100.5,3.2
+,"22 years","22","Census Region 3: South","CENS-R3",1613,1632446,98.8,94.0,103.6,2.5
+,"22 years","22","Census Region 4: West","CENS-R4",891,1050208,84.8,79.3,90.4,2.8
+,"23 years","23","Census Region 1: Northeast","CENS-R1",607,733617,82.7,76.2,89.3,3.4
+,"23 years","23","Census Region 2: Midwest","CENS-R2",947,932887,101.5,95.0,108.0,3.3
+,"23 years","23","Census Region 3: South","CENS-R3",1783,1675996,106.4,101.4,111.3,2.5
+,"23 years","23","Census Region 4: West","CENS-R4",915,1096224,83.5,78.1,88.9,2.8
+,"24 years","24","Census Region 1: Northeast","CENS-R1",722,758479,95.2,88.2,102.1,3.5
+,"24 years","24","Census Region 2: Midwest","CENS-R2",1000,933855,107.1,100.4,113.7,3.4
+,"24 years","24","Census Region 3: South","CENS-R3",1902,1713249,111.0,106.0,116.0,2.5
+,"24 years","24","Census Region 4: West","CENS-R4",944,1128193,83.7,78.3,89.0,2.7
+,"25 years","25","Census Region 1: Northeast","CENS-R1",770,775890,99.2,92.2,106.3,3.6
+,"25 years","25","Census Region 2: Midwest","CENS-R2",1059,939126,112.8,106.0,119.6,3.5
+,"25 years","25","Census Region 3: South","CENS-R3",2041,1739941,117.3,112.2,122.4,2.6
+,"25 years","25","Census Region 4: West","CENS-R4",974,1151324,84.6,79.3,89.9,2.7
+,"26 years","26","Census Region 1: Northeast","CENS-R1",872,783359,111.3,103.9,118.7,3.8
+,"26 years","26","Census Region 2: Midwest","CENS-R2",1182,959015,123.3,116.2,130.3,3.6
+,"26 years","26","Census Region 3: South","CENS-R3",2097,1788226,117.3,112.2,122.3,2.6
+,"26 years","26","Census Region 4: West","CENS-R4",1079,1198114,90.1,84.7,95.4,2.7
+,"27 years","27","Census Region 1: Northeast","CENS-R1",927,796994,116.3,108.8,123.8,3.8
+,"27 years","27","Census Region 2: Midwest","CENS-R2",1241,951511,130.4,123.2,137.7,3.7
+,"27 years","27","Census Region 3: South","CENS-R3",2249,1826302,123.1,118.1,128.2,2.6
+,"27 years","27","Census Region 4: West","CENS-R4",1282,1239173,103.5,97.8,109.1,2.9
+,"28 years","28","Census Region 1: Northeast","CENS-R1",987,808515,122.1,114.5,129.7,3.9
+,"28 years","28","Census Region 2: Midwest","CENS-R2",1289,939508,137.2,129.7,144.7,3.8
+,"28 years","28","Census Region 3: South","CENS-R3",2371,1817857,130.4,125.2,135.7,2.7
+,"28 years","28","Census Region 4: West","CENS-R4",1182,1235831,95.6,90.2,101.1,2.8
+,"29 years","29","Census Region 1: Northeast","CENS-R1",978,785790,124.5,116.7,132.3,4.0
+,"29 years","29","Census Region 2: Midwest","CENS-R2",1265,900059,140.5,132.8,148.3,4.0
+,"29 years","29","Census Region 3: South","CENS-R3",2445,1744406,140.2,134.6,145.7,2.8
+,"29 years","29","Census Region 4: West","CENS-R4",1171,1180815,99.2,93.5,104.8,2.9
+,"30 years","30","Census Region 1: Northeast","CENS-R1",1038,776499,133.7,125.5,141.8,4.1
+,"30 years","30","Census Region 2: Midwest","CENS-R2",1331,879026,151.4,143.3,159.6,4.2
+,"30 years","30","Census Region 3: South","CENS-R3",2518,1695277,148.5,142.7,154.3,3.0
+,"30 years","30","Census Region 4: West","CENS-R4",1213,1150480,105.4,99.5,111.4,3.0
+,"31 years","31","Census Region 1: Northeast","CENS-R1",983,763050,128.8,120.8,136.9,4.1
+,"31 years","31","Census Region 2: Midwest","CENS-R2",1269,867827,146.2,138.2,154.3,4.1
+,"31 years","31","Census Region 3: South","CENS-R3",2408,1666384,144.5,138.7,150.3,2.9
+,"31 years","31","Census Region 4: West","CENS-R4",1299,1124288,115.5,109.3,121.8,3.2
+,"32 years","32","Census Region 1: Northeast","CENS-R1",1052,758740,138.7,130.3,147.0,4.3
+,"32 years","32","Census Region 2: Midwest","CENS-R2",1316,880833,149.4,141.3,157.5,4.1
+,"32 years","32","Census Region 3: South","CENS-R3",2709,1667524,162.5,156.3,168.6,3.1
+,"32 years","32","Census Region 4: West","CENS-R4",1222,1126652,108.5,102.4,114.5,3.1
+,"33 years","33","Census Region 1: Northeast","CENS-R1",1069,753586,141.9,133.4,150.4,4.3
+,"33 years","33","Census Region 2: Midwest","CENS-R2",1339,895434,149.5,141.5,157.5,4.1
+,"33 years","33","Census Region 3: South","CENS-R3",2738,1680368,162.9,156.8,169.0,3.1
+,"33 years","33","Census Region 4: West","CENS-R4",1332,1131858,117.7,111.4,124.0,3.2
+,"34 years","34","Census Region 1: Northeast","CENS-R1",1044,721355,144.7,135.9,153.5,4.5
+,"34 years","34","Census Region 2: Midwest","CENS-R2",1404,865835,162.2,153.7,170.6,4.3
+,"34 years","34","Census Region 3: South","CENS-R3",2742,1633020,167.9,161.6,174.2,3.2
+,"34 years","34","Census Region 4: West","CENS-R4",1357,1097982,123.6,117.0,130.2,3.4
+,"35 years","35","Census Region 1: Northeast","CENS-R1",1104,724908,152.3,143.3,161.3,4.6
+,"35 years","35","Census Region 2: Midwest","CENS-R2",1537,881114,174.4,165.7,183.2,4.4
+,"35 years","35","Census Region 3: South","CENS-R3",2983,1661682,179.5,173.1,186.0,3.3
+,"35 years","35","Census Region 4: West","CENS-R4",1466,1108697,132.2,125.5,139.0,3.5
+,"36 years","36","Census Region 1: Northeast","CENS-R1",1112,720570,154.3,145.3,163.4,4.6
+,"36 years","36","Census Region 2: Midwest","CENS-R2",1588,884906,179.5,170.6,188.3,4.5
+,"36 years","36","Census Region 3: South","CENS-R3",2976,1658824,179.4,173.0,185.8,3.3
+,"36 years","36","Census Region 4: West","CENS-R4",1529,1102623,138.7,131.7,145.6,3.5
+,"37 years","37","Census Region 1: Northeast","CENS-R1",1119,706583,158.4,149.1,167.6,4.7
+,"37 years","37","Census Region 2: Midwest","CENS-R2",1617,878919,184.0,175.0,192.9,4.6
+,"37 years","37","Census Region 3: South","CENS-R3",3210,1646399,195.0,188.2,201.7,3.4
+,"37 years","37","Census Region 4: West","CENS-R4",1517,1081185,140.3,133.2,147.4,3.6
+,"38 years","38","Census Region 1: Northeast","CENS-R1",1180,721870,163.5,154.1,172.8,4.8
+,"38 years","38","Census Region 2: Midwest","CENS-R2",1652,895723,184.4,175.5,193.3,4.5
+,"38 years","38","Census Region 3: South","CENS-R3",3398,1678880,202.4,195.6,209.2,3.5
+,"38 years","38","Census Region 4: West","CENS-R4",1605,1094933,146.6,139.4,153.8,3.7
+,"39 years","39","Census Region 1: Northeast","CENS-R1",1242,681361,182.3,172.1,192.4,5.2
+,"39 years","39","Census Region 2: Midwest","CENS-R2",1662,839818,197.9,188.4,207.4,4.9
+,"39 years","39","Census Region 3: South","CENS-R3",3495,1576419,221.7,214.4,229.1,3.8
+,"39 years","39","Census Region 4: West","CENS-R4",1625,1018173,159.6,151.8,167.4,4.0
+,"40 years","40","Census Region 1: Northeast","CENS-R1",1152,667857,172.5,162.5,182.5,5.1
+,"40 years","40","Census Region 2: Midwest","CENS-R2",1710,818142,209.0,199.1,218.9,5.1
+,"40 years","40","Census Region 3: South","CENS-R3",3462,1548541,223.6,216.1,231.0,3.8
+,"40 years","40","Census Region 4: West","CENS-R4",1583,996774,158.8,151.0,166.6,4.0
+,"41 years","41","Census Region 1: Northeast","CENS-R1",1273,658564,193.3,182.7,203.9,5.4
+,"41 years","41","Census Region 2: Midwest","CENS-R2",1688,804383,209.9,199.8,219.9,5.1
+,"41 years","41","Census Region 3: South","CENS-R3",3582,1539271,232.7,225.1,240.3,3.9
+,"41 years","41","Census Region 4: West","CENS-R4",1642,983938,166.9,158.8,175.0,4.1
+,"42 years","42","Census Region 1: Northeast","CENS-R1",1231,642646,191.6,180.9,202.3,5.5
+,"42 years","42","Census Region 2: Midwest","CENS-R2",1754,775212,226.3,215.7,236.8,5.4
+,"42 years","42","Census Region 3: South","CENS-R3",3623,1491404,242.9,235.0,250.8,4.0
+,"42 years","42","Census Region 4: West","CENS-R4",1685,956805,176.1,167.7,184.5,4.3
+,"43 years","43","Census Region 1: Northeast","CENS-R1",1321,665834,198.4,187.7,209.1,5.5
+,"43 years","43","Census Region 2: Midwest","CENS-R2",1879,798483,235.3,224.7,246.0,5.4
+,"43 years","43","Census Region 3: South","CENS-R3",3895,1537048,253.4,245.4,261.4,4.1
+,"43 years","43","Census Region 4: West","CENS-R4",1807,978244,184.7,176.2,193.2,4.3
+,"44 years","44","Census Region 1: Northeast","CENS-R1",1430,645348,221.6,210.1,233.1,5.9
+,"44 years","44","Census Region 2: Midwest","CENS-R2",2033,769007,264.4,252.9,275.9,5.9
+,"44 years","44","Census Region 3: South","CENS-R3",4097,1496506,273.8,265.4,282.2,4.3
+,"44 years","44","Census Region 4: West","CENS-R4",1916,940294,203.8,194.6,212.9,4.7
+,"45 years","45","Census Region 1: Northeast","CENS-R1",1566,657289,238.3,226.5,250.1,6.0
+,"45 years","45","Census Region 2: Midwest","CENS-R2",2208,780081,283.0,271.2,294.9,6.0
+,"45 years","45","Census Region 3: South","CENS-R3",4689,1527398,307.0,298.2,315.8,4.5
+,"45 years","45","Census Region 4: West","CENS-R4",2046,939273,217.8,208.4,227.3,4.8
+,"46 years","46","Census Region 1: Northeast","CENS-R1",1783,694162,256.9,244.9,268.8,6.1
+,"46 years","46","Census Region 2: Midwest","CENS-R2",2538,823562,308.2,296.2,320.2,6.1
+,"46 years","46","Census Region 3: South","CENS-R3",5203,1593875,326.4,317.6,335.3,4.5
+,"46 years","46","Census Region 4: West","CENS-R4",2401,962860,249.4,239.4,259.3,5.1
+,"47 years","47","Census Region 1: Northeast","CENS-R1",1979,744066,266.0,254.3,277.7,6.0
+,"47 years","47","Census Region 2: Midwest","CENS-R2",2891,878470,329.1,317.1,341.1,6.1
+,"47 years","47","Census Region 3: South","CENS-R3",5747,1668352,344.5,335.6,353.4,4.5
+,"47 years","47","Census Region 4: West","CENS-R4",2632,1010430,260.5,250.5,270.4,5.1
+,"48 years","48","Census Region 1: Northeast","CENS-R1",2174,766958,283.5,271.5,295.4,6.1
+,"48 years","48","Census Region 2: Midwest","CENS-R2",2990,883514,338.4,326.3,350.6,6.2
+,"48 years","48","Census Region 3: South","CENS-R3",6183,1664914,371.4,362.1,380.6,4.7
+,"48 years","48","Census Region 4: West","CENS-R4",2835,1034328,274.1,264.0,284.2,5.1
+,"49 years","49","Census Region 1: Northeast","CENS-R1",2268,736494,307.9,295.3,320.6,6.5
+,"49 years","49","Census Region 2: Midwest","CENS-R2",3173,838394,378.5,365.3,391.6,6.7
+,"49 years","49","Census Region 3: South","CENS-R3",6501,1567324,414.8,404.7,424.9,5.1
+,"49 years","49","Census Region 4: West","CENS-R4",3066,975391,314.3,303.2,325.5,5.7
+,"50 years","50","Census Region 1: Northeast","CENS-R1",2519,731644,344.3,330.8,357.7,6.9
+,"50 years","50","Census Region 2: Midwest","CENS-R2",3327,821528,405.0,391.2,418.7,7.0
+,"50 years","50","Census Region 3: South","CENS-R3",6786,1531302,443.2,432.6,453.7,5.4
+,"50 years","50","Census Region 4: West","CENS-R4",3191,942000,338.7,327.0,350.5,6.0
+,"51 years","51","Census Region 1: Northeast","CENS-R1",2797,741327,377.3,363.3,391.3,7.1
+,"51 years","51","Census Region 2: Midwest","CENS-R2",3718,832131,446.8,432.4,461.2,7.3
+,"51 years","51","Census Region 3: South","CENS-R3",7525,1528634,492.3,481.1,503.4,5.7
+,"51 years","51","Census Region 4: West","CENS-R4",3503,922977,379.5,367.0,392.1,6.4
+,"52 years","52","Census Region 1: Northeast","CENS-R1",3165,761006,415.9,401.4,430.4,7.4
+,"52 years","52","Census Region 2: Midwest","CENS-R2",4202,849450,494.7,479.7,509.6,7.6
+,"52 years","52","Census Region 3: South","CENS-R3",8352,1556393,536.6,525.1,548.1,5.9
+,"52 years","52","Census Region 4: West","CENS-R4",3785,927230,408.2,395.2,421.2,6.6
+,"53 years","53","Census Region 1: Northeast","CENS-R1",3465,804689,430.6,416.3,444.9,7.3
+,"53 years","53","Census Region 2: Midwest","CENS-R2",4772,903444,528.2,513.2,543.2,7.6
+,"53 years","53","Census Region 3: South","CENS-R3",9636,1647589,584.9,573.2,596.5,6.0
+,"53 years","53","Census Region 4: West","CENS-R4",4240,977653,433.7,420.6,446.7,6.7
+,"54 years","54","Census Region 1: Northeast","CENS-R1",3925,813135,482.7,467.6,497.8,7.7
+,"54 years","54","Census Region 2: Midwest","CENS-R2",5318,929098,572.4,557.0,587.8,7.8
+,"54 years","54","Census Region 3: South","CENS-R3",10941,1674135,653.5,641.3,665.8,6.2
+,"54 years","54","Census Region 4: West","CENS-R4",4797,989199,484.9,471.2,498.7,7.0
+,"55 years","55","Census Region 1: Northeast","CENS-R1",4285,807173,530.9,515.0,546.8,8.1
+,"55 years","55","Census Region 2: Midwest","CENS-R2",5977,935166,639.1,622.9,655.3,8.3
+,"55 years","55","Census Region 3: South","CENS-R3",11828,1660809,712.2,699.3,725.0,6.5
+,"55 years","55","Census Region 4: West","CENS-R4",5220,990835,526.8,512.5,541.1,7.3
+,"56 years","56","Census Region 1: Northeast","CENS-R1",4708,800837,587.9,571.1,604.7,8.6
+,"56 years","56","Census Region 2: Midwest","CENS-R2",6500,942351,689.8,673.0,706.5,8.6
+,"56 years","56","Census Region 3: South","CENS-R3",12788,1647590,776.2,762.7,789.6,6.9
+,"56 years","56","Census Region 4: West","CENS-R4",5861,986352,594.2,579.0,609.4,7.8
+,"57 years","57","Census Region 1: Northeast","CENS-R1",5171,812209,636.7,619.3,654.0,8.9
+,"57 years","57","Census Region 2: Midwest","CENS-R2",7048,962334,732.4,715.3,749.5,8.7
+,"57 years","57","Census Region 3: South","CENS-R3",14056,1654145,849.7,835.7,863.8,7.2
+,"57 years","57","Census Region 4: West","CENS-R4",6268,994122,630.5,614.9,646.1,8.0
+,"58 years","58","Census Region 1: Northeast","CENS-R1",5407,818536,660.6,643.0,678.2,9.0
+,"58 years","58","Census Region 2: Midwest","CENS-R2",7710,966190,798.0,780.2,815.8,9.1
+,"58 years","58","Census Region 3: South","CENS-R3",14976,1660245,902.0,887.6,916.5,7.4
+,"58 years","58","Census Region 4: West","CENS-R4",6518,1008067,646.6,630.9,662.3,8.0
+,"59 years","59","Census Region 1: Northeast","CENS-R1",5748,794191,723.8,705.0,742.5,9.5
+,"59 years","59","Census Region 2: Midwest","CENS-R2",8240,940053,876.5,857.6,895.5,9.7
+,"59 years","59","Census Region 3: South","CENS-R3",15676,1597795,981.1,965.7,996.5,7.8
+,"59 years","59","Census Region 4: West","CENS-R4",6978,961985,725.4,708.4,742.4,8.7
+,"60 years","60","Census Region 1: Northeast","CENS-R1",6064,787612,769.9,750.5,789.3,9.9
+,"60 years","60","Census Region 2: Midwest","CENS-R2",8732,938135,930.8,911.3,950.3,10.0
+,"60 years","60","Census Region 3: South","CENS-R3",16402,1578677,1039.0,1023.1,1054.9,8.1
+,"60 years","60","Census Region 4: West","CENS-R4",7503,954937,785.7,767.9,803.5,9.1
+,"61 years","61","Census Region 1: Northeast","CENS-R1",6302,771285,817.1,796.9,837.3,10.3
+,"61 years","61","Census Region 2: Midwest","CENS-R2",9295,924544,1005.4,984.9,1025.8,10.4
+,"61 years","61","Census Region 3: South","CENS-R3",17624,1562573,1127.9,1111.2,1144.5,8.5
+,"61 years","61","Census Region 4: West","CENS-R4",8071,944492,854.5,835.9,873.2,9.5
+,"62 years","62","Census Region 1: Northeast","CENS-R1",6687,737934,906.2,884.5,927.9,11.1
+,"62 years","62","Census Region 2: Midwest","CENS-R2",9609,885563,1085.1,1063.4,1106.8,11.1
+,"62 years","62","Census Region 3: South","CENS-R3",18204,1505971,1208.8,1191.2,1226.3,9.0
+,"62 years","62","Census Region 4: West","CENS-R4",8334,913928,911.9,892.3,931.5,10.0
+,"63 years","63","Census Region 1: Northeast","CENS-R1",7121,727150,979.3,956.6,1002.0,11.6
+,"63 years","63","Census Region 2: Midwest","CENS-R2",10136,874133,1159.5,1137.0,1182.1,11.5
+,"63 years","63","Census Region 3: South","CENS-R3",19012,1489800,1276.1,1258.0,1294.3,9.3
+,"63 years","63","Census Region 4: West","CENS-R4",8826,909152,970.8,950.5,991.0,10.3
+,"64 years","64","Census Region 1: Northeast","CENS-R1",7071,687945,1027.8,1003.9,1051.8,12.2
+,"64 years","64","Census Region 2: Midwest","CENS-R2",10388,835013,1244.1,1220.1,1268.0,12.2
+,"64 years","64","Census Region 3: South","CENS-R3",19577,1430935,1368.1,1349.0,1387.3,9.8
+,"64 years","64","Census Region 4: West","CENS-R4",8915,871872,1022.5,1001.3,1043.7,10.8
+,"65 years","65","Census Region 1: Northeast","CENS-R1",7469,657827,1135.4,1109.7,1161.2,13.1
+,"65 years","65","Census Region 2: Midwest","CENS-R2",10678,798230,1337.7,1312.3,1363.1,12.9
+,"65 years","65","Census Region 3: South","CENS-R3",19757,1373445,1438.5,1418.4,1458.6,10.2
+,"65 years","65","Census Region 4: West","CENS-R4",9353,840098,1113.3,1090.8,1135.9,11.5
+,"66 years","66","Census Region 1: Northeast","CENS-R1",7647,626968,1219.7,1192.3,1247.0,13.9
+,"66 years","66","Census Region 2: Midwest","CENS-R2",11056,769632,1436.5,1409.8,1463.3,13.7
+,"66 years","66","Census Region 3: South","CENS-R3",20209,1319274,1531.8,1510.7,1552.9,10.8
+,"66 years","66","Census Region 4: West","CENS-R4",9730,800562,1215.4,1191.2,1239.5,12.3
+,"67 years","67","Census Region 1: Northeast","CENS-R1",7843,603305,1300.0,1271.2,1328.8,14.7
+,"67 years","67","Census Region 2: Midwest","CENS-R2",11314,738010,1533.0,1504.8,1561.3,14.4
+,"67 years","67","Census Region 3: South","CENS-R3",20809,1284928,1619.5,1597.5,1641.5,11.2
+,"67 years","67","Census Region 4: West","CENS-R4",9891,772512,1280.4,1255.1,1305.6,12.9
+,"68 years","68","Census Region 1: Northeast","CENS-R1",7933,585595,1354.7,1324.9,1384.5,15.2
+,"68 years","68","Census Region 2: Midwest","CENS-R2",11420,707209,1614.8,1585.2,1644.4,15.1
+,"68 years","68","Census Region 3: South","CENS-R3",21555,1254041,1718.8,1695.9,1741.8,11.7
+,"68 years","68","Census Region 4: West","CENS-R4",10199,760988,1340.2,1314.2,1366.2,13.3
+,"69 years","69","Census Region 1: Northeast","CENS-R1",8575,564419,1519.3,1487.1,1551.4,16.4
+,"69 years","69","Census Region 2: Midwest","CENS-R2",12170,679857,1790.1,1758.3,1821.9,16.2
+,"69 years","69","Census Region 3: South","CENS-R3",22881,1222265,1872.0,1847.8,1896.3,12.4
+,"69 years","69","Census Region 4: West","CENS-R4",10757,727728,1478.2,1450.2,1506.1,14.3
+,"70 years","70","Census Region 1: Northeast","CENS-R1",9288,558213,1663.9,1630.0,1697.7,17.3
+,"70 years","70","Census Region 2: Midwest","CENS-R2",12991,660539,1966.7,1932.9,2000.5,17.3
+,"70 years","70","Census Region 3: South","CENS-R3",24477,1212889,2018.1,1992.8,2043.4,12.9
+,"70 years","70","Census Region 4: West","CENS-R4",11385,712825,1597.2,1567.8,1626.5,15.0
+,"71 years","71","Census Region 1: Northeast","CENS-R1",10380,580940,1786.8,1752.4,1821.1,17.5
+,"71 years","71","Census Region 2: Midwest","CENS-R2",14144,684033,2067.7,2033.7,2101.8,17.4
+,"71 years","71","Census Region 3: South","CENS-R3",26686,1264331,2110.7,2085.4,2136.0,12.9
+,"71 years","71","Census Region 4: West","CENS-R4",12615,731248,1725.1,1695.0,1755.2,15.4
+,"72 years","72","Census Region 1: Northeast","CENS-R1",8933,424350,2105.1,2061.4,2148.8,22.3
+,"72 years","72","Census Region 2: Midwest","CENS-R2",11765,489519,2403.4,2360.0,2446.8,22.2
+,"72 years","72","Census Region 3: South","CENS-R3",22741,930267,2444.6,2412.8,2476.3,16.2
+,"72 years","72","Census Region 4: West","CENS-R4",10504,548147,1916.3,1879.6,1952.9,18.7
+,"73 years","73","Census Region 1: Northeast","CENS-R1",9110,412471,2208.6,2163.3,2254.0,23.1
+,"73 years","73","Census Region 2: Midwest","CENS-R2",12313,478009,2575.9,2530.4,2621.4,23.2
+,"73 years","73","Census Region 3: South","CENS-R3",23553,916382,2570.2,2537.4,2603.0,16.7
+,"73 years","73","Census Region 4: West","CENS-R4",11057,537771,2056.1,2017.8,2094.4,19.6
+,"74 years","74","Census Region 1: Northeast","CENS-R1",10112,399067,2533.9,2484.5,2583.3,25.2
+,"74 years","74","Census Region 2: Midwest","CENS-R2",13227,467782,2827.6,2779.4,2875.8,24.6
+,"74 years","74","Census Region 3: South","CENS-R3",25269,884658,2856.4,2821.1,2891.6,18.0
+,"74 years","74","Census Region 4: West","CENS-R4",11982,511982,2340.3,2298.4,2382.2,21.4
+,"75 years","75","Census Region 1: Northeast","CENS-R1",11226,414282,2709.7,2659.6,2759.9,25.6
+,"75 years","75","Census Region 2: Midwest","CENS-R2",14819,482782,3069.5,3020.1,3118.9,25.2
+,"75 years","75","Census Region 3: South","CENS-R3",27488,890702,3086.1,3049.6,3122.6,18.6
+,"75 years","75","Census Region 4: West","CENS-R4",12991,505838,2568.2,2524.0,2612.4,22.5
+,"76 years","76","Census Region 1: Northeast","CENS-R1",10578,355378,2976.5,2919.8,3033.3,28.9
+,"76 years","76","Census Region 2: Midwest","CENS-R2",14539,419466,3466.1,3409.7,3522.4,28.7
+,"76 years","76","Census Region 3: South","CENS-R3",26076,766450,3402.2,3360.9,3443.5,21.1
+,"76 years","76","Census Region 4: West","CENS-R4",12172,436718,2787.2,2737.6,2836.7,25.3
+,"77 years","77","Census Region 1: Northeast","CENS-R1",10668,316900,3366.4,3302.5,3430.2,32.6
+,"77 years","77","Census Region 2: Midwest","CENS-R2",14264,377627,3777.3,3715.3,3839.3,31.6
+,"77 years","77","Census Region 3: South","CENS-R3",25886,696512,3716.5,3671.2,3761.8,23.1
+,"77 years","77","Census Region 4: West","CENS-R4",12199,395142,3087.2,3032.5,3142.0,28.0
+,"78 years","78","Census Region 1: Northeast","CENS-R1",10568,297544,3551.7,3484.0,3619.5,34.5
+,"78 years","78","Census Region 2: Midwest","CENS-R2",14284,350183,4079.0,4012.1,4145.9,34.1
+,"78 years","78","Census Region 3: South","CENS-R3",25838,647957,3987.6,3939.0,4036.2,24.8
+,"78 years","78","Census Region 4: West","CENS-R4",12498,370718,3371.3,3312.2,3430.4,30.2
+,"79 years","79","Census Region 1: Northeast","CENS-R1",11325,277714,4077.9,4002.8,4153.0,38.3
+,"79 years","79","Census Region 2: Midwest","CENS-R2",14892,329351,4521.6,4449.0,4594.2,37.1
+,"79 years","79","Census Region 3: South","CENS-R3",26371,595509,4428.3,4374.9,4481.8,27.3
+,"79 years","79","Census Region 4: West","CENS-R4",13063,340293,3838.8,3772.9,3904.6,33.6
+,"80 years","80","Census Region 1: Northeast","CENS-R1",11573,265251,4363.0,4283.5,4442.5,40.6
+,"80 years","80","Census Region 2: Midwest","CENS-R2",15650,311733,5020.3,4941.7,5099.0,40.1
+,"80 years","80","Census Region 3: South","CENS-R3",27301,556893,4902.4,4844.2,4960.5,29.7
+,"80 years","80","Census Region 4: West","CENS-R4",13463,317706,4237.6,4166.0,4309.1,36.5
+,"81 years","81","Census Region 1: Northeast","CENS-R1",12159,242536,5013.3,4924.2,5102.4,45.5
+,"81 years","81","Census Region 2: Midwest","CENS-R2",15834,282875,5597.5,5510.3,5684.7,44.5
+,"81 years","81","Census Region 3: South","CENS-R3",27053,498466,5427.3,5362.6,5491.9,33.0
+,"81 years","81","Census Region 4: West","CENS-R4",13538,287611,4707.1,4627.8,4786.3,40.5
+,"82 years","82","Census Region 1: Northeast","CENS-R1",12736,228218,5580.6,5483.7,5677.6,49.5
+,"82 years","82","Census Region 2: Midwest","CENS-R2",16484,266518,6184.9,6090.5,6279.4,48.2
+,"82 years","82","Census Region 3: South","CENS-R3",28136,463910,6065.0,5994.1,6135.8,36.2
+,"82 years","82","Census Region 4: West","CENS-R4",13934,265519,5247.8,5160.7,5335.0,44.5
+,"83 years","83","Census Region 1: Northeast","CENS-R1",13137,215038,6109.2,6004.7,6213.6,53.3
+,"83 years","83","Census Region 2: Midwest","CENS-R2",16894,249730,6764.9,6662.9,6866.9,52.0
+,"83 years","83","Census Region 3: South","CENS-R3",28664,431821,6637.9,6561.1,6714.8,39.2
+,"83 years","83","Census Region 4: West","CENS-R4",14478,247080,5859.6,5764.2,5955.1,48.7
+,"84 years","84","Census Region 1: Northeast","CENS-R1",13333,190243,7008.4,6889.4,7127.4,60.7
+,"84 years","84","Census Region 2: Midwest","CENS-R2",16684,217487,7671.3,7554.9,7787.7,59.4
+,"84 years","84","Census Region 3: South","CENS-R3",27832,371980,7482.1,7394.2,7570.0,44.8
+,"84 years","84","Census Region 4: West","CENS-R4",14577,216693,6727.0,6617.8,6836.2,55.7
+,"85 years","85","Census Region 1: Northeast","CENS-R1",14149,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85 years","85","Census Region 2: Midwest","CENS-R2",17588,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85 years","85","Census Region 3: South","CENS-R3",28484,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"85 years","85","Census Region 4: West","CENS-R4",14802,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"86 years","86","Census Region 1: Northeast","CENS-R1",14865,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"86 years","86","Census Region 2: Midwest","CENS-R2",18034,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"86 years","86","Census Region 3: South","CENS-R3",28395,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"86 years","86","Census Region 4: West","CENS-R4",15349,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"87 years","87","Census Region 1: Northeast","CENS-R1",15445,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"87 years","87","Census Region 2: Midwest","CENS-R2",18759,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"87 years","87","Census Region 3: South","CENS-R3",28279,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"87 years","87","Census Region 4: West","CENS-R4",15506,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"88 years","88","Census Region 1: Northeast","CENS-R1",15868,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"88 years","88","Census Region 2: Midwest","CENS-R2",18613,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"88 years","88","Census Region 3: South","CENS-R3",28689,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"88 years","88","Census Region 4: West","CENS-R4",15929,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"89 years","89","Census Region 1: Northeast","CENS-R1",15634,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"89 years","89","Census Region 2: Midwest","CENS-R2",18377,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"89 years","89","Census Region 3: South","CENS-R3",27104,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"89 years","89","Census Region 4: West","CENS-R4",15247,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90 years","90","Census Region 1: Northeast","CENS-R1",15503,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90 years","90","Census Region 2: Midwest","CENS-R2",18243,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90 years","90","Census Region 3: South","CENS-R3",25971,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"90 years","90","Census Region 4: West","CENS-R4",15077,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"91 years","91","Census Region 1: Northeast","CENS-R1",14931,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"91 years","91","Census Region 2: Midwest","CENS-R2",17319,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"91 years","91","Census Region 3: South","CENS-R3",24388,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"91 years","91","Census Region 4: West","CENS-R4",14197,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"92 years","92","Census Region 1: Northeast","CENS-R1",13597,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"92 years","92","Census Region 2: Midwest","CENS-R2",15781,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"92 years","92","Census Region 3: South","CENS-R3",21611,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"92 years","92","Census Region 4: West","CENS-R4",13211,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"93 years","93","Census Region 1: Northeast","CENS-R1",12496,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"93 years","93","Census Region 2: Midwest","CENS-R2",14290,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"93 years","93","Census Region 3: South","CENS-R3",19663,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"93 years","93","Census Region 4: West","CENS-R4",12356,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"94 years","94","Census Region 1: Northeast","CENS-R1",11365,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"94 years","94","Census Region 2: Midwest","CENS-R2",12278,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"94 years","94","Census Region 3: South","CENS-R3",17015,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"94 years","94","Census Region 4: West","CENS-R4",10777,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95 years","95","Census Region 1: Northeast","CENS-R1",9600,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95 years","95","Census Region 2: Midwest","CENS-R2",10646,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95 years","95","Census Region 3: South","CENS-R3",13991,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"95 years","95","Census Region 4: West","CENS-R4",9336,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"96 years","96","Census Region 1: Northeast","CENS-R1",8037,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"96 years","96","Census Region 2: Midwest","CENS-R2",8824,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"96 years","96","Census Region 3: South","CENS-R3",11634,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"96 years","96","Census Region 4: West","CENS-R4",7843,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"97 years","97","Census Region 1: Northeast","CENS-R1",6396,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"97 years","97","Census Region 2: Midwest","CENS-R2",7023,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"97 years","97","Census Region 3: South","CENS-R3",9299,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"97 years","97","Census Region 4: West","CENS-R4",6190,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"98 years","98","Census Region 1: Northeast","CENS-R1",4753,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"98 years","98","Census Region 2: Midwest","CENS-R2",5126,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"98 years","98","Census Region 3: South","CENS-R3",6803,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"98 years","98","Census Region 4: West","CENS-R4",4625,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"99 years","99","Census Region 1: Northeast","CENS-R1",3267,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"99 years","99","Census Region 2: Midwest","CENS-R2",3652,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"99 years","99","Census Region 3: South","CENS-R3",4684,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"99 years","99","Census Region 4: West","CENS-R4",3117,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"100+ years","100","Census Region 1: Northeast","CENS-R1",6959,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"100+ years","100","Census Region 2: Midwest","CENS-R2",7310,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"100+ years","100","Census Region 3: South","CENS-R3",9356,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"100+ years","100","Census Region 4: West","CENS-R4",6624,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","Census Region 1: Northeast","CENS-R1",83,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","Census Region 2: Midwest","CENS-R2",Suppressed,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","Census Region 3: South","CENS-R3",22,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+,"Not Stated","NS","Census Region 4: West","CENS-R4",34,Not Applicable,Not Applicable,Not Applicable,Not Applicable,Not Applicable
+"---"
+"Dataset: Multiple Cause of Death, 1999-2020"
+"Query Parameters:"
+"Year/Month: 2018"
+"Group By: Single-Year Ages; Census Region"
+"Show Totals: Disabled"
+"Show Zero Values: True"
+"Show Suppressed: True"
+"Calculate Rates Per: 100,000"
+"Rate Options: Default intercensal populations for years 2001-2009 (except Infant Age Groups)"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/mcd.html for more information."
+"---"
+"Query Date: Nov 24, 2025 5:50:29 AM"
+"---"
+"Suggested Citation: Centers for Disease Control and Prevention, National Center for Health Statistics. National Vital Statistics"
+"System, Mortality 1999-2020 on CDC WONDER Online Database, released in 2021. Data are from the Multiple Cause of Death Files,"
+"1999-2020, as compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative"
+"Program. Accessed at http://wonder.cdc.gov/mcd-icd10.html on Nov 24, 2025 5:50:29 AM"
+"---"
+Messages:
+"1. Totals are not available for these results due to suppression constraints. More Information:"
+"http://wonder.cdc.gov/wonder/help/faq.html#Privacy."
+"---"
+Caveats:
+"1. Population and rates are labeled 'Not Applicable' when they include a subset of ages 85-100+ because populations are not"
+"available for those ages. More information: http://wonder.cdc.gov/wonder/help/mcd.html#Ages 85-100."
+"2. Data are Suppressed when the data meet the criteria for confidentiality constraints. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Assurance of Confidentiality."
+"3. Deaths of persons with Age ""Not Stated"" are included in ""All"" counts and rates, but are not distributed among age groups,"
+"so are not included in age-specific counts, age-specific rates or in any age-adjusted rates. More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Not Stated."
+"4. The method used to calculate 95% confidence intervals is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Confidence-Intervals."
+"5. The method used to calculate standard errors is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/mcd.html#Standard-Errors."
+"6. The population figures for year 2020 are bridged-race estimates of the July 1 resident population, from the Vintage 2020"
+"postcensal series released by NCHS on September 22, 2021. The population figures for year 2019 are bridged-race estimates of the"
+"July 1 resident population, from the Vintage 2019 postcensal series released by NCHS on July 9, 2020. The population figures for"
+"year 2018 are bridged-race estimates of the July 1 resident population, from the Vintage 2018 postcensal series released by NCHS"
+"on June 25, 2019. The population figures for year 2017 are bridged-race estimates of the July 1 resident population, from the"
+"Vintage 2017 postcensal series released by NCHS on June 27, 2018. The population figures for year 2016 are bridged-race"
+"estimates of the July 1 resident population, from the Vintage 2016 postcensal series released by NCHS on June 26, 2017. The"
+"population figures for year 2015 are bridged-race estimates of the July 1 resident population, from the Vintage 2015 postcensal"
+"series released by NCHS on June 28, 2016. The population figures for year 2014 are bridged-race estimates of the July 1 resident"
+"population, from the Vintage 2014 postcensal series released by NCHS on June 30, 2015. The population figures for year 2013 are"
+"bridged-race estimates of the July 1 resident population, from the Vintage 2013 postcensal series released by NCHS on June 26,"
+"2014. The population figures for year 2012 are bridged-race estimates of the July 1 resident population, from the Vintage 2012"
+"postcensal series released by NCHS on June 13, 2013. Population figures for 2011 are bridged-race estimates of the July 1"
+"resident population, from the county-level postcensal Vintage 2011 series released by NCHS on July 18, 2012. Population figures"
+"for 2010 are April 1 Census counts. The population figures for years 2001 - 2009, are bridged-race estimates of the July 1"
+"resident population, from the revised intercensal county-level 2000 - 2009 series released by NCHS on October 26, 2012."
+"Population figures for 2000 are April 1 Census counts. Population figures for 1999 are from the 1990-1999 intercensal series of"
+"July 1 estimates. Population figures for Infant Age Groups are the number of live births. <br/><b>Note:</b> Rates and population"
+"figures for years 2001 - 2009 differ slightly from previously published reports, due to use of the population estimates which"
+"were available at the time of release."
+"7. The population figures used in the calculation of death rates for the age group 'under 1 year' are the estimates of the"
+"resident population that is under one year of age. More information: http://wonder.cdc.gov/wonder/help/mcd.html#Age Group."
