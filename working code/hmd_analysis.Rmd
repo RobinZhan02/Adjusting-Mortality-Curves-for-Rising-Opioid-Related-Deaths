@@ -1,5 +1,5 @@
 ---
-title: "HMD Analysis"
+title: "hmd_analysis"
 author: '"PSTAT 296A"'
 date: "`r Sys.Date()`"
 output: pdf_document
@@ -14,12 +14,12 @@ library(demography)
 library(ggplot2)
 library(tidyverse)
 library(reshape2) # For data transformation
+library(gridExtra)
 ```
 
 ```{r}
 # load data
 US_data <- hmd.mx(country="USA", username="amandahuang@ucsb.edu", password="Ilovepstat296!")
-US_data99 <- extract.years(US_data, 1999:2020)
 ```
 
 # Exploratory Analysis
@@ -36,49 +36,35 @@ Rates_Total <- US_data$rate$total
 
 ```
 
-```{r}
+```{r fig.show='hold', out.width = "50%"}
 # --- Plot 1: Total Mortality
-plot(US_data, series="total", ylim = c(-10, 0), xlim = c(0,110))
+plot(US_data, series="total", ylim = c(-10, 0), xlim = c(0,110), main = "USA: Total Mortality Rate")
+# Add vertical dotted lines at age 20 and 60
+abline(v = 25, col = "black", lty = 2, lwd = 1.5)   # age 25
+abline(v = 65, col = "black", lty = 2, lwd = 1.5)   # age 65
 legend("bottomright", legend=unique(Years),
   col=rainbow(length(Years)*1.25), ncol=8, pch=19,
   title="Year", cex=0.44)
-```
-```{r fig.show='hold', out.width = "50%"}
+
 # --- Plot 2: Male Mortality
-plot(US_data, series="male",  ylim = c(-10, 0))
+plot(US_data, series="male",  ylim = c(-10, 0), main = "USA: Male Mortality Rate")
+# Add vertical dotted lines at age 20 and 60
+abline(v = 25, col = "black", lty = 2, lwd = 1.5)   # age 25
+abline(v = 65, col = "black", lty = 2, lwd = 1.5)   # age 65
 legend("bottomright", legend=unique(Years),
   col=rainbow(length(Years)*1.25), ncol=8, pch=19, 
   title="Year", cex=0.44)
 
 # --- Plot 3: Female Mortality
-plot(US_data, series = "female", ylim = c(-10, 0), xlim = c(0,120))
+plot(US_data, series = "female", ylim = c(-10, 0), main = "USA: Female Mortality Rate")
+# Add vertical dotted lines at age 20 and 60
+abline(v = 25, col = "black", lty = 2, lwd = 1.5)   # age 25
+abline(v = 65, col = "black", lty = 2, lwd = 1.5)   # age 65
 legend("bottomright", legend=unique(Years),
   col=rainbow(length(Years)*1.25), ncol=8, pch=19,
   title="Year", cex=0.44)
 
-```
-These plots display the age_specific log-mortality rate for every years from 1933 to 2023. Each line represents a single year, with the colors often used to denote the year (e.g., the warm colors for early years, cool colors for recent years.)  
-\textbf{Mortality Curve Shape:} All log-mortality curves show a J-shape: high mortality in infancy, started declining to a lowest point around age 10 in young adulthood, followed by a continuous, near-exponential rise with age. In early years, some fluctuations at the older ages, reflecting data variability, probably due to lack of sample.
-\textbf{Mortality Improvement:} The mortality curve vertically shift downward over time, which represent mortality improvement (Period effect). 
-\textbf{Gender Comparision:} The Female lines tend to be lower than the Male lines. 
-
-```{r}
-# Define color 
-col_all <- rainbow(length(Years)*1.25)  # default colors
-recent_years <- 2016:2023                 # years to make black
-col_all[Years %in% recent_years] <- "black"
-
-# --- Total Mortality, 2016-2023
-plot(US_data, series="total", ylim = c(-10, 0), xlim = c(0,120))
-lines(US_data, series="total", ylim = c(-10, 0), year = 2016:2023, col = "black")
-legend("bottomright", legend=unique(Years), col=col_all, ncol=8, pch=19,
-  title="Year", cex=0.45)
-
-```
-From years 2016-2023, log death rate fro age 20-40 increased compared to previous years. 
-
-## Mean Mortality Profit
-```{r}
+# --- Plot 4: Mean Mortality Profit
 # Cal mean log-death rate across all year for each age
 # strat sex
 Alpha_Male <- mean(US_data, series = names(US_data$rate)[2], transform = TRUE, 
@@ -110,9 +96,32 @@ ggplot(alpha_long, aes(x = Ages, y = Mean_LogRate, color = Gender)) +
     y = "Mean Log(Mortality Rate)"
   ) +
   theme_minimal()
+```
+
+These plots display the age specific log-mortality rate for every years from 1933 to 2023. Each line represents a single year, with the colors used to denote the year (e.g., the warm colors for early years, cool colors for recent years.)  
+\textbf{Mortality Curve Shape:} All log-mortality curves show a J-shape: high mortality in infancy, started declining to a lowest point around age 10 in young childhood, then increased dramatically from age 15 to 20, followed by a continuous, near-exponential rise with age. In early years, some fluctuations at the older ages, reflecting data variability, probably due to lack of sample.  
+\textbf{Mortality Improvement:} The mortality curve vertically shift downward over time, representing mortality improvement overtime. Also, the rate of change by age group is not uniform. Therefore, cohort effect was observed. 
+\textbf{Gender Comparision:} The Female lines tend to be lower than the Male lines. From age 15 to 20, males mortality curve has a clear accident hump while it is less pronounced for female mortality. The accident hump is often due to lack of driving experience of young males and have higher crash rate. The effect is gender specific, tied to male mortality. Also, at the elder ages, male mortality have more variation than female mortality.  
+\textbf{REMARK:} This study limit age interval from 25 to 65 because this age interval is where the opioid adjustment most likely take place combined with the analysis of missing data of opioid death. Also, limiting age group can the large variation at the from infancy age to young adulthood and elder ages, which can improve the modeling accuracy. 
+
+```{r}
+# Define color 
+col_all <- rainbow(length(Years)*1.25)  # default colors
+recent_years <- 2016:2023                 # years to make black
+col_all[Years %in% recent_years] <- "black"
+
+# --- Total Mortality, 2016-2023
+plot(US_data, series="total", ylim = c(-10, 0), xlim = c(0,110))
+lines(US_data, series="total", ylim = c(-10, 0), year = 2016:2023, col = "black")
+# Add vertical dotted lines at age 20 and 60
+abline(v = 25, col = "black", lty = 2, lwd = 1.5)   # age 25
+abline(v = 65, col = "black", lty = 2, lwd = 1.5)   # age 65
+legend("bottomright", legend=unique(Years), col=col_all, ncol=8, pch=19,
+  title="Year", cex=0.45)
 
 ```
-Across nearly all ages, males exhibit higher mortality rate than females, with the gap most noticeable in young adulthood, reflecting behavioral and environmental factors such as greater risk exposure. The difference narrows in later life when biological aging dominates mortality risk. 
+From years 2016-2023, log death rate for age 20-45 shift up compared to previous years. This increase can be due to many event, including opioid death. 
+
 
 ## Change in Mortality Over Time
 ```{r fig.show='hold', out.width = "50%"}
@@ -132,11 +141,12 @@ plot(US_data, series = "total", plot.type = "time", xlab = "Year", age = 101:110
      main = "USA: total death rates (1933-2023) Age: 101-110")
 
 ```
+
 This graph displays the evolution of age-specific mortality over time, where each line represent an age group and shows how its log death rate has changed across year. And the warm color (red, orange) is younger ages and cool color (blue/ purple) represent older ages. 
 
-The overall pattern reveals a steady downward shift in death rate across nearly all ages, indicating continuous mortality improvement over years. This downward movement could potentially reflect the period effect. At year 2020 and after, there is a noticeable increase in death mortality across all ages. 
+The overall pattern reveals a steady decrease in death rate across nearly all ages but with different gradient, indicating continuous mortality improvement over years. This downward movement reveal cohort effect. At year 2020 and after, death mortality increase across all ages but with different rate due to COVID. 
 
-From age 0-24, mortality rate have declined substantially across the entire period, particularly from 1930s-1960. From age 26-40, mortality rate has more fluctuation. Mortality rate show a notable decline from 1930s to 1970s, reaching a minimum around 1980. However, the curves rise again after 1990, particularly after 2010. This may correspond to behavioral or socioeconomic factors, like substance abuse. 
+From age 26-40, mortality rate has more fluctuation. Mortality rate show a notable decline from 1930s to 1970s, reaching a minimum around 1980. However, the mortality curve increase from 1980 to 1990 and more pronounced after 2010. This may correspond to behavioral or socioeconomic factors, like substance abuse. 
 
 From age 41-100, mortality rate shows a steady downward trend over time. From ages 101-110, the curves display considerable volatility probably due to limited data availability and sample size variation. The lack of a clear trend indicates that statistical uncertainty dominates at these extreme ages. 
 
@@ -150,10 +160,11 @@ matplot(Years, t(diff_data), type = "l",
         lwd = 0.8,
         ylab = "Male - Female (log mortality difference)",
         xlab = "Year",
-        main = "Gender Difference in Log Mortality Rates (1933–2023)")
+        main = "Gender Difference in Log Mortality Rates (1933-2023)")
 abline(h = 0, col = "black", lty = 2)  # reference line
 
 ```
+
 This graph shows the difference between male and female log mortality rate across all ages over time, where each line represents a age.  The curves above zero indicate higher male mortality while below zero indicate higher female mortality. 
 
 Most of the curves locate above zero, meaning male mortality rates have consistently been higher than female mortality rate across almost all age groups and time periods. But during the early age, such as infant time and child time, the mortality curves fluctuate around zero, indicating no gender advantage on mortality rate during that time.  
@@ -175,4 +186,758 @@ legend("topright",
        col = c("blue", "red"), lwd = 2, bty = "n")
 ```
 
-The blue gradient represents males, while the red gradient represents females. Between 1980 and 2000, male death rates stabilize and increase slightly while females rate continue to improve.
+The blue gradient represents males, while the red gradient represents females. Between 1980 and 1990, male death rate increase while females rate is stable and continue to decrease. Therefore, for age group 26-40, increase of mortality from 1980 to 1990 is gender specific to male. 
+
+In addition, for age group 26-40, the increase of mortality after 2010 cross whole population, regardless of gender, which could be potentially caused by drug overdose and opioid. 
+
+# Mortality Modeling
+## Lee-Carter
+```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=10}
+# Convert to StMoMoData
+mort <- StMoMoData(US_data, type = "central", series = "total")
+
+LC <- lc(link = "log", const = "sum")
+LCfit <- fit(LC, data = mort, ages.fit = 25:65, control = list(vcov=TRUE))
+# deviance residuals 
+resi_lc <- residuals(LCfit)
+
+
+# Plot results
+# view ax, bx, kt
+par(mfrow = c(3, 1))  # reset
+plot(25:65, LCfit$ax, type = "l", lwd = 2, col = "black",
+     main = expression(a[x]~" vs. x"),
+     xlab = "Age", ylab = expression(a[x]), cex.main = 2,
+      cex.lab = 2)
+axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5))
+
+plot(25:65, LCfit$bx, type = "l", lwd = 2, col = "black",
+     main = expression(beta[x]^{(1)} ~ "vs." ~ x),
+     xlab = "Age", ylab = expression(beta[x]^{(1)}), cex.main = 2,
+      cex.lab = 2)
+axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5))
+
+plot(as.numeric(colnames(LCfit$kt)), LCfit$kt[1,], type = "l", lwd = 2, 
+     col = "black", main = expression(kappa[x]^{(1)} ~ "vs." ~ t),
+     xlab = "Year", ylab = expression(kappa[x]^{(1)}), cex.main = 2,
+     cex.lab = 2)
+par(mfrow = c(1, 1))  # reset
+```
+### Goodness of Fit
+```{r}
+# Check goodness of fit: Lee-Carter
+Dxt <- mort$Dxt     # death counts
+Ext <- mort$Ext     # exposures
+mxt_obs <- Dxt / Ext
+
+# LC paramerter
+ax <- as.numeric(LCfit$ax)        # alpha_x (vector over ages)
+bx <- as.numeric(LCfit$bx[,1])    # beta_x
+kt <- as.numeric(LCfit$kt[1,])    # kappa_t 
+
+eta_xt <- outer(bx, kt, "*")
+eta_xt <- sweep(eta_xt, 1, ax, "+")
+# LC fitted mortality
+mxt_fit <- exp(eta_xt)
+
+# Extract ages to plot
+ages_to_plot <- c(25, 30, 40, 50, 60, 65)
+age_index <- match(ages_to_plot, mort$ages)
+years <- mort$years
+
+plot_list <- list()
+
+for (i in seq_along(age_index)) {
+  age <- ages_to_plot[i]
+  idx <- age_index[i]
+  
+  df <- data.frame(
+    year = years,
+    observed = mxt_obs[idx, ],
+    fitted   = mxt_fit[idx-25, ]
+  )
+  
+  df_melt <- melt(df, id.vars = "year")
+  
+  p <- ggplot(df_melt, aes(x = year, y = value, color = variable)) +
+    geom_line(size = 0.9) +
+    scale_y_log10() + 
+    labs(title = paste("Age", age, ": Observed vs Fitted LC Mortality"),
+         y = "mortality (log scale)", x = "year",
+         color = "") +
+    theme_minimal()
+  
+  plot_list[[i]] <- p
+}
+
+grid.arrange(
+  plot_list[[1]], plot_list[[2]], plot_list[[3]],
+  plot_list[[4]], plot_list[[5]], plot_list[[6]],
+  nrow = 2, ncol = 3
+)
+```
+
+```{r}
+resid_dev <- residuals(LCfit, type = "deviance")
+plot(resid_dev, )   # residual heatmap
+```
+
+### CI
+
+```{r}
+set.seed(123)
+
+LCboot_tot <- bootstrap(
+  LCfit,
+  nBoot = 50,              # bump if server can handle it
+  type  = "semiparametric"
+)
+
+ci_fun <- function(mat) {
+  tibble(
+    est   = apply(mat, 1, mean,     na.rm = TRUE),
+    lower = apply(mat, 1, quantile, probs = 0.025, na.rm = TRUE),
+    upper = apply(mat, 1, quantile, probs = 0.975, na.rm = TRUE)
+  )
+}
+
+ages  <- LCfit$ages
+years <- LCfit$years
+
+# collect bootstrap parameter draws
+ax_mat <- sapply(LCboot_tot$bootParameters, \(p) p$ax)
+bx_mat <- sapply(LCboot_tot$bootParameters, \(p) p$bx[, 1])
+kt_mat <- sapply(LCboot_tot$bootParameters, \(p) p$kt[1, ])
+
+# CI tables using empirical quantiles
+ax_df <- ci_fun(ax_mat) |> mutate(Age = ages)
+bx_df <- ci_fun(bx_mat) |> mutate(Age = ages)
+kt_df <- ci_fun(kt_mat) |> mutate(Year = years)
+```
+
+```{r}
+# a_x
+ggplot(ax_df, aes(x = Age, y = est)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+  geom_line() +
+  labs(
+    title = "Lee–Carter a_x with empirical 95% CIs",
+    x = "Age",
+    y = expression(alpha[x])
+  ) +
+  theme_minimal()
+
+# b_x
+ggplot(bx_df, aes(x = Age, y = est)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+  geom_line() +
+  labs(
+    title = "Lee–Carter b_x with empirical 95% CIs",
+    x = "Age",
+    y = expression(beta[x])
+  ) +
+  theme_minimal()
+
+# k_t
+ggplot(kt_df, aes(x = Year, y = est)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+  geom_line() +
+  labs(
+    title = "Lee–Carter k_t with empirical 95% CIs",
+    x = "Year",
+    y = expression(kappa[t])
+  ) +
+  theme_minimal()
+```
+
+```{r}
+# --- extract LC parameters and exposures from the MLE fit ---
+ax <- as.numeric(LCfit$ax)          # a_x
+bx <- as.numeric(LCfit$bx[, 1])     # b_x (first/only period term)
+kt <- as.numeric(LCfit$kt[1, ])     # k_t
+
+Ext <- LCfit$Ext                    # exposures E_{x,t}
+
+ages  <- LCfit$ages                 # fitted ages (25:65)
+years <- LCfit$years                # fitted years
+A  <- length(ages)
+Tt <- length(years)
+
+# --- linear predictor eta_{x,t} = a_x + b_x * k_t ---
+Ax_mat   <- matrix(ax, nrow = A, ncol = Tt, byrow = FALSE)
+BxKt_mat <- outer(bx, kt, "*")
+eta      <- Ax_mat + BxKt_mat
+
+# --- fitted Poisson means lambda_hat_{x,t} = E_{x,t} * exp(eta_{x,t}) ---
+lambda_hat <- Ext * exp(eta)
+
+# --- diagonal Fisher-info approximations for Var(a_x), Var(b_x), Var(k_t) ---
+
+# Var(a_x) ≈ 1 / Σ_t λ_{x,t}
+var_ax <- 1 / rowSums(lambda_hat)
+se_ax  <- sqrt(var_ax)
+
+# Var(b_x) ≈ 1 / Σ_t λ_{x,t} * k_t^2
+kt2_mat <- matrix(kt^2, nrow = A, ncol = Tt, byrow = TRUE)
+var_bx  <- 1 / rowSums(lambda_hat * kt2_mat)
+se_bx   <- sqrt(var_bx)
+
+# Var(k_t) ≈ 1 / Σ_x λ_{x,t} * b_x^2
+bx2_mat <- matrix(bx^2, nrow = A, ncol = Tt, byrow = FALSE)
+var_kt  <- 1 / colSums(lambda_hat * bx2_mat)
+se_kt   <- sqrt(var_kt)
+
+# z-value for ~95% CI
+z <- 1.96
+
+ax_df <- data.frame(
+  Age   = ages,
+  est   = ax,
+  lower = ax - z * se_ax,
+  upper = ax + z * se_ax
+)
+
+bx_df <- data.frame(
+  Age   = ages,
+  est   = bx,
+  lower = bx - z * se_bx,
+  upper = bx + z * se_bx
+)
+
+kt_df <- data.frame(
+  Year  = years,
+  est   = kt,
+  lower = kt - z * se_kt,
+  upper = kt + z * se_kt
+)
+```
+
+```{r}
+# a_x
+ggplot(ax_df, aes(x = Age, y = est)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper),
+              fill = "grey70", alpha = 0.3) +
+  geom_line(color = "black", linewidth = 1, alpha = 1.5) +
+  geom_line(aes(y = lower), color = "red", linetype = "11", linewidth = 1, alpha = 1.5) +
+  geom_line(aes(y = upper), color = "red", linetype = "11", linewidth = 1, alpha = 1.5) +
+  labs(
+    title = "Lee–Carter a_x with approx. 95% CIs",
+    x = "Age",
+    y = expression(alpha[x])
+  ) +
+  theme_minimal()
+
+# b_x
+ggplot(bx_df, aes(x = Age, y = est)) +
+  geom_line(color = "black", linewidth = 1) +
+  geom_line(aes(y = lower), color = "red", linetype = "dashed") +
+  geom_line(aes(y = upper), color = "red", linetype = "dashed") +
+  labs(
+    title = "Lee–Carter b_x with approx. 95% CIs",
+    x = "Age",
+    y = expression(beta[x])
+  ) +
+  theme_minimal()
+
+# k_t
+# make a plotting copy with a wider band (only for visualization)
+kt_plot <- kt_df |>
+  mutate(
+    lower_vis = est - 5 * (est - lower),  # 5x wider band
+    upper_vis = est + 5 * (upper - est)
+  )
+
+ggplot(kt_plot, aes(x = Year, y = est)) +
+  geom_ribbon(aes(ymin = lower_vis, ymax = upper_vis),
+              fill = "grey70", alpha = 0.3) +
+  geom_line(color = "black", linewidth = 1.2) +
+  geom_line(aes(y = lower_vis), color = "red",
+            linetype = "dashed", linewidth = 0.9) +
+  geom_line(aes(y = upper_vis), color = "red",
+            linetype = "dashed", linewidth = 0.9) +
+  labs(
+    title = "Lee–Carter k_t with approx. 95% CIs (Fisher, band magnified for visibility)",
+    x = "Year",
+    y = expression(kappa[t])
+  ) +
+  theme_minimal()
+```
+
+```{r}
+#testing
+range(ax_df$upper - ax_df$lower)
+range(bx_df$upper - bx_df$lower)
+range(kt_df$upper - kt_df$lower)
+
+head(ax_df, 5)
+head(bx_df, 5)
+head(kt_df, 5)
+```
+
+
+```{r}
+# attempt for CI
+# Covariance matrix for Lee-Carter
+## Extract parameter from LCfit
+ax <- as.numeric(LCfit$ax)          # a_x (length 41)
+bx <- as.numeric(LCfit$bx)          # b_x (length 41)
+kt <- as.numeric(LCfit$kt[1, ])     # k_t (length 91)
+
+Ext <- LCfit$Ext               #dim:41x91
+
+ages <- LCfit$ages
+A <- length(ages)                   # length 41
+years <- LCfit$years                # length 91
+Tt <- length(years)
+
+# Matrix Ax
+Ax_mat <- matrix(ax, nrow = A, ncol = Tt, byrow = FALSE)
+
+# BxKt
+BxKt_mat <- outer(bx, kt, "*")
+
+# ln mxt
+eta <- Ax_mat + BxKt_mat
+eta
+Ext
+# Compute lambda_hat_{x,t} = E_{x,t} * exp(eta_{x,t})
+lambda_hat <- Ext * exp(eta)    # (A x Tt)
+
+## -------------------------------------
+# Approximate SE(a_x) for each age x
+var_ax <- 1 / rowSums(lambda_hat)
+se_ax <- sqrt(var_ax)
+
+# Approximate SE(b_x) for each age x
+# Need sum_t lambda_{x,t} * k_t^2
+kt2_mat <- matrix(kt^2, nrow = A, ncol = Tt, byrow = TRUE)  # each row = k_t^2
+var_bx <- 1/ rowSums(lambda_hat * kt2_mat)
+se_bx <- sqrt(var_bx)
+
+# Approximate SE(k_t) for each year t
+bx2_mat <- matrix(bx^2, nrow = A, ncol = Tt, byrow = FALSE) # each col = b_x^2
+var_kt <- 1 / colSums(lambda_hat * bx2_mat)
+se_kt  <- sqrt(var_kt)
+
+## -------------------------------------
+## Construct CI with estimate
+ax_CI <- cbind(
+  lower = ax - 2.576 * se_ax,
+  estimate = ax,
+  upper = ax + 2.576 * se_ax
+)
+
+bx_CI <- cbind(
+  lower = bx - 2.576 * se_bx,
+  estimate = bx,
+  upper = bx + 2.576 * se_bx
+)
+
+kt_CI <- cbind(
+  lower = kt - 2.576 * se_kt,
+  estimate = kt,
+  upper = kt + 2.576 * se_kt
+)
+
+## -------------------------------------
+## Plot parameter estimate with CI
+# ax
+# determine the range
+ymin <- min(ax_CI)
+ymax <- max(ax_CI)
+# construct tick sequence every 0.5
+yticks <- seq(floor(ymin), ceiling(ymax), by = 0.5)
+plot(ages, ax, type = "l", lwd = 2, col = "black",
+     xlab = "Age", ylab = expression(a[x]),
+     main = expression(a[x] ~ "vs. x with approx. 95% CI"))
+lines(ages, ax_CI[,"lower"], lty = 2, col = "red")
+lines(ages, ax_CI[,"upper"], lty = 2, , col = "red")
+axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5))
+# add custom axis
+axis(2, at = yticks)
+
+# bx
+plot(ages, bx, type = "l", lwd = 2, col = "black",
+     xlab = "Age", ylab = expression(beta[x]),
+     main = expression(beta[x] ~ "vs. x with approx. 95% CI"))
+lines(ages, bx_CI[,"lower"], lty = 2, col = "red")
+lines(ages, bx_CI[,"upper"], lty = 2, , col = "red")
+axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5))
+
+# kt
+plot(as.numeric(colnames(LCfit$kt)), kt, type = "l", lwd = 2, col = "black",
+     xlab = "Year", ylab = expression(kappa[x]^{(1)}),
+     main = expression(kappa[t] ~ "vs." ~ "with approx. 95% CI"))
+lines(years, kt_CI[,"lower"], lty = 2, col = "red")
+lines(years, kt_CI[,"upper"], lty = 2, , col = "red")
+
+```
+```{r}
+# 2nd attempt
+Sigma <- vcov(LCfit)
+```
+
+
+1) Age Effect $a_x$
+-   $a_x$ is monotone increasing smoothly and almost linearly across age 25 to 60, reflecting steadily rising baseline mortality with age on the log scale. And there is a noticeable jump at the last age around 65. Since the sample size around age 65 is relatively large and we need to group data above 65, this jump might be due to a boundary/grouping effect. 
+
+2) Age Sensitivity to period index $\beta_x^{(1)}$
+-   $b_x$ declines with age across 25-65, where higher values at younger adult ages and lower values at older adult ages. Also, a sudden drop at the last age around 65.
+-   This means improvements or deterioration in the period index $\kappa_t$, produce larger proportional changes in mortality at younger ages and smaller proportional changes at older adult ages.  
+-   This make sense because period-wide shocks like medical advances, epidemics, and economic conditions, have stronger impact on young and middle-age adult than at the older age. 
+
+3) Period mortality index $\kappa_t$
+-   $\kappa_t$ shows a strong downward trend over the long-run, implying substantial long-term mortality improvement for age 25-65. However, the decline is not constant or linear; instead, it occurs in distinct phases. The index falls sharply from approximately 1933–1955, representing the period of greatest mortality improvement. From 1955–1970, $\kappa_t$ remains relatively flat, indicating a temporary slowdown in improvements. After 1970, the decline resumes, reflecting a renewed period of improvement driven by medical advances. For recent years, around 2020 has a short-term mortality uptick, which is corresponding to COVID shock.
+-   Because $\beta_x^{1}$ greater than $0$ for all ages here, a decrease in $\kappa_t$ corresponds to improvement in mortality across all ages.
+-   A strong decline in 1930s to 1950s could be potentially due to post-war improvements in income and living standards, roll-out of public health measures, and improvements in maternal.
+-   From 1980-2000, the United States experience a notable stagnation in adult mortality improvement. Heat disease mortality had been falling rapidly since the 1970s due to improved treatment and prevention but the rate of improvement slowed before accelerating again in 1990s which cardiac surgery improved and better hypertension and cholesterol control was introduced. Others factors include high prevalence of smoking among adults, rising obesity, HIV/AIDS epidemic which rose sharply from around 1983 to 1995.
+
+## RH 1
+```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=13, cache = TRUE}
+# Renshaw and Haberman (Lee-Carter with cohorts)
+# a_x + B_xk_t + gamma_t-x
+# cohortAgeFun = "1", B_x^(0) = 1
+mort <- StMoMoData(US_data, type = "central", series = "total")
+RH <- rh(link = "log", cohortAgeFun = "1")
+RHfit <- fit(RH, data = mort, ages.fit = 25:65)
+RHfit
+resRH <- residuals(RHfit)        # deviance residuals
+
+# parameters
+plot(RHfit)                      # ax, bx, kt, gc
+```
+```{r}
+# # RH
+# # Bootstrap 
+# RHBoot <- bootstrap(RHfit, nBoot = 200, type = "residual")
+# plot(RHBoot, probs = seq(2.5, 97.5))
+```
+
+1) Age Effect $a_x$ and Age Sensitivity to period index $\beta_x^{(1)}$
+-   Baseline mortality $a_x$ and age sensitivity $\beta_x^{(1)}$ show a similar pattern as Lee-Carter model, where $a_x$ increases monotonically with age from 25 to 65 and $\beta_x^{(1)}$ declines with ages. 
+
+2) Period mortality index $\kappa_t$
+-   The period index also show a long-term downward trend consistent with declining mortality over time like Lee-Carter Model. However, the downward trend becomes smoother in RH compared to Lee-Carter because part of the temporal variation is now attributed to cohort effects. 
+
+3) Cohort Effect $\gamma_{t-x}$
+-   The cohort term shows a clear increasing trend by year of birth, where earlier cohorts born in the late 1800s to early 1900s have lower mortality, while more recent cohorts show higher mortality. 
+
+
+## RH 2
+```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=13}
+# Renshaw and Haberman (Lee-Carter with cohorts)
+# a_x + B_xk_t + B_0 gamma_t-x
+# cohortAgeFun = "NP", B_x^(0) = NP
+mort_rh2 <- StMoMoData(US_data, type = "central", series = "total")
+RHnp_mod <- rh(link = "log", cohortAgeFun = "NP")
+RHnp_fit <- fit(RHnp_mod, data = mort_rh2, ages.fit = 25:65)
+
+# deviance residuals 
+# Safe residuals helper: computes deviance/pearson manually and rebuilds a resStMoMo object
+# safe_residuals_resStMoMo <- function(fit, type = c("deviance","pearson")){
+#   type <- match.arg(type)
+#   rates_hat <- fitted(fit, type = "rates")                     # ages x years
+#   mu        <- fit$Ext * rates_hat
+#   # guard against zeros
+#   mu  <- pmax(mu, 1e-12)
+#   if (type == "deviance") {
+#     # deviance residuals for Poisson
+#     y  <- fit$Dxt
+#     r  <- sign(y - mu) * sqrt(2 * (y * ifelse(y > 0, log(y/mu), 0) - (y - mu)))
+#   } else {
+#     r  <- (fit$Dxt - mu) / sqrt(mu)
+#   }
+#   # ensure it is a matrix with dimnames
+#   r <- as.matrix(r)
+#   dimnames(r) <- list(fit$ages, fit$years)
+#   # build an object that plot() in StMoMo can handle
+#   res_obj <- list(residuals = r, ages = fit$ages, years = fit$years, name = paste(type, "residuals"))
+#   class(res_obj) <- "resStMoMo"
+#   res_obj
+# }
+# res_rhnp <- tryCatch(residuals(RHnp_fit),
+#                      error = function(e) safe_residuals_resStMoMo(RHnp_fit, "deviance"))
+
+# parameters
+plot(RHnp_fit, cex.main=2, cex.lab = 2)
+```
+
+```{r}
+# # RHNP
+# # Bootstrap 
+# RHnp_Boot <- bootstrap(RHnp_fit, nBoot = 200, type = "residual")
+# plot(RHnp_Boot, probs = seq(2.5, 97.5))
+```
+
+### Goodness of Fit 
+```{r}
+# Ages and years actually used in the RH model
+ages_fit  <- RHnp_fit$ages
+years_fit <- RHnp_fit$years
+
+# Extract deaths & exposures for those ages
+Dxt_fit <- mort$Dxt[match(ages_fit, mort$ages), ]
+Ext_fit <- mort$Ext[match(ages_fit, mort$ages), ]
+
+# Observed mortality (central death rates)
+mxt_obs_RH <- Dxt_fit / Ext_fit
+
+# Fitted mortality from the RH model
+mxt_fit_RH <- fitted(RHnp_fit, type = "rates")   # matrix age x year
+
+ages_to_plot <- c(25, 30, 40, 50, 60, 65)       # all must be in ages_fit
+age_index    <- match(ages_to_plot, ages_fit)
+
+plot_list_RH <- vector("list", length(ages_to_plot))
+
+for (i in seq_along(age_index)) {
+  age <- ages_to_plot[i]
+  idx <- age_index[i]
+
+  df <- data.frame(
+    year     = years_fit,
+    observed = mxt_obs_RH[idx, ],
+    fitted   = mxt_fit_RH[idx, ]
+  )
+
+  df_melt <- melt(df, id.vars = "year")
+
+  p <- ggplot(df_melt, aes(x = year, y = value, color = variable)) +
+    geom_line(size = 0.9) +
+    scale_y_log10() +
+    labs(title = paste("Age", age, ": Observed vs Fitted RH Mortality"),
+         y = "mortality (log scale)", x = "year",
+         color = "") +
+    theme_minimal()
+
+  plot_list_RH[[i]] <- p
+}
+
+grid.arrange(
+  plot_list_RH[[1]], plot_list_RH[[2]], plot_list_RH[[3]],
+  plot_list_RH[[4]], plot_list_RH[[5]], plot_list_RH[[6]],
+  nrow = 2, ncol = 3
+)
+```
+
+
+1) Age Effect $a_x$
+-   Baseline mortality $a_x$ remain a smooth monotonic increase across age 25-65 and a sharp increase around age 65, consistent with Lee-Carter model and the RH model with constant cohort loading.
+
+2) Age Sensitivity to period index $\beta_x^{(1)}$
+-   In contrast to Lee–Carter and RH with constant cohort loading (both of which show a steady decline in $\beta_x^{(1)}$, the non-parametric RH model shows a different pattern: sensitivity decreases up to approximately age 60 and then increases again for the older ages in the range.
+-   This suggests that mortality improvements over time are not uniformly strongest at younger ages, and that ages near 60 experience a renewed sensitivity to period mortality trends.
+
+3) Cohort Effect $\gamma_{t-x}$
+-   The cohort index displays a substantially different pattern from the constant-loading RH model. Rather than a monotonic increase, the cohort effect declines for cohorts born between ~1880 and ~1940, and then increases sharply for later birth cohorts.
+-   This reveals that the generational mortality disadvantage affecting recent cohorts is age-specific, not uniform across the adult age span.
+
+4) Cohort Age Loading $\beta_x^{(0)}(x)$
+-   Unlike the constant-loading RH model where is $\beta_x^{(0)}$ flat, the non-parametric model shows clear variation across age. This indicates that cohort effects do not impact all ages equally—certain ages are more strongly influenced by generational effects than others.
+
+## APC
+```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=10}
+# # fit APC
+# APC <- apc(link = "log")
+# APCfit <- fit(APC, data = mort)
+# # deviance residuals 
+# resi_apc <- residuals(APCfit)
+# 
+# # plot parameters
+# plot(APCfit, , parametricbx = FALSE)
+```
+
+1) Age Effect $a_x$
+-   The age effect increases monotonically with age from 30 to around 65 and a jump at the last age group, similar to all other model. Also, a noticeable uptick shows at the last age around 65. 
+
+2) Period Effect $\kappa_t$
+-   The period effect show a sustained decline from 1930 to the 1980. After 1980, the downward trend flattens and start increasing from 1990. And there is a uptick around 2020. 
+
+3) Cohort Effect $\gamma_{t-x}$
+-   Cohort effect increase from 1880 and reach maximum around 1920, and the start decrease until 1970 reaching a local minimum. After 1980, mortality begins to raise gradually. All three mortality model show distinct cohort effect. 
+
+## CBD Model
+```{r, cache = TRUE}
+mort_CBD <- StMoMoData(US_data, type = "initial", series = "total")
+N <- 1e6
+mort_CBD$Dxt <- round(mort_CBD$Dxt * N)
+mort_CBD$Ext <- round(mort_CBD$Ext * N)
+
+# Fit CBD
+# Binomial Distribution
+CBD <- cbd(link = "logit")
+CBDfit <- fit(CBD, data = (mort_CBD), ages.fit = 25:65)
+CBDfit
+# plot parameters
+plot(CBDfit, parametricbx = FALSE)
+plot(CBDfit, nCol = 1, parametricbx = FALSE, lwd = 2, cex.main =2, cex.lab = 2)
+```
+### Goodness of Fit
+```{r}
+# Ages and years actually used in the CBD model
+ages_fit  <- CBDfit$ages
+years_fit <- CBDfit$years
+
+# Extract deaths & exposures for those ages
+Dxt_fit <- mort_CBD$Dxt[match(ages_fit, mort_CBD$ages), ]
+Ext_fit <- mort_CBD$Ext[match(ages_fit, mort_CBD$ages), ]
+
+# Observed initial death probabilities q_{x,t}
+qxt_obs_CBD <- Dxt_fit / Ext_fit
+
+# Fitted q_{x,t} from CBD model
+qxt_fit_CBD <- fitted(CBDfit, type = "rates")   # matrix: age x year
+
+ages_to_plot <- c(25, 30, 40, 50, 60, 65)   # all must be in ages_fit
+age_index    <- match(ages_to_plot, ages_fit)
+
+plot_list_CBD <- vector("list", length(ages_to_plot))
+
+for (i in seq_along(age_index)) {
+  age <- ages_to_plot[i]
+  idx <- age_index[i]
+
+  df <- data.frame(
+    year     = years_fit,
+    observed = qxt_obs_CBD[idx, ],
+    fitted   = qxt_fit_CBD[idx, ]
+  )
+
+  df_melt <- melt(df, id.vars = "year")
+
+  p <- ggplot(df_melt, aes(x = year, y = value, color = variable)) +
+    geom_line(size = 0.9) +
+    scale_y_log10() +   # log scale for probabilities (optional but consistent)
+    labs(title = paste("Age", age, ": Observed vs Fitted CBD Mortality"),
+         y = "death probability (log scale)", x = "year",
+         color = "") +
+    theme_minimal()
+
+  plot_list_CBD[[i]] <- p
+}
+
+grid.arrange(
+  plot_list_CBD[[1]], plot_list_CBD[[2]], plot_list_CBD[[3]],
+  plot_list_CBD[[4]], plot_list_CBD[[5]], plot_list_CBD[[6]],
+  nrow = 2, ncol = 3
+)
+```
+
+
+1) $\kappa_t^{(1)}$: overall mortality leve in year $t$
+-   $\kappa_t^{(1)}$ has a clear long-term decline from early 1930s to roughly 2010s, indicating substantial improvements in overall mortality over this period. The decline is not linear: the curve contains several stretches where it become almost flat, corresponding to periods in which mortality improvement temporarily slowed down. This pattern is consistent with the behavior of the period index $\kappa_t^{(1)}$ in both Lee-Carter and RH models.  
+-   However, around 2010, CBD highlight that $\kappa_t^{(1)}$ stop declining and begins to increase, signalling a reversal in the long-run trend. 
+
+```{r}
+# # extract (x-x-bar)
+# CBD_bx <- coef(CBDfit)$bx
+# # extract kt
+# CBD_kt <- coef(CBDfit)$kt
+# 
+# # extract age and year
+# CBD_ages <- as.numeric(rownames(CBD_bx))
+# CBD_years <- as.numeric(colnames(CBD_kt))
+# 
+# 
+# b_x <- as.numeric(CBD_bx[,2])              # (x-x-bar)
+# k1_t   <- as.numeric(CBD_kt[1, ])          # kt^(1)
+# k2_t   <- as.numeric(CBD_kt[2, ])          # kt^(2)
+# 
+# years_to_plot <- c(1935, 1960, 1970,1980, 1990, 2000, 2010, 2018,2020)
+# idx <- match(years_to_plot, CBD_years)
+# 
+# # Compute logit(q_x,t) for selected years
+# logit_q <- sapply(idx, function(i) {
+#   k1_t[i] + b_x * k2_t[i]
+# })
+# 
+# colnames(logit_q) <- years_to_plot
+# 
+# # Plot curves: logit(q_x) vs age
+# plot(ages, logit_q[,1],
+#      type = "l", lwd = 2,
+#      ylab = "q_x in logit scale",
+#      xlab = "Age",
+#      main = "logit(q_x) by Age for Selected Years",
+#      ylim = range(logit_q))
+# 
+# colors <- rainbow(length(idx))
+# 
+# for (i in 1:length(years_to_plot)) {
+#   lines(ages, logit_q[,i], col = colors[i], lwd = 2)
+# }
+# 
+# legend("bottomright",
+#        legend = paste("Year =", years_to_plot),
+#        col = colors,
+#        lwd = 2, 
+#        cex=0.6)
+``` 
+
+
+## M6
+```{r}
+mort_M6 <- StMoMoData(US_data, type = "initial", series = "total")
+mort_M6$Dxt <- round(mort_M6$Dxt * N)
+mort_M6$Ext <- round(mort_M6$Ext * N)
+# Fit CBD
+# Binomial Distribution
+M6 <- m6(link = "logit")
+M6fit <- fit(M6, data = mort_M6, ages.fit = 25:65)
+
+# plot parameters
+plot(M6fit)
+```
+
+
+# Goodness of Fit
+```{r}
+# # 1) AIC / BIC
+# AIC / BIC values from your output
+# AIC_LC   <- AIC(LCfit)
+# AIC_RH1  <- AIC(RHfit)
+# AIC_RHnp <- AIC(RHnp_fit)
+# AIC_APC  <- AIC(APCfit)
+# 
+# BIC_LC   <- BIC(LCfit)
+# BIC_RH1  <- BIC(RHfit)
+# BIC_RHnp <- BIC(RHnp_fit)
+# BIC_APC  <- BIC(APCfit)
+# 
+# # Combine into a dataframe
+# model_compare <- data.frame(
+#   Criterion = c("AIC", "BIC"),
+#   LC   = c(AIC_LC,  BIC_LC),
+#   RH1  = c(AIC_RH1, BIC_RH1),
+#   RHnp = c(AIC_RHnp, BIC_RHnp),
+#   APC  = c(AIC_APC, BIC_APC)
+# )
+# 
+# knitr::kable(
+#   model_compare,
+#   caption = "Model Comparison Based on AIC and BIC",
+#   align = "c",
+#   format = "markdown"
+# )
+```
+RHnp (Renshaw-Haberman with non-parametric cohort age loading) has the lowest AIC and BIC among all model, implying that RHnp provide the best firt to the observed mortality data.
+
+
+```{r fig.show='hold', out.width = "50%"}
+# # 2) Residual heatmaps
+# plot(resi_lc,  type="colourmap", main="LC residuals")
+# plot(resRH, type="colourmap", main="RH (const) residuals")
+# plot(res_rhnp,type="colourmap", main="RH (NP) residuals")
+# plot(resi_apc,type="colourmap", main="APC residuals")
+```
+
+```{r fig.show='hold'}
+# # 3) Residual scatterplot
+plot(resi_lc,  type="scatter", main="LC residuals")
+# plot(resRH, type="scatter", main="RH (const) residuals")
+# plot(res_rhnp,type="scatter", main="RH (NP) residuals")
+# plot(resi_apc,type="scatter", main="APC residuals")
+```
+
+
+
