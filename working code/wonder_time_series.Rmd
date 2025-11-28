@@ -116,7 +116,7 @@ for(i in 7:last_ma){
   mu <- weighted.mean(x_vals, w_vals)
   year_month$mean[i] <- mu
   
-  year_month$variance[i] <- sum(w_vals * (x_vals - mu)^2) / sum(w_vals)
+  year_month$variance[i] <- sum(w_vals^2 * (x_vals - mu)^2) / sum(w_vals^2)
 }
 ```
 
@@ -174,7 +174,7 @@ dispersion_calc <- function(dataset, title) {
     mu <- weighted.mean(x_vals, w_vals)
     dataset$mean[i] <- mu
   
-    dataset$variance[i] <- sum(w_vals * (x_vals - mu)^2) / sum(w_vals)
+    dataset$variance[i] <- sum(w_vals^2 * (x_vals - mu)^2) / sum(w_vals^2)
   }
 
   dispersion_set <- dataset %>%
@@ -272,7 +272,7 @@ for(i in 7:last_ma){
   mu <- weighted.mean(x_vals, w_vals)
   year_month$mean[i] <- mu
   
-  year_month$variance[i] <- sum(w_vals * (x_vals - mu)^2) / sum(w_vals)
+  year_month$variance[i] <- sum(w_vals^2 * (x_vals - mu)^2) / sum(w_vals^2)
 }
 ```
 
