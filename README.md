@@ -6,10 +6,10 @@ data - this folder contains data used for exploratory data analysis and missing 
 
 working code - this folder contains code used to generate plots and perform calculations in our final presentation and report
 
-  hmd_analysis.Rmd - modeling (LC, RH, CBD) with human mortality database
+  - hmd_analysis.Rmd - modeling (LC, RH, CBD) with human mortality database
   
-  wonder_eda.Rmd/wonder_eda2.Rmd - exploratory data analysis with CDC wonder
+  - wonder_eda.Rmd/wonder_eda2.Rmd - exploratory data analysis with CDC wonder
   
-  wonder_time_series.Rmd - additional analysis regarding dispersion and time series analysis
+  - wonder_time_series.Rmd - additional analysis regarding dispersion and time series analysis
   
 Dockerfile - this script builds the container
