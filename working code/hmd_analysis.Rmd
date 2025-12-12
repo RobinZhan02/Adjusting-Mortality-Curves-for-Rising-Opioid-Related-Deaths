@@ -197,14 +197,97 @@ In addition, for age group 26-40, the increase of mortality after 2010 cross who
 mort <- StMoMoData(US_data, type = "central", series = "total")
 
 LC <- lc(link = "log", const = "sum")
-LCfit <- fit(LC, data = mort, ages.fit = 25:65, control = list(vcov=TRUE))
+LCfit <- fit(LC, data = mort, ages.fit = 25:65)
 # deviance residuals 
 resi_lc <- residuals(LCfit)
 
-
 # Plot results
 # view ax, bx, kt
-par(mfrow = c(3, 1))  # reset
+par(mfrow = c(3, 1), mar = c(5, 6, 3, 1))  # reset
+plot(25:65, LCfit$ax, type = "l", lwd = 2, col = "black",
+     main = expression(a[x]~" vs. x"),
+     xlab = "Age", ylab = expression(a[x]), cex.main = 2,
+      cex.lab = 2, cex.axis=1.3)
+axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis=1.3)
+
+plot(25:65, LCfit$bx, type = "l", lwd = 2, col = "black",
+     main = expression(beta[x]^{(1)} ~ "vs." ~ x),
+     xlab = "Age", ylab = expression(beta[x]^{(1)}), cex.main = 2,
+      cex.lab = 2, cex.axis=1.3)
+axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis=1.3)
+
+plot(as.numeric(colnames(LCfit$kt)), LCfit$kt[1,], type = "l", lwd = 2, 
+     col = "black", main = expression(kappa[t]^{(1)} ~ "vs." ~ t),
+     ylim = c(min(kt_df$lower), max(kt_df$upper)),
+     xlab = "Year", ylab = expression(kappa[t]^{(1)}), cex.main = 2,
+     cex.lab = 2, cex.axis=1.3)
+# Add dashed lower CI
+lines(kt_df$year, kt_df$lower,
+      col = "gray40", lty = 2, lwd = 2)
+
+# Add dashed upper CI
+lines(kt_df$year, kt_df$upper,
+      col = "gray40", lty = 2, lwd = 2)
+legend("topright",
+       legend = c("kappa(t)", "95% CI"),
+       col = c("black", "gray40"),
+       lty = c(1, 3),
+       lwd = 2,
+       bty = "n")
+par(mfrow = c(1, 1))  # reset
+```
+### CI
+```{r}
+# attempt for CI
+## kappa
+kappa <- as.numeric(LCfit$kt)  # κ_t
+years <- LCfit$years      # length 91
+stopifnot(length(years) == length(kappa))
+
+# Compute increments
+y <- diff(kappa) 
+n <- length(y)
+
+# Estimate the drift theta
+theta_hat <- mean(y)
+
+# Compute residuals
+omega_hat <- y - theta_hat
+
+# Estimate the innovation variance
+sigma2_w_hat <- mean(omega_hat^2)      # MLE
+sigma_w_hat <- sqrt(sigma2_w_hat)
+
+
+# Gaussian CI for k_t at each year
+alpha <- 0.05
+z <- qnorm(1 - alpha / 2)   # ≈ 1.96 for 95% CI
+
+kappa_lower <- kappa - z * sigma_w_hat
+kappa_upper <- kappa + z * sigma_w_hat
+
+kt_df <- data.frame(
+  year  = years,
+  kappa = kappa,
+  lower = kappa_lower,
+  upper = kappa_upper
+)
+
+ggplot(kt_df, aes(x = year, y = kappa)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+  geom_line() +
+  labs(
+    x = "Year",
+    y = "kappa_t",
+    title = "GAPC Gaussian RW-based 95% CI for kappa_t (per year)"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+# Plot results
+# view ax, bx, kt
+par(mfrow = c(3, 1), mar = c(5, 6, 3, 1))  # reset
 plot(25:65, LCfit$ax, type = "l", lwd = 2, col = "black",
      main = expression(a[x]~" vs. x"),
      xlab = "Age", ylab = expression(a[x]), cex.main = 2,
@@ -218,11 +301,26 @@ plot(25:65, LCfit$bx, type = "l", lwd = 2, col = "black",
 axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5))
 
 plot(as.numeric(colnames(LCfit$kt)), LCfit$kt[1,], type = "l", lwd = 2, 
-     col = "black", main = expression(kappa[x]^{(1)} ~ "vs." ~ t),
-     xlab = "Year", ylab = expression(kappa[x]^{(1)}), cex.main = 2,
+     col = "black", main = expression(kappa[t]^{(1)} ~ "vs." ~ t),
+     ylim = c(min(kt_df$lower), max(kt_df$upper)),
+     xlab = "Year", ylab = expression(kappa[t]^{(1)}), cex.main = 2,
      cex.lab = 2)
+# Add dashed lower CI
+lines(kt_df$year, kt_df$lower,
+      col = "gray40", lty = 2, lwd = 2)
+
+# Add dashed upper CI
+lines(kt_df$year, kt_df$upper,
+      col = "gray40", lty = 2, lwd = 2)
+legend("topright",
+       legend = c("kappa(t)", "95% CI"),
+       col = c("black", "gray40"),
+       lty = c(1, 3),
+       lwd = 2,
+       bty = "n")
 par(mfrow = c(1, 1))  # reset
 ```
+
 ### Goodness of Fit
 ```{r}
 # Check goodness of fit: Lee-Carter
@@ -282,302 +380,6 @@ resid_dev <- residuals(LCfit, type = "deviance")
 plot(resid_dev, )   # residual heatmap
 ```
 
-### CI
-
-```{r}
-set.seed(123)
-
-LCboot_tot <- bootstrap(
-  LCfit,
-  nBoot = 50,              # bump if server can handle it
-  type  = "semiparametric"
-)
-
-ci_fun <- function(mat) {
-  tibble(
-    est   = apply(mat, 1, mean,     na.rm = TRUE),
-    lower = apply(mat, 1, quantile, probs = 0.025, na.rm = TRUE),
-    upper = apply(mat, 1, quantile, probs = 0.975, na.rm = TRUE)
-  )
-}
-
-ages  <- LCfit$ages
-years <- LCfit$years
-
-# collect bootstrap parameter draws
-ax_mat <- sapply(LCboot_tot$bootParameters, \(p) p$ax)
-bx_mat <- sapply(LCboot_tot$bootParameters, \(p) p$bx[, 1])
-kt_mat <- sapply(LCboot_tot$bootParameters, \(p) p$kt[1, ])
-
-# CI tables using empirical quantiles
-ax_df <- ci_fun(ax_mat) |> mutate(Age = ages)
-bx_df <- ci_fun(bx_mat) |> mutate(Age = ages)
-kt_df <- ci_fun(kt_mat) |> mutate(Year = years)
-```
-
-```{r}
-# a_x
-ggplot(ax_df, aes(x = Age, y = est)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
-  geom_line() +
-  labs(
-    title = "Lee–Carter a_x with empirical 95% CIs",
-    x = "Age",
-    y = expression(alpha[x])
-  ) +
-  theme_minimal()
-
-# b_x
-ggplot(bx_df, aes(x = Age, y = est)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
-  geom_line() +
-  labs(
-    title = "Lee–Carter b_x with empirical 95% CIs",
-    x = "Age",
-    y = expression(beta[x])
-  ) +
-  theme_minimal()
-
-# k_t
-ggplot(kt_df, aes(x = Year, y = est)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
-  geom_line() +
-  labs(
-    title = "Lee–Carter k_t with empirical 95% CIs",
-    x = "Year",
-    y = expression(kappa[t])
-  ) +
-  theme_minimal()
-```
-
-```{r}
-# --- extract LC parameters and exposures from the MLE fit ---
-ax <- as.numeric(LCfit$ax)          # a_x
-bx <- as.numeric(LCfit$bx[, 1])     # b_x (first/only period term)
-kt <- as.numeric(LCfit$kt[1, ])     # k_t
-
-Ext <- LCfit$Ext                    # exposures E_{x,t}
-
-ages  <- LCfit$ages                 # fitted ages (25:65)
-years <- LCfit$years                # fitted years
-A  <- length(ages)
-Tt <- length(years)
-
-# --- linear predictor eta_{x,t} = a_x + b_x * k_t ---
-Ax_mat   <- matrix(ax, nrow = A, ncol = Tt, byrow = FALSE)
-BxKt_mat <- outer(bx, kt, "*")
-eta      <- Ax_mat + BxKt_mat
-
-# --- fitted Poisson means lambda_hat_{x,t} = E_{x,t} * exp(eta_{x,t}) ---
-lambda_hat <- Ext * exp(eta)
-
-# --- diagonal Fisher-info approximations for Var(a_x), Var(b_x), Var(k_t) ---
-
-# Var(a_x) ≈ 1 / Σ_t λ_{x,t}
-var_ax <- 1 / rowSums(lambda_hat)
-se_ax  <- sqrt(var_ax)
-
-# Var(b_x) ≈ 1 / Σ_t λ_{x,t} * k_t^2
-kt2_mat <- matrix(kt^2, nrow = A, ncol = Tt, byrow = TRUE)
-var_bx  <- 1 / rowSums(lambda_hat * kt2_mat)
-se_bx   <- sqrt(var_bx)
-
-# Var(k_t) ≈ 1 / Σ_x λ_{x,t} * b_x^2
-bx2_mat <- matrix(bx^2, nrow = A, ncol = Tt, byrow = FALSE)
-var_kt  <- 1 / colSums(lambda_hat * bx2_mat)
-se_kt   <- sqrt(var_kt)
-
-# z-value for ~95% CI
-z <- 1.96
-
-ax_df <- data.frame(
-  Age   = ages,
-  est   = ax,
-  lower = ax - z * se_ax,
-  upper = ax + z * se_ax
-)
-
-bx_df <- data.frame(
-  Age   = ages,
-  est   = bx,
-  lower = bx - z * se_bx,
-  upper = bx + z * se_bx
-)
-
-kt_df <- data.frame(
-  Year  = years,
-  est   = kt,
-  lower = kt - z * se_kt,
-  upper = kt + z * se_kt
-)
-```
-
-```{r}
-# a_x
-ggplot(ax_df, aes(x = Age, y = est)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper),
-              fill = "grey70", alpha = 0.3) +
-  geom_line(color = "black", linewidth = 1, alpha = 1.5) +
-  geom_line(aes(y = lower), color = "red", linetype = "11", linewidth = 1, alpha = 1.5) +
-  geom_line(aes(y = upper), color = "red", linetype = "11", linewidth = 1, alpha = 1.5) +
-  labs(
-    title = "Lee–Carter a_x with approx. 95% CIs",
-    x = "Age",
-    y = expression(alpha[x])
-  ) +
-  theme_minimal()
-
-# b_x
-ggplot(bx_df, aes(x = Age, y = est)) +
-  geom_line(color = "black", linewidth = 1) +
-  geom_line(aes(y = lower), color = "red", linetype = "dashed") +
-  geom_line(aes(y = upper), color = "red", linetype = "dashed") +
-  labs(
-    title = "Lee–Carter b_x with approx. 95% CIs",
-    x = "Age",
-    y = expression(beta[x])
-  ) +
-  theme_minimal()
-
-# k_t
-# make a plotting copy with a wider band (only for visualization)
-kt_plot <- kt_df |>
-  mutate(
-    lower_vis = est - 5 * (est - lower),  # 5x wider band
-    upper_vis = est + 5 * (upper - est)
-  )
-
-ggplot(kt_plot, aes(x = Year, y = est)) +
-  geom_ribbon(aes(ymin = lower_vis, ymax = upper_vis),
-              fill = "grey70", alpha = 0.3) +
-  geom_line(color = "black", linewidth = 1.2) +
-  geom_line(aes(y = lower_vis), color = "red",
-            linetype = "dashed", linewidth = 0.9) +
-  geom_line(aes(y = upper_vis), color = "red",
-            linetype = "dashed", linewidth = 0.9) +
-  labs(
-    title = "Lee–Carter k_t with approx. 95% CIs (Fisher, band magnified for visibility)",
-    x = "Year",
-    y = expression(kappa[t])
-  ) +
-  theme_minimal()
-```
-
-```{r}
-#testing
-range(ax_df$upper - ax_df$lower)
-range(bx_df$upper - bx_df$lower)
-range(kt_df$upper - kt_df$lower)
-
-head(ax_df, 5)
-head(bx_df, 5)
-head(kt_df, 5)
-```
-
-
-```{r}
-# attempt for CI
-# Covariance matrix for Lee-Carter
-## Extract parameter from LCfit
-ax <- as.numeric(LCfit$ax)          # a_x (length 41)
-bx <- as.numeric(LCfit$bx)          # b_x (length 41)
-kt <- as.numeric(LCfit$kt[1, ])     # k_t (length 91)
-
-Ext <- LCfit$Ext               #dim:41x91
-
-ages <- LCfit$ages
-A <- length(ages)                   # length 41
-years <- LCfit$years                # length 91
-Tt <- length(years)
-
-# Matrix Ax
-Ax_mat <- matrix(ax, nrow = A, ncol = Tt, byrow = FALSE)
-
-# BxKt
-BxKt_mat <- outer(bx, kt, "*")
-
-# ln mxt
-eta <- Ax_mat + BxKt_mat
-eta
-Ext
-# Compute lambda_hat_{x,t} = E_{x,t} * exp(eta_{x,t})
-lambda_hat <- Ext * exp(eta)    # (A x Tt)
-
-## -------------------------------------
-# Approximate SE(a_x) for each age x
-var_ax <- 1 / rowSums(lambda_hat)
-se_ax <- sqrt(var_ax)
-
-# Approximate SE(b_x) for each age x
-# Need sum_t lambda_{x,t} * k_t^2
-kt2_mat <- matrix(kt^2, nrow = A, ncol = Tt, byrow = TRUE)  # each row = k_t^2
-var_bx <- 1/ rowSums(lambda_hat * kt2_mat)
-se_bx <- sqrt(var_bx)
-
-# Approximate SE(k_t) for each year t
-bx2_mat <- matrix(bx^2, nrow = A, ncol = Tt, byrow = FALSE) # each col = b_x^2
-var_kt <- 1 / colSums(lambda_hat * bx2_mat)
-se_kt  <- sqrt(var_kt)
-
-## -------------------------------------
-## Construct CI with estimate
-ax_CI <- cbind(
-  lower = ax - 2.576 * se_ax,
-  estimate = ax,
-  upper = ax + 2.576 * se_ax
-)
-
-bx_CI <- cbind(
-  lower = bx - 2.576 * se_bx,
-  estimate = bx,
-  upper = bx + 2.576 * se_bx
-)
-
-kt_CI <- cbind(
-  lower = kt - 2.576 * se_kt,
-  estimate = kt,
-  upper = kt + 2.576 * se_kt
-)
-
-## -------------------------------------
-## Plot parameter estimate with CI
-# ax
-# determine the range
-ymin <- min(ax_CI)
-ymax <- max(ax_CI)
-# construct tick sequence every 0.5
-yticks <- seq(floor(ymin), ceiling(ymax), by = 0.5)
-plot(ages, ax, type = "l", lwd = 2, col = "black",
-     xlab = "Age", ylab = expression(a[x]),
-     main = expression(a[x] ~ "vs. x with approx. 95% CI"))
-lines(ages, ax_CI[,"lower"], lty = 2, col = "red")
-lines(ages, ax_CI[,"upper"], lty = 2, , col = "red")
-axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5))
-# add custom axis
-axis(2, at = yticks)
-
-# bx
-plot(ages, bx, type = "l", lwd = 2, col = "black",
-     xlab = "Age", ylab = expression(beta[x]),
-     main = expression(beta[x] ~ "vs. x with approx. 95% CI"))
-lines(ages, bx_CI[,"lower"], lty = 2, col = "red")
-lines(ages, bx_CI[,"upper"], lty = 2, , col = "red")
-axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5))
-
-# kt
-plot(as.numeric(colnames(LCfit$kt)), kt, type = "l", lwd = 2, col = "black",
-     xlab = "Year", ylab = expression(kappa[x]^{(1)}),
-     main = expression(kappa[t] ~ "vs." ~ "with approx. 95% CI"))
-lines(years, kt_CI[,"lower"], lty = 2, col = "red")
-lines(years, kt_CI[,"upper"], lty = 2, , col = "red")
-
-```
-```{r}
-# 2nd attempt
-Sigma <- vcov(LCfit)
-```
-
-
 1) Age Effect $a_x$
 -   $a_x$ is monotone increasing smoothly and almost linearly across age 25 to 60, reflecting steadily rising baseline mortality with age on the log scale. And there is a noticeable jump at the last age around 65. Since the sample size around age 65 is relatively large and we need to group data above 65, this jump might be due to a boundary/grouping effect. 
 
@@ -606,12 +408,6 @@ resRH <- residuals(RHfit)        # deviance residuals
 # parameters
 plot(RHfit)                      # ax, bx, kt, gc
 ```
-```{r}
-# # RH
-# # Bootstrap 
-# RHBoot <- bootstrap(RHfit, nBoot = 200, type = "residual")
-# plot(RHBoot, probs = seq(2.5, 97.5))
-```
 
 1) Age Effect $a_x$ and Age Sensitivity to period index $\beta_x^{(1)}$
 -   Baseline mortality $a_x$ and age sensitivity $\beta_x^{(1)}$ show a similar pattern as Lee-Carter model, where $a_x$ increases monotonically with age from 25 to 65 and $\beta_x^{(1)}$ declines with ages. 
@@ -631,42 +427,162 @@ plot(RHfit)                      # ax, bx, kt, gc
 mort_rh2 <- StMoMoData(US_data, type = "central", series = "total")
 RHnp_mod <- rh(link = "log", cohortAgeFun = "NP")
 RHnp_fit <- fit(RHnp_mod, data = mort_rh2, ages.fit = 25:65)
-
-# deviance residuals 
-# Safe residuals helper: computes deviance/pearson manually and rebuilds a resStMoMo object
-# safe_residuals_resStMoMo <- function(fit, type = c("deviance","pearson")){
-#   type <- match.arg(type)
-#   rates_hat <- fitted(fit, type = "rates")                     # ages x years
-#   mu        <- fit$Ext * rates_hat
-#   # guard against zeros
-#   mu  <- pmax(mu, 1e-12)
-#   if (type == "deviance") {
-#     # deviance residuals for Poisson
-#     y  <- fit$Dxt
-#     r  <- sign(y - mu) * sqrt(2 * (y * ifelse(y > 0, log(y/mu), 0) - (y - mu)))
-#   } else {
-#     r  <- (fit$Dxt - mu) / sqrt(mu)
-#   }
-#   # ensure it is a matrix with dimnames
-#   r <- as.matrix(r)
-#   dimnames(r) <- list(fit$ages, fit$years)
-#   # build an object that plot() in StMoMo can handle
-#   res_obj <- list(residuals = r, ages = fit$ages, years = fit$years, name = paste(type, "residuals"))
-#   class(res_obj) <- "resStMoMo"
-#   res_obj
-# }
-# res_rhnp <- tryCatch(residuals(RHnp_fit),
-#                      error = function(e) safe_residuals_resStMoMo(RHnp_fit, "deviance"))
-
+RHnp_fit
 # parameters
-plot(RHnp_fit, cex.main=2, cex.lab = 2)
-```
+# Plot results
+layout_mat <- matrix(c(1, 0,
+                       2, 3,
+                       4, 5),
+                     nrow = 3, byrow = TRUE)
 
+layout(layout_mat)
+par(mar = c(5, 6, 3, 1))   # margins
+
+plot(25:65, RHnp_fit$ax, type = "l", lwd = 2, col = "black",
+     main = expression(a[x]~" vs. x"),
+     xlab = "Age", ylab = expression(a[x]), cex.main = 2,
+      cex.lab = 2, cex.axis=1.3)
+axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis=1.3)
+
+plot(25:65, RHnp_fit$bx, type = "l", lwd = 2, col = "black",
+     main = expression(beta[x]^{(1)} ~ "vs." ~ x),
+     xlab = "Age", ylab = expression(beta[x]^{(1)}), cex.main = 2,
+      cex.lab = 2, cex.axis=1.3)
+axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis=1.3)
+
+plot(as.numeric(colnames(RHnp_fit$kt)), RHnp_fit$kt[1,], type = "l", lwd = 2,
+     col = "black", main = expression(kappa[t]^{(1)} ~ "vs." ~ t),
+     ylim = c(min(kt_df2$lower), max(kt_df2$upper)),
+     xlab = "Year", ylab = expression(kappa[t]^{(1)}), cex.main = 2,
+     cex.lab = 2, cex.axis=1.3)
+# Add dashed lower CI
+lines(kt_df2$year, kt_df2$lower,
+      col = "gray40", lty = 2, lwd = 2)
+# Add dashed upper CI
+lines(kt_df2$year, kt_df2$upper,
+      col = "gray40", lty = 2, lwd = 2)
+legend("topright",
+       legend = c("kappa(t)", "95% CI"),
+       col = c("black", "gray40"),
+       lty = c(1, 3),
+       lwd = 2,
+       bty = "n")
+
+plot(25:65, RHnp_fit$b0x, type = "l", lwd = 2, col = "black",
+     main = expression(beta[x]^{(2)} ~ "vs." ~ x),
+     xlab = "Age", ylab = expression(beta[x]^{(2)}), cex.main = 2,
+      cex.lab = 2, cex.axis=1.3)
+axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis=1.3)
+
+
+plot(as.numeric(names(RHnp_fit$gc)), RHnp_fit$gc, type = "l", lwd = 2,
+     col = "black", main = expression(gamma[t-x] ~ "vs." ~ t-x),
+     xlab = "Cohort", ylab = expression(gamma[t-x]), cex.main = 2,
+     cex.lab = 2, cex.axis=1.3)
+
+layout(1)   # reset layout
+```
+### CI
 ```{r}
-# # RHNP
-# # Bootstrap 
-# RHnp_Boot <- bootstrap(RHnp_fit, nBoot = 200, type = "residual")
-# plot(RHnp_Boot, probs = seq(2.5, 97.5))
+# attempt for CI
+## kappa
+kappa <- as.numeric(RHnp_fit$kt)  # κ_t
+years <- RHnp_fit$years      # length 91
+stopifnot(length(years) == length(kappa))
+
+# Compute increments
+y <- diff(kappa) 
+n <- length(y)
+
+# Estimate the drift theta
+theta_hat <- mean(y)
+
+# Compute residuals
+omega_hat <- y - theta_hat
+
+# Estimate the innovation variance
+sigma2_w_hat <- mean(omega_hat^2)      # MLE
+sigma_w_hat <- sqrt(sigma2_w_hat)
+
+
+# Gaussian CI for k_t at each year
+alpha <- 0.05
+z <- qnorm(1 - alpha / 2)   # for 95% CI
+
+kappa_lower <- kappa - z * sigma_w_hat
+kappa_upper <- kappa + z * sigma_w_hat
+
+kt_df2 <- data.frame(
+  year  = years,
+  kappa = kappa,
+  lower = kappa_lower,
+  upper = kappa_upper
+)
+
+ggplot(kt_df2, aes(x = year, y = kappa)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+  geom_line() +
+  labs(
+    x = "Year",
+    y = "kappa_t",
+    title = "GAPC Gaussian RW-based 95% CI for kappa_t (per year)"
+  ) +
+  theme_minimal()
+```
+### Parameter Plot
+```{r}
+# Plot results
+layout_mat <- matrix(c(1, 0,
+                       2, 3,
+                       4, 5),
+                     nrow = 3, byrow = TRUE)
+
+layout(layout_mat)
+par(mar = c(5, 6, 3, 1))   # margins
+
+plot(25:65, RHnp_fit$ax, type = "l", lwd = 2, col = "black",
+     main = expression(a[x]~" vs. x"),
+     xlab = "Age", ylab = expression(a[x]), cex.main = 2,
+      cex.lab = 2, cex.axis=1.3)
+axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis=1.3)
+
+plot(25:65, RHnp_fit$bx, type = "l", lwd = 2, col = "black",
+     main = expression(beta[x]^{(1)} ~ "vs." ~ x),
+     xlab = "Age", ylab = expression(beta[x]^{(1)}), cex.main = 2,
+      cex.lab = 2, cex.axis=1.3)
+axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis=1.3)
+
+plot(as.numeric(colnames(RHnp_fit$kt)), RHnp_fit$kt[1,], type = "l", lwd = 2,
+     col = "black", main = expression(kappa[t]^{(1)} ~ "vs." ~ t),
+     ylim = c(min(kt_df2$lower), max(kt_df2$upper)),
+     xlab = "Year", ylab = expression(kappa[t]^{(1)}), cex.main = 2,
+     cex.lab = 2, cex.axis=1.3)
+# Add dashed lower CI
+lines(kt_df2$year, kt_df2$lower,
+      col = "gray40", lty = 2, lwd = 2)
+# Add dashed upper CI
+lines(kt_df2$year, kt_df2$upper,
+      col = "gray40", lty = 2, lwd = 2)
+legend("topright",
+       legend = c("kappa(t)", "95% CI"),
+       col = c("black", "gray40"),
+       lty = c(1, 3),
+       lwd = 2,
+       bty = "n")
+
+plot(25:65, RHnp_fit$b0x, type = "l", lwd = 2, col = "black",
+     main = expression(beta[x]^{(2)} ~ "vs." ~ x),
+     xlab = "Age", ylab = expression(beta[x]^{(2)}), cex.main = 2,
+      cex.lab = 2, cex.axis=1.3)
+axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis=1.3)
+
+
+plot(as.numeric(names(RHnp_fit$gc)), RHnp_fit$gc, type = "l", lwd = 2,
+     col = "black", main = expression(gamma[t-x] ~ "vs." ~ t-x),
+     xlab = "Cohort", ylab = expression(gamma[t-x]), cex.main = 2,
+     cex.lab = 2, cex.axis=1.3)
+
+layout(1)   # reset layout
 ```
 
 ### Goodness of Fit 
@@ -822,6 +738,127 @@ grid.arrange(
   nrow = 2, ncol = 3
 )
 ```
+### CI
+```{r}
+# attempt for CI
+## kappa
+kappa1 <- as.numeric(CBDfit$kt[1,])  # κ_t
+kappa2 <- as.numeric(CBDfit$kt[2,])  # κ_t
+years <- CBDfit$years      # length 91
+stopifnot(length(years) == length(kappa))
+
+# Compute increments
+y1 <- diff(kappa1) 
+y2 <- diff(kappa2) 
+n <- length(y1)
+
+# Estimate the drift theta
+theta_hat1 <- mean(y1)
+theta_hat2 <- mean(y2)
+
+# Compute residuals
+omega_hat1 <- y1 - theta_hat1
+omega_hat2 <- y2 - theta_hat2
+
+# Estimate the innovation variance
+sigma2_w_hat1 <- mean(omega_hat1^2)      # MLE
+sigma_w_hat1 <- sqrt(sigma2_w_hat1)
+
+sigma2_w_hat2 <- mean(omega_hat2^2)      # MLE
+sigma_w_hat2 <- sqrt(sigma2_w_hat2)
+
+# Gaussian CI for k_t at each year
+alpha <- 0.05
+z <- qnorm(1 - alpha / 2)   # ≈ 1.96 for 95% CI
+
+kappa_lower1 <- kappa1 - z * sigma_w_hat1
+kappa_upper1 <- kappa1 + z * sigma_w_hat1
+
+kappa_lower2 <- kappa2 - z * sigma_w_hat2
+kappa_upper2 <- kappa2 + z * sigma_w_hat2
+
+kt_df1 <- data.frame(
+  year  = years,
+  kappa = kappa1,
+  lower = kappa_lower1,
+  upper = kappa_upper1
+)
+
+kt_df2 <- data.frame(
+  year  = years,
+  kappa = kappa2,
+  lower = kappa_lower2,
+  upper = kappa_upper2
+)
+
+
+
+ggplot(kt_df1, aes(x = year, y = kappa)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+  geom_line() +
+  labs(
+    x = "Year",
+    y = "kappa_t",
+    title = "GAPC Gaussian CBD-based 95% CI for kappa_t (per year)"
+  ) +
+  theme_minimal()
+
+ggplot(kt_df2, aes(x = year, y = kappa)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+  geom_line() +
+  labs(
+    x = "Year",
+    y = "kappa_t",
+    title = "GAPC Gaussian CBD-based 95% CI for kappa_t (per year)"
+  ) +
+  theme_minimal()
+
+
+## kt_df1: year, kappa, lower, upper   (for kappa^(1))
+## kt_df2: year, kappa, lower, upper   (for kappa^(2))
+
+# --------- First panel: kappa^(1) vs. t ---------
+p1 <- ggplot(kt_df1, aes(x = year, y = kappa)) +
+  geom_line(color = "black", linewidth = 0.6) +
+  geom_line(aes(y = lower), color = "gray40", linewidth = 0.6, linetype = "33") +
+  geom_line(aes(y = upper), color = "gray40", linewidth = 0.6, linetype = "33") +
+  labs(
+    x   = "year",
+    y   = expression(kappa[t]^{(1)}),
+    title = expression(kappa[t]^{(1)} ~ "vs. t")
+  ) +
+  scale_x_continuous(breaks = seq(1940, 2025, by = 20)) +
+  theme_classic(base_size = 12) +
+  theme(
+    plot.title   = element_text(hjust = 0.5, size = 14),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 12),
+    axis.text    = element_text(size = 10)
+  )
+
+# --------- Second panel: kappa^(2) vs. t ---------
+p2 <- ggplot(kt_df2, aes(x = year, y = kappa)) +
+  geom_line(color = "black", linewidth = 0.6) +
+  geom_line(aes(y = lower), color = "gray40", linewidth = 0.6, linetype = "33") +
+  geom_line(aes(y = upper), color = "gray40", linewidth = 0.6, linetype = "33") +
+  labs(
+    x   = "year",
+    y   = expression(kappa[t]^{(2)}),
+    title = expression(kappa[t]^{(2)} ~ "vs. t")
+  ) +
+  scale_x_continuous(breaks = seq(1940, 2025, by = 20)) +
+  theme_classic(base_size = 12) +
+  theme(
+    plot.title   = element_text(hjust = 0.5, size = 14),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 12),
+    axis.text    = element_text(size = 10)
+  )
+
+# --------- Stack the two plots vertically ---------
+grid.arrange(p1, p2, ncol = 1)
+
+```
 
 
 1) $\kappa_t^{(1)}$: overall mortality leve in year $t$
@@ -870,7 +907,7 @@ grid.arrange(
 # legend("bottomright",
 #        legend = paste("Year =", years_to_plot),
 #        col = colors,
-#        lwd = 2, 
+#        lwd = 2,
 #        cex=0.6)
 ``` 
 

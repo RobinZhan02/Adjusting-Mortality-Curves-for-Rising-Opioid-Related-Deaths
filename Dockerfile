@@ -2,7 +2,7 @@ FROM quay.io/jupyter/datascience-notebook:r-4.3.1
 
 ### Environment variables
 ENV GITHUB_CLI_VERSION 2.30.0
-ENV QUARTO_VERSION 1.4.549
+ENV QUARTO_VERSION 1.5.57
 ENV R_STUDIO_VERSION 2023.12.1-402
 
 ###########################
@@ -82,7 +82,7 @@ RUN mamba install -y -c conda-forge --freeze-installed \
     mamba clean --all
 
 ### PyPI (pip) packages
-RUN pip install \ 
+RUN pip install \
         nbgitpuller \
         jupyterlab-quarto==0.2.8 \
         radian==0.6.11 \
@@ -122,7 +122,7 @@ FROM quay.io/jupyter/datascience-notebook:r-4.3.1
 
 ### Environment variables
 ENV GITHUB_CLI_VERSION 2.30.0
-ENV QUARTO_VERSION 1.4.549
+ENV QUARTO_VERSION 1.5.57
 ENV R_STUDIO_VERSION 2023.12.1-402
 
 ###########################
@@ -202,7 +202,7 @@ RUN mamba install -y -c conda-forge --freeze-installed \
     mamba clean --all
 
 ### PyPI (pip) packages
-RUN pip install \ 
+RUN pip install \
         nbgitpuller \
         jupyterlab-quarto==0.2.8 \
         radian==0.6.11 \
