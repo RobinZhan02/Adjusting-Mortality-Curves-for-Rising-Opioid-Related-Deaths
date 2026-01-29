@@ -1,0 +1,180 @@
+---
+title: "Modeling"
+author: "PSTAT 296A"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(mgcv)     
+library(plotly)
+#install.packages("plotly")
+```
+
+```{r}
+df_raw <- read_csv("../data/missing_data/Inferred-WONDER-Census Region-Sex-5Yr.csv", show_col_types = FALSE) |>
+  clean_names()
+
+#names(df_raw)
+#glimpse(df_raw)
+
+df_year <- df_raw |>
+  clean_names() |>
+  mutate(
+    deaths = deaths |>
+      str_remove_all(",") |>
+      na_if("Suppressed") |>
+      na_if("") |>
+      as.numeric(),
+    year = as.integer(year),
+    sex_code = factor(sex_code),
+    age_groups = as.character(age_groups)
+  ) |>
+  drop_na(deaths) |>
+  group_by(sex_code, year, age_groups) |>
+  summarise(deaths = sum(deaths), .groups = "drop")
+
+# Convert age_groups to numeric age midpoint
+df_year <- df_year |>
+  mutate(
+    age_lo = case_when(
+      age_groups == "< 1 year" ~ 0,
+      TRUE ~ as.numeric(str_extract(age_groups, "^\\d+"))
+    ),
+    age_hi = case_when(
+      age_groups == "< 1 year" ~ 0,
+      str_detect(age_groups, "\\+") ~ age_lo + 9,
+      TRUE ~ as.numeric(str_extract(age_groups, "(?<=-)\\d+"))
+    ),
+    age = (age_lo + age_hi) / 2
+  ) |>
+  drop_na(age)
+
+
+# Filter ages 20-60
+df1 <- df_year |>
+  filter(age >= 20, age <= 60, sex_code == "F")
+
+df1 <- df1 |>
+  mutate(log_deaths = log(deaths + 0.5))
+
+fit <- gam(
+  log_deaths ~ s(age, k = 4) + s(year, k = 6),
+  data = df1,
+  method = "REML"
+)
+```
+
+
+```{r}
+# Not 3d
+grid <- expand_grid(
+  age  = sort(unique(df1$age)),
+  year = sort(unique(df1$year))
+)
+
+grid$u_hat <- predict(fit, newdata = grid)
+grid$y_hat <- exp(grid$u_hat)
+
+grid |>
+  ggplot(aes(x = age, y = y_hat, group = year)) +
+  geom_line(alpha = 0.3) +
+  labs(x = "Age", y = "Smoothed mortality (relative)")
+```
+
+```{r}
+yrs_keep <- sort(unique(grid$year))
+yrs_keep <- yrs_keep[seq(1, length(yrs_keep), length.out = 10)] |> round()
+
+pdat <- grid |> filter(year %in% yrs_keep)
+
+
+age_fine <- seq(min(pdat$age), max(pdat$age), by = 1)
+
+grid_fine <- expand_grid(
+  year = yrs_keep,
+  age  = age_fine
+)
+
+grid_fine$y_hat <- exp(predict(fit, newdata = grid_fine))
+
+plot_ly() |>
+  add_trace(
+    data = grid_fine,
+    x = ~age, y = ~year, z = ~y_hat,
+    type = "scatter3d", mode = "lines",
+    split = ~year, line = list(width = 4)
+  ) |>
+  layout(scene = list(
+    xaxis = list(title = "Age"),
+    yaxis = list(title = "Time (Year)"),
+    zaxis = list(title = "Smoothed Mortality U(x,t)")
+  ))
+```
+
+```{r, fig.width=12, fig.height=9}
+zmat <- grid_fine |>
+  select(year, age, y_hat) |>
+  pivot_wider(names_from = age, values_from = y_hat) |>
+  arrange(year)
+
+x_time  <- zmat$year
+y_age <- as.numeric(colnames(zmat)[-1])
+z      <- as.matrix(zmat |> select(-year))
+
+draw_surface <- function(theta = theta, phi = phi, expand = 1) {
+
+  pmat <- persp(
+    x = x_time, y = y_age, z = z,
+    xlab = "", ylab = "", zlab = "",
+    theta = theta, phi = phi, expand = expand,
+    shade = 0.4, col = "gray85",
+    ltheta = 120, ticktype = "detailed",
+    axes = FALSE, box = TRUE
+  )
+
+  z0 <- min(z); z1 <- max(z)
+  x0 <- min(x_time); x1 <- max(x_time)
+  y0 <- min(y_age); y1 <- max(y_age)
+  
+  tick_len <- 0.05 * (z1 - z0)   # longer tick marks
+  
+  p1 <- trans3d(min(x_time), max(y_age), z0, pmat)
+  p2 <- trans3d(max(x_time), max(y_age), z0, pmat)
+  segments(p1$x, p1$y, p2$x, p2$y, lwd = 2)
+
+  time_ticks <- seq(min(x_time), max(x_time), by = 5)
+  for (tt in time_ticks) {
+    a <- trans3d(tt, max(y_age), z0, pmat)
+    b <- trans3d(tt, max(y_age), z0 + tick_len, pmat)
+    segments(a$x, a$y, b$x, b$y)
+    text(a$x, a$y, tt, pos = 1, cex = 1.0, xpd = NA)
+  }
+
+lab_time <- trans3d(mean(x_time), max(y_age), z0, pmat)
+text(lab_time$x, lab_time$y, "Time (Year)", font = 2, cex = 1.2, pos = 4)
+
+q1 <- trans3d(max(x_time), min(y_age), z0, pmat)
+q2 <- trans3d(max(x_time), max(y_age), z0, pmat)
+segments(q1$x, q1$y, q2$x, q2$y, lwd = 2)
+
+  age_ticks <- seq(20, 60, by = 10)
+  for (ag in age_ticks) {
+    a <- trans3d(max(x_time), ag, z0, pmat)
+    b <- trans3d(max(x_time), ag, z0 + tick_len, pmat)
+    segments(a$x, a$y, b$x, b$y)
+    text(a$x, a$y, ag, pos = 1, cex = 1.0, xpd = NA)
+  }
+
+  lab_age <- trans3d(max(x_time), mean(y_age) , z0, pmat)
+  text(lab_age$x, lab_age$y, "Age", font = 2, cex = 1.2, pos = 1, xpd = NA)
+  
+  lab_z <- trans3d(min(x_time), min(y_age), max(z), pmat)
+  text(lab_z$x, lab_z$y, "Smoothed Mortality u(x,t)", font = 2, cex = 1.2, pos = 1)
+}
+
+draw_surface(theta = 320, phi = 5)
+```
+
