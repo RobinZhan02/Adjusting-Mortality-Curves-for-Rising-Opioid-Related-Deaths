@@ -238,4 +238,4 @@ RUN echo "echo \"Jupyter server token: \$(jupyter server list 2>&1 | grep -oP '(
     echo "sh \${HOME}/.get-jupyter-url.sh" >> ${HOME}/.bashrc
 
 # Install your R packages
-RUN R -q -e 'install.packages(c("cowplot","data.table","demography","dplyr","forecast","ggnewscale","ggplot2","gnm","grid","lpSolve","lubridate","patchwork","purrr","readr","readxl","reshape2","StMoMo","strucchange","stringr","tseries","tidyverse"), repos="https://cloud.r-project.org")'
+RUN R -q -e 'install.packages(c("cowplot","data.table","demography","dplyr","forecast","ggnewscale","ggplot2","gnm","grid", "gridExtra", "janitor", "lpSolve","lubridate", "mgcv", "patchwork", "plotly","purrr","readr","readxl","reshape2","StMoMo","strucchange","stringr","tseries","tidyverse"), repos="https://cloud.r-project.org")'
