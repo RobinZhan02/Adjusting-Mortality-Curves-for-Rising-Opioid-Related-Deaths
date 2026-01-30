@@ -67,6 +67,10 @@ fit <- gam(
 )
 ```
 
+```{r}
+summary(fit)
+```
+
 
 ```{r}
 # Not 3d
@@ -85,13 +89,16 @@ grid |>
 ```
 
 ```{r}
-yrs_keep <- sort(unique(grid$year))
-yrs_keep <- yrs_keep[seq(1, length(yrs_keep), length.out = 10)] |> round()
+#yrs_keep <- sort(unique(grid$year))
+#yrs_keep <- yrs_keep[seq(1, length(yrs_keep), length.out = 10)] |> round()
+
+yrs_keep <- seq(2000, 2020, by = 2)
 
 pdat <- grid |> filter(year %in% yrs_keep)
 
+age_fine <- seq(25, 60, by = 1)
 
-age_fine <- seq(min(pdat$age), max(pdat$age), by = 1)
+#age_fine <- seq(min(pdat$age), max(pdat$age), by = 1)
 
 grid_fine <- expand_grid(
   year = yrs_keep,
@@ -105,13 +112,27 @@ plot_ly() |>
     data = grid_fine,
     x = ~age, y = ~year, z = ~y_hat,
     type = "scatter3d", mode = "lines",
-    split = ~year, line = list(width = 4)
+    split = ~year, line = list(width = 5), opacity = 0.85
   ) |>
-  layout(scene = list(
-    xaxis = list(title = "Age"),
-    yaxis = list(title = "Time (Year)"),
-    zaxis = list(title = "Smoothed Mortality U(x,t)")
-  ))
+  layout(
+  title = list(
+    text = "Opioid Mortality Distribution",
+    x = 0.5, y = 0.94
+  ),
+  scene = list(
+    xaxis = list(
+      title = "Age",
+      autorange = "reversed"
+    ),
+    yaxis = list(
+      title = "Time (Year)",
+      autorange = "reversed"
+    ),
+    zaxis = list(
+      title = "Smoothed Mortality U(x,t)"
+    )
+  )
+)
 ```
 
 ```{r, fig.width=12, fig.height=9}
