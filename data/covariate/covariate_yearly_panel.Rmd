@@ -20,3 +20,61 @@ covariate_behavior_region <- read_csv("covariate_behavior_region.csv")
 
 ```
 
+```{r}
+years <- 2005:2019
+
+# =========================================================
+# 1) Division panel: Year x Census_Division (2005–2020)
+# =========================================================
+
+divisions <- union(
+  unique(covariate_behavior_division$Census_Division),
+  unique(covariate_socioeconomic_score_division$Census_Division)
+)
+
+panel_division <- tidyr::expand_grid(
+  Year = years,
+  Census_Division = divisions
+) %>%
+  left_join(
+    covariate_behavior_division,
+    by = c("Year", "Census_Division")
+  ) %>%
+  left_join(
+    covariate_socioeconomic_score_division %>%
+      tidyr::expand_grid(Year = years) %>%
+      filter(Year >= start_year, Year <= end_year) %>%
+      select(Census_Division, Year, socio_score = Score),
+    by = c("Census_Division", "Year")
+  )
+
+# =========================================================
+# 2) Region panel: Year x Census_Region (2005–2020)
+# =========================================================
+
+regions <- union(
+  unique(covariate_behavior_region$Census_Region),
+  unique(covariate_socioeconomic_score_region$Census_Region)
+)
+
+panel_region <- tidyr::expand_grid(
+  Year = years,
+  Census_Region = regions
+) %>%
+  left_join(
+    covariate_behavior_region,
+    by = c("Year", "Census_Region")
+  ) %>%
+  left_join(
+    covariate_socioeconomic_score_region %>%
+      tidyr::expand_grid(Year = years) %>%
+      filter(Year >= start_year, Year <= end_year) %>%
+      select(Census_Region, Year, socio_score = Score),
+    by = c("Census_Region", "Year")
+  )
+
+panel_region |> write_csv("covariate_combine_region.csv")
+panel_division |> write_csv("covariate_combine_division.csv")
+
+```
+

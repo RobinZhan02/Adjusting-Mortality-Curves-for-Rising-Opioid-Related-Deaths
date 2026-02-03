@@ -3,3 +3,48 @@ title: "covariate_correlation_analysis"
 output: html_document
 ---
 
+```{r}
+rm(list=ls());gc()
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+panel_division <- read_csv("covariate_combine_division.csv")
+panel_region <- read_csv("covariate_combine_region.csv")
+```
+
+```{r}
+vars <- c("rate_health_care_coverage", "rate_alochol_consum", "socio_score")
+
+cor_mat_div <- panel_division %>%
+  select(all_of(vars)) %>%
+  cor(use = "complete.obs")
+
+cor_long_div <- as.data.frame(as.table(cor_mat_div)) %>%
+  rename(var1 = Var1, var2 = Var2, cor = Freq)
+
+ggplot(cor_long_div, aes(x = var1, y = var2, fill = cor)) +
+  geom_tile() +
+  geom_text(aes(label = round(cor, 2))) +
+  coord_equal() +
+  labs(x = NULL, y = NULL, fill = "corr")
+
+```
+```{r}
+cor_mat_reg <- panel_region %>%
+  select(all_of(vars)) %>%
+  cor(use = "complete.obs")
+
+cor_long_reg <- as.data.frame(as.table(cor_mat_reg)) %>%
+  rename(var1 = Var1, var2 = Var2, cor = Freq)
+
+ggplot(cor_long_reg, aes(x = var1, y = var2, fill = cor)) +
+  geom_tile() +
+  geom_text(aes(label = round(cor, 2))) +
+  coord_equal() +
+  labs(x = NULL, y = NULL, fill = "corr")
+
+```
+
+
+

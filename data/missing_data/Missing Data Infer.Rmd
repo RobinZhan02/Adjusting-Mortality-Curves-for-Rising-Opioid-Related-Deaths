@@ -35,7 +35,7 @@ expected_rows_for_file <- function(fname) {
   }
   # geography: exactly one of Division or Region; otherwise fallback to 1
   geo_factor <- if (str_detect(fname, fixed("Census-Division"))) {
-    n_div
+    n_di
   } else if (str_detect(fname, fixed("Census-Region"))) {
     n_region
   } else {
