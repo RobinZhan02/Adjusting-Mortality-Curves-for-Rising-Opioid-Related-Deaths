@@ -1,0 +1,202 @@
+---
+title: "wonder_eda3"
+output: html_document
+---
+
+```{r, message=FALSE}
+# =========================================================
+# 0) packages
+# =========================================================
+library(readr)
+library(dplyr)
+library(stringr)
+library(lubridate)
+library(ggplot2)
+library(forcats)
+
+# =========================================================
+# 1) read data
+# =========================================================
+division_10yr <- read_csv("../data/missing_data/Inferred-WONDER-Census Division-Sex-10Yr.csv",
+                          show_col_types = FALSE)
+division_5yr  <- read_csv("../data/missing_data/Inferred-WONDER-Census Division-Sex-5Yr.csv",
+                          show_col_types = FALSE)
+region_10yr   <- read_csv("../data/missing_data/Inferred-WONDER-Census Region-Sex-10Yr.csv",
+                          show_col_types = FALSE)
+region_5yr    <- read_csv("../data/missing_data/Inferred-WONDER-Census Region-Sex-5Yr.csv",
+                          show_col_types = FALSE)
+
+# =========================================================
+# 2) helpers: standardize columns + parse age bounds
+# =========================================================
+standardize_cols <- function(df) {
+  # find columns robustly (handles "Age Groups" vs "Age Group", etc.)
+  nms <- names(df)
+
+  age_col   <- "Age Groups"
+  month_col <- "Month Code"
+  deaths_col <- "Deaths"
+
+  if (length(age_col) != 1 || length(month_col) != 1 || length(deaths_col) != 1) {
+    stop(
+      "Could not uniquely identify columns for Age Groups / Month Code / Deaths.\n",
+      "Found age_col=", paste(age_col, collapse=", "), "\n",
+      "Found month_col=", paste(month_col, collapse=", "), "\n",
+      "Found deaths_col=", paste(deaths_col, collapse=", ")
+    )
+  }
+
+  df %>%
+    rename(
+      age_groups = all_of(age_col),
+      month_code = all_of(month_col),
+      deaths_raw = all_of(deaths_col)
+    )
+}
+
+parse_age_bounds <- function(age_str) {
+  s <- str_to_lower(str_trim(age_str))
+
+  # extract all integers in the string
+  nums <- str_extract_all(s, "\\d+") |> lapply(as.integer)
+
+  lower <- rep(NA_integer_, length(s))
+  upper <- rep(NA_integer_, length(s))
+
+  # 2 numbers => range like "15-19 years"
+  idx2 <- lengths(nums) >= 2
+  lower[idx2] <- vapply(nums[idx2], `[[`, integer(1), 1)
+  upper[idx2] <- vapply(nums[idx2], `[[`, integer(1), 2)
+
+  # 1 number => could be "85+ years" or "15 years"
+  idx1 <- lengths(nums) == 1
+  lower[idx1] <- vapply(nums[idx1], `[[`, integer(1), 1)
+  upper[idx1] <- lower[idx1]
+
+  # plus sign => treat upper as Inf (we’ll drop later anyway if >54)
+  has_plus <- str_detect(s, "\\+")
+  upper[has_plus] <- 999L
+
+  tibble(age_lower = lower, age_upper = upper)
+}
+
+# =========================================================
+# 3) clean + compute suppressed percent (15–54 only)
+# =========================================================
+clean_one <- function(df, dataset_label) {
+  df2 <- standardize_cols(df)
+
+  age_bounds <- parse_age_bounds(df2$age_groups)
+
+  df2 %>%
+    bind_cols(age_bounds) %>%
+    mutate(
+      # Month Code like "1999/01" -> date at first day of month
+      month = ym(str_replace_all(month_code, "/", "-")),
+      deaths_raw = as.character(deaths_raw),
+      suppressed = str_detect(str_to_lower(deaths_raw), "suppress")
+    ) %>%
+    filter(!is.na(month)) %>%
+    filter(!is.na(age_lower), !is.na(age_upper)) %>%
+    filter(age_lower >= 15, age_upper <= 54) %>%
+    mutate(
+      dataset = dataset_label,
+      age_group = str_trim(age_groups)
+    ) %>%
+    select(dataset, month, age_lower, age_upper, age_group, suppressed)
+}
+
+d10 <- clean_one(division_10yr, "division_10yr")
+d5  <- clean_one(division_5yr,  "division_5yr")
+r10 <- clean_one(region_10yr,   "region_10yr")
+r5  <- clean_one(region_5yr,    "region_5yr")
+
+# (A) a reusable theme + scales (keeps plots consistent)
+theme_ts <- theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    legend.box = "vertical",
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title.position = "plot",
+    plot.margin = margin(10, 12, 10, 12)
+  )
+
+scale_x_month <- scale_x_date(
+  date_breaks = "1 year",
+  date_labels = "%Y"
+)
+
+scale_y_pct <- scale_y_continuous(
+  limits = c(0, 100),
+  breaks = seq(0, 100, by = 20),
+  expand = expansion(mult = c(0.01, 0.02))
+)
+
+scale_age_colors <- scale_color_brewer(
+  palette = "Dark2",
+  guide = guide_legend(nrow = 2, byrow = TRUE)
+)
+
+# (B) helper that builds one plot for one dataset
+make_one_plot <- function(dat, dataset_name) {
+  dat_one <- dat %>%
+    filter(dataset == dataset_name) %>%
+    mutate(age_group = fct_reorder(age_group, age_lower))
+
+  ggplot(dat_one, aes(x = month, y = suppressed_pct, color = age_group)) +
+    geom_line(linewidth = 0.7, alpha = 0.95) +
+    scale_x_month +
+    scale_y_pct +
+    scale_age_colors +
+    labs(
+      title = paste0("Suppression rate over time (ages 15–54): ", dataset_name),
+      x = "Month",
+      y = "Suppressed (%)",
+      color = "Age group"
+    ) +
+    theme_ts
+}
+
+# (C) build each plot separately
+p_div_10yr <- make_one_plot(supp_ts, "division_10yr")
+p_div_5yr  <- make_one_plot(supp_ts, "division_5yr")
+p_reg_10yr <- make_one_plot(supp_ts, "region_10yr")
+p_reg_5yr  <- make_one_plot(supp_ts, "region_5yr")
+
+# (D) print each graph separately
+print(p_div_10yr)
+print(p_div_5yr)
+print(p_reg_10yr)
+print(p_reg_5yr)
+
+# optional save
+# ggsave("suppressed_percent_15_54_timeseries.png", p, width = 12, height = 10, dpi = 300)
+
+```
+# Covariates
+## Socialeconomic factor
+Unemployment Rate
+  Data Source: Bureau Of Labor Statistics
+  https://www.bls.gov/developers/home.htm
+
+GDP/GDP per person (need to calculate)/Personal Income and Employment by Major Component
+  Data Source: Bureau of Economic Analysis
+  https://apps.bea.gov/API/signup/?_gl=1*1q35mzt*_ga*MzM1NDQ2MDYzLjE3Njg1ODgyNTg.*_ga_J4698JNNFT*czE3Njg1ODgyNTgkbzEkZzAkdDE3Njg1ODgyNTgkajYwJGwwJGgw
+  
+Poverty Rate
+  Data Source: Not sure yet
+  
+## Health Care Assess
+uninsured / coverage
+  Data Source: Not sure yet
+  
+behavioral risk factors
+  Data Source: CDC Behavior Risk Factor Surveillance System
+  https://www.cdc.gov/brfss/annual_data/annual_data.htm?utm_source=chatgpt.com
+  
+## Weather/Policy
+Highest/lowest temperature? Not sure yet
+
+opioid-related policy indicators

@@ -1,0 +1,63 @@
+---
+title: "state_population"
+output: html_document
+---
+
+```{r}
+# install.packages(c("readr","dplyr","tidyr","stringr"))
+rm(list=ls()); gc()
+
+library(readr)
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+# 1) Source files (official Census PEP CSVs)
+url_2000_2009 <- "https://www2.census.gov/programs-surveys/popest/datasets/2000-2009/national/totals/nst_est2009_alldata.csv"
+url_2010_2019 <- "https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/national/totals/nst-est2019-alldata.csv"
+url_2020_2025 <- "https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/state/totals/NST-EST2025-ALLDATA.csv"
+
+# 2) Read the three files
+df_2000_2009 <- read_csv(url_2000_2009, show_col_types = FALSE) %>% mutate(vintage = 2009)
+df_2010_2019 <- read_csv(url_2010_2019, show_col_types = FALSE) %>% mutate(vintage = 2019)
+df_2020_2025 <- read_csv(url_2020_2025, show_col_types = FALSE) %>% mutate(vintage = 2025)
+
+# 3) Keep state-level rows (SUMLEV 040) and reshape into (state, year, population)
+to_state_year <- function(df) {
+
+  df_clean <- df %>%
+    mutate(
+      SUMLEV = as.character(SUMLEV),
+      STATE  = as.integer(STATE)
+    ) %>%
+    filter(SUMLEV %in% c("40","040")) %>%     # robust to numeric vs "040"
+    filter(!is.na(STATE), STATE > 0)
+
+  long <- df_clean %>%
+    select(STATE, NAME, vintage, starts_with("POPESTIMATE")) %>%
+    pivot_longer(
+      cols = starts_with("POPESTIMATE"),
+      names_to = "year",
+      values_to = "population"
+    ) %>%
+    mutate(
+      year = parse_number(year),
+      state_fips = str_pad(as.character(STATE), width = 2, side = "left", pad = "0")
+    ) %>%
+    filter(state_fips != "72") %>%            # drop Puerto Rico (state-equivalent) if you only want 50 + DC
+    select(state_fips, state_name = NAME, year, population)
+
+  long
+}
+
+pop_2000_2009 <- to_state_year(df_2000_2009) %>% filter(year >= 2004, year <= 2009)
+pop_2010_2019 <- to_state_year(df_2010_2019)
+pop_2020_2025 <- to_state_year(df_2020_2025)
+
+state_pop <- bind_rows(pop_2000_2009, pop_2010_2019, pop_2020_2025) %>%
+  arrange(state_fips, year)
+
+write_csv(state_pop, "state_population.csv")
+
+```
+

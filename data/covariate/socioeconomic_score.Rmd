@@ -1,0 +1,183 @@
+---
+title: "socioeconomic_score"
+output: html_document
+---
+
+We want to clean the socieconomic factor provided by SOA
+Raw file is accessed from https://www.soa.org/resources/research-reports/2020/us-mort-rate-socioeconomic/#excel
+
+
+```{r}
+rm(list=ls());gc()
+library(readxl)
+library(tidyverse)
+
+sis_2005_2009 <- read_excel("mort-socioeconomic-country-level.xlsx", 
+    sheet = "2005-2009 ACS", skip = 2) |> select(State_USPS, Source, Score, Total_Pop)
+
+sis_2010_2014 <- read_excel("mort-socioeconomic-country-level.xlsx", 
+    sheet = "2010-2014 ACS", skip = 2) |> select(State_USPS, Source, Score, Total_Pop)
+
+sis_2015_2019 <- read_excel("mort-socioeconomic-country-level.xlsx", 
+    sheet = "2015-2019 ACS", skip = 2) |> select(State_USPS, Source, Score, Total_Pop)
+
+
+```
+```{r}
+library(dplyr)
+library(tidyr)
+library(readr)
+
+# =========================================================
+# 1) State -> Census region/division crosswalk (50 states + DC)
+# =========================================================
+state_census_xwalk <- tibble::tribble(
+  ~State_USPS, ~Census_Region, ~Census_Division,
+  "CT","Northeast","New England",
+  "ME","Northeast","New England",
+  "MA","Northeast","New England",
+  "NH","Northeast","New England",
+  "RI","Northeast","New England",
+  "VT","Northeast","New England",
+
+  "NJ","Northeast","Middle Atlantic",
+  "NY","Northeast","Middle Atlantic",
+  "PA","Northeast","Middle Atlantic",
+
+  "IL","Midwest","East North Central",
+  "IN","Midwest","East North Central",
+  "MI","Midwest","East North Central",
+  "OH","Midwest","East North Central",
+  "WI","Midwest","East North Central",
+
+  "IA","Midwest","West North Central",
+  "KS","Midwest","West North Central",
+  "MN","Midwest","West North Central",
+  "MO","Midwest","West North Central",
+  "NE","Midwest","West North Central",
+  "ND","Midwest","West North Central",
+  "SD","Midwest","West North Central",
+
+  "DE","South","South Atlantic",
+  "DC","South","South Atlantic",
+  "FL","South","South Atlantic",
+  "GA","South","South Atlantic",
+  "MD","South","South Atlantic",
+  "NC","South","South Atlantic",
+  "SC","South","South Atlantic",
+  "VA","South","South Atlantic",
+  "WV","South","South Atlantic",
+
+  "AL","South","East South Central",
+  "KY","South","East South Central",
+  "MS","South","East South Central",
+  "TN","South","East South Central",
+
+  "AR","South","West South Central",
+  "LA","South","West South Central",
+  "OK","South","West South Central",
+  "TX","South","West South Central",
+
+  "AZ","West","Mountain",
+  "CO","West","Mountain",
+  "ID","West","Mountain",
+  "MT","West","Mountain",
+  "NV","West","Mountain",
+  "NM","West","Mountain",
+  "UT","West","Mountain",
+  "WY","West","Mountain",
+
+  "AK","West","Pacific",
+  "CA","West","Pacific",
+  "HI","West","Pacific",
+  "OR","West","Pacific",
+  "WA","West","Pacific"
+)
+
+# =========================================================
+# 2) Weighted mean helper (Score weighted by Total_Pop)
+# =========================================================
+wtd_mean <- function(x, w) {
+  ok <- !is.na(x) & !is.na(w) & w > 0
+  if (!any(ok)) return(NA_real_)
+  sum(x[ok] * w[ok]) / sum(w[ok])
+}
+
+# =========================================================
+# 3) Stack your three SIS tables (keeps Source as-is)
+#    key fix #1: parse numbers robustly (commas, etc.)
+# =========================================================
+sis_all <- bind_rows(
+  sis_2005_2009,
+  sis_2010_2014,
+  sis_2015_2019
+) %>%
+  mutate(
+    State_USPS = toupper(trimws(State_USPS)),
+    Total_Pop  = readr::parse_number(as.character(Total_Pop)),
+    Score      = readr::parse_number(as.character(Score))
+  )
+
+# Optional: quick check for states not in crosswalk
+missing_states <- sis_all %>%
+  distinct(State_USPS) %>%
+  anti_join(state_census_xwalk, by = "State_USPS")
+
+# Optional: quick check for numeric parsing problems
+# sis_all %>% summarise(
+#   n = n(),
+#   pop_na = sum(is.na(Total_Pop)),
+#   score_na = sum(is.na(Score))
+# )
+
+# =========================================================
+# 4) Join to region/division and aggregate
+# =========================================================
+sis_tagged <- sis_all %>%
+  inner_join(state_census_xwalk, by = "State_USPS")
+
+# key fix #2: compute Score BEFORE Total_Pop inside summarise
+# (dplyr summarise evaluates left-to-right; otherwise Total_Pop becomes a scalar and can break weighting)
+
+# 4a) Census division level
+sis_division <- sis_tagged %>%
+  group_by(Source, Census_Region, Census_Division) %>%
+  summarise(
+    Score     = wtd_mean(Score, Total_Pop),
+    Total_Pop = sum(Total_Pop, na.rm = TRUE),
+    .groups   = "drop"
+  ) %>%
+  arrange(Source, Census_Region, Census_Division)
+
+# 4b) Census region level
+sis_region <- sis_tagged %>%
+  group_by(Source, Census_Region) %>%
+  summarise(
+    Score     = wtd_mean(Score, Total_Pop),
+    Total_Pop = sum(Total_Pop, na.rm = TRUE),
+    .groups   = "drop"
+  ) %>%
+  arrange(Source, Census_Region)
+
+# Optional: identify groups that still have NA Score (usually because all weights are NA/0)
+# sis_division %>% filter(is.na(Score) | Total_Pop == 0)
+# sis_region   %>% filter(is.na(Score) | Total_Pop == 0)
+
+# =========================================================
+# 5) Outputs
+# =========================================================
+sis_division_final <- sis_division  |> mutate(
+    start_year = as.integer(str_extract(Source, "^\\d{4}")),
+    end_year   = as.integer(str_extract(Source, "(?<=-)\\d{4}"))
+  )|> select(-Total_Pop, -Source)
+
+sis_region_final <- sis_region  |> mutate(
+    start_year = as.integer(str_extract(Source, "^\\d{4}")),
+    end_year   = as.integer(str_extract(Source, "(?<=-)\\d{4}"))
+  )|> select(-Total_Pop, -Source)
+
+
+sis_division_final |> select(-Census_Region) |> write_csv("covariate_socioeconomic_score_division.csv")
+sis_region_final |> write_csv("covariate_socioeconomic_score_region.csv")
+```
+

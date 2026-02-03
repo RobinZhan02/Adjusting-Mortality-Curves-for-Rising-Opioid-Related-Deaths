@@ -1,0 +1,22 @@
+---
+title: "covariate_yearly_panel"
+output: html_document
+---
+
+```{r}
+rm(list=ls());gc()
+
+library(tidyverse)
+
+
+
+covariate_socioeconomic_score_region <- read_csv("covariate_socioeconomic_score_region.csv")
+covariate_socioeconomic_score_division <- read_csv("covariate_socioeconomic_score_division.csv")
+
+
+
+covariate_behavior_division <- read_csv("covariate_behavior_division.csv")
+covariate_behavior_region <- read_csv("covariate_behavior_region.csv")
+
+```
+

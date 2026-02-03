@@ -1,0 +1,190 @@
+---
+title: "behavior_risk"
+output: html_document
+---
+
+```{r}
+rm(list=ls());gc
+library(tidyverse)
+library(data.table)
+
+brfss_before_2010 <- fread("Behavioral_Risk_Factor_Surveillance_System__BRFSS__Prevalence_Data__2010_and_prior_.csv", 
+                           select = c("Year", "Locationabbr", "Question", "Break_Out", "Break_Out_Category", "Data_value", "Response"))
+
+
+
+brfss_after_2010 <- fread("Behavioral_Risk_Factor_Surveillance_System_(BRFSS)_Prevalence_Data_(2011_to_present)_20260202.csv",
+                          select = c("Year", "Locationabbr", "Question", "Break_Out", "Break_Out_Category" , "Data_value","Response"))
+```
+
+```{r}
+brfss_before_2010_reduce <- brfss_before_2010 |>
+  filter(Question %in% c(
+    "Adults who have had at least one drink of alcohol within the past 30 days",
+    "Do you have any kind of health care coverage?"
+  ))
+
+brfss_after_2010_reduce <- brfss_after_2010 |>
+  filter(Question %in% c(
+    "Adults who have had at least one drink of alcohol within the past 30 days",
+    "Do you have any kind of health care coverage?"
+  ))
+
+combine_data <- brfss_before_2010_reduce |> bind_rows(brfss_after_2010_reduce)
+```
+
+
+
+```{r}
+alochol_consum <- combine_data |>
+  filter(Question %in% c(
+    "Adults who have had at least one drink of alcohol within the past 30 days"
+  )) |> filter(Break_Out == "Overall" & Response == "Yes")
+
+
+coverage <- combine_data |>
+  filter(!Question %in% c(
+    "Adults who have had at least one drink of alcohol within the past 30 days"
+  )) |> filter(Break_Out == "Overall" & Response == "Yes")
+
+
+rm(list = setdiff(ls(), c("alochol_consum", "coverage")));gc()
+
+state_pop <- fread("state_population.csv")
+```
+
+
+
+```{r}
+
+# ---------------------------------------------------------
+# 0) state_name -> Locationabbr + census region/division
+#    this covers all 50 states; add DC explicitly
+# ---------------------------------------------------------
+state_xwalk <- tibble(
+  state_name = c(state.name, "District of Columbia"),
+  Locationabbr = c(state.abb, "DC"),
+  Census_Region = c(as.character(state.region), "South"),
+  Census_Division = c(as.character(state.division), "South Atlantic")
+) |> mutate(Census_Region = ifelse(Census_Region == "North Central", "Midwest", Census_Region))
+
+# ---------------------------------------------------------
+# 1) helper: reduce each dataset to 1 row per state-year using Data_value
+#    - if multiple Questions exist, keep the most common one
+#    - prefer Overall if present
+# ---------------------------------------------------------
+to_state_year_value <- function(df, out_name) {
+  df2 <- df %>%
+    mutate(
+      Year = as.integer(Year),
+      Locationabbr = as.character(Locationabbr),
+      Data_value = readr::parse_number(as.character(Data_value))
+    )
+
+  if ("Question" %in% names(df2)) {
+    q_tbl <- df2 %>% count(Question, sort = TRUE)
+    if (nrow(q_tbl) > 1) {
+      keep_q <- q_tbl$Question[1]
+      df2 <- df2 %>% filter(Question == keep_q)
+    }
+  }
+
+  if ("Break_Out_Category" %in% names(df2)) {
+    if (any(tolower(df2$Break_Out_Category) == "overall", na.rm = TRUE)) {
+      df2 <- df2 %>% filter(tolower(Break_Out_Category) == "overall")
+    }
+  }
+  if ("Break_Out" %in% names(df2)) {
+    if (any(tolower(df2$Break_Out) == "overall", na.rm = TRUE)) {
+      df2 <- df2 %>% filter(tolower(Break_Out) == "overall")
+    }
+  }
+
+  df2 %>%
+    group_by(Year, Locationabbr) %>%
+    summarise(value = mean(Data_value, na.rm = TRUE), .groups = "drop") %>%
+    rename(!!out_name := value)
+}
+
+# ---------------------------------------------------------
+# 2) population to (Year, Locationabbr) + region/division
+#    your state_pop has: state_fips, state_name, year, population
+# ---------------------------------------------------------
+pop_state_year <- state_pop %>%
+  transmute(
+    state_name = as.character(state_name),
+    Year = as.integer(year),
+    population = as.numeric(population)
+  ) %>%
+  left_join(state_xwalk, by = "state_name") %>%
+  filter(!is.na(Locationabbr)) %>%  # keeps 50 states + DC; drops PR/territories if present
+  select(Year, Locationabbr, Census_Region, Census_Division, population)
+
+# quick check: do we truly have all states each year?
+# (this returns years with < 51 entries)
+missing_years <- pop_state_year %>%
+  count(Year) %>%
+  filter(n < 51)
+
+# ---------------------------------------------------------
+# 3) build state-year rates
+# ---------------------------------------------------------
+coverage_state <- to_state_year_value(coverage, "rate_health_care_coverage")
+alcohol_state  <- to_state_year_value(alochol_consum, "rate_alochol_consum")
+
+# ---------------------------------------------------------
+# 4) state-year panel (population + both rates)
+# ---------------------------------------------------------
+state_year_panel <- pop_state_year %>%
+  left_join(coverage_state, by = c("Year", "Locationabbr")) %>%
+  left_join(alcohol_state,  by = c("Year", "Locationabbr"))
+
+# ---------------------------------------------------------
+# 5) weighted aggregation to division and region
+#    also keep "population_used_*" so you know what weights actually contributed
+# ---------------------------------------------------------
+division_year_panel <- state_year_panel %>%
+  group_by(Year, Census_Region, Census_Division) %>%
+  summarise(
+    population_total = sum(population, na.rm = TRUE),
+
+    population_used_coverage = sum(population[!is.na(rate_health_care_coverage)], na.rm = TRUE),
+    rate_health_care_coverage =
+      sum(rate_health_care_coverage * population, na.rm = TRUE) /
+      sum(population[!is.na(rate_health_care_coverage)], na.rm = TRUE),
+
+    population_used_alcohol = sum(population[!is.na(rate_alochol_consum)], na.rm = TRUE),
+    rate_alochol_consum =
+      sum(rate_alochol_consum * population, na.rm = TRUE) /
+      sum(population[!is.na(rate_alochol_consum)], na.rm = TRUE),
+
+    .groups = "drop"
+  ) %>%
+  arrange(Year, Census_Region, Census_Division)
+
+region_year_panel <- state_year_panel %>%
+  group_by(Year, Census_Region) %>%
+  summarise(
+    population_total = sum(population, na.rm = TRUE),
+
+    population_used_coverage = sum(population[!is.na(rate_health_care_coverage)], na.rm = TRUE),
+    rate_health_care_coverage =
+      sum(rate_health_care_coverage * population, na.rm = TRUE) /
+      sum(population[!is.na(rate_health_care_coverage)], na.rm = TRUE),
+
+    population_used_alcohol = sum(population[!is.na(rate_alochol_consum)], na.rm = TRUE),
+    rate_alochol_consum =
+      sum(rate_alochol_consum * population, na.rm = TRUE) /
+      sum(population[!is.na(rate_alochol_consum)], na.rm = TRUE),
+
+    .groups = "drop"
+  ) %>%
+  arrange(Year, Census_Region)
+
+
+region_year_panel |> select(-population_total, -population_used_coverage, - population_used_alcohol) |> write_csv("covariate_behavior_region.csv")
+
+division_year_panel|> select(-population_total, -population_used_coverage, - population_used_alcohol, - Census_Region)  |> write_csv("covariate_behavior_division.csv")
+```
+
+
