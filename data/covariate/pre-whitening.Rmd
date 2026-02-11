@@ -104,6 +104,52 @@ corr_division_long <- make_corr_long(division_pw, "Census_Division")
 plot_corr_heatmap(corr_division_long, "Pre-whitened correlations by Census Division")
 ```
 
+```{r}
+vars_pw <- c("rate_health_care_coverage", "rate_alochol_consum", "socio_score")
+
+make_corr_long <- function(df, group_var) {
+  df %>%
+    group_by(.data[[group_var]]) %>%
+    group_modify(~{
+      m <- cor(dplyr::select(.x, dplyr::all_of(vars_pw)),
+               use = "pairwise.complete.obs")
+      as.data.frame(as.table(m)) %>%
+        dplyr::rename(var1 = Var1, var2 = Var2, corr = Freq)
+    }) %>%
+    ungroup() %>%
+    dplyr::rename(group = !!group_var) %>%
+    mutate(
+      var1 = factor(var1, levels = vars_pw),
+      var2 = factor(var2, levels = vars_pw)
+    )
+}
+
+plot_corr_heatmap <- function(corr_long, facet_title = NULL) {
+  ggplot(corr_long, aes(x = var1, y = var2, fill = corr)) +
+    geom_tile(color = "white", linewidth = 0.3) +
+    geom_text(aes(label = ifelse(is.na(corr), "", sprintf("%.2f", corr))), size = 3) +
+    coord_equal() +
+    facet_wrap(~ group) +
+    scale_fill_gradient2(limits = c(-1, 1), na.value = "grey90") +
+    labs(
+      title = facet_title,
+      x = NULL, y = NULL, fill = "Corr"
+    ) +
+    theme_minimal(base_size = 12) +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      panel.grid = element_blank()
+    )
+}
+
+# ---- Region heatmap ----
+corr_region_long <- make_corr_long(region_pw, "Census_Region")
+plot_corr_heatmap(corr_region_long, "Pre-whitened correlations by Census Region")
+
+
+corr_division_long <- make_corr_long(division_pw, "Census_Division")
+plot_corr_heatmap(corr_division_long, "Pre-whitened correlations by Census Division")
+```
 
 
 
