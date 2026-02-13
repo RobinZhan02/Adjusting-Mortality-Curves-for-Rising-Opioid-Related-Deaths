@@ -13,28 +13,19 @@ library(plotly)
 #install.packages("plotly")
 ```
 
-```{r}
-df_raw <- read_csv("../data/missing_data/Inferred-WONDER-Census Region-Sex-5Yr.csv", show_col_types = FALSE) |>
-  clean_names()
+```{r, warning=FALSE}
+df_raw <- read_csv("../data/wonder_opioid/Five-Year-Age-Group.csv", show_col_types = FALSE, na = c("", "NA", "Not Applicable", "Suppressed")) |>
+  clean_names() |>
+  filter(!is.na(year))  
 
 #names(df_raw)
 #glimpse(df_raw)
 
 df_year <- df_raw |>
-  clean_names() |>
   mutate(
-    deaths = deaths |>
-      str_remove_all(",") |>
-      na_if("Suppressed") |>
-      na_if("") |>
-      as.numeric(),
     year = as.integer(year),
-    sex_code = factor(sex_code),
-    age_groups = as.character(age_groups)
-  ) |>
-  drop_na(deaths) |>
-  group_by(sex_code, year, age_groups) |>
-  summarise(deaths = sum(deaths), .groups = "drop")
+    age_groups = five_year_age_groups
+  )
 
 # Convert age_groups to numeric age midpoint
 df_year <- df_year |>
@@ -48,20 +39,20 @@ df_year <- df_year |>
       str_detect(age_groups, "\\+") ~ age_lo + 9,
       TRUE ~ as.numeric(str_extract(age_groups, "(?<=-)\\d+"))
     ),
-    age = (age_lo + age_hi) / 2
+    age = (age_lo + age_hi) / 2,
+    mortality = deaths / population
   ) |>
-  drop_na(age)
-
+  drop_na(age, deaths)
 
 # Filter ages 20-60
 df1 <- df_year |>
-  filter(age >= 20, age <= 60, sex_code == "F")
+  filter(age >= 20, age <= 60)
 
 df1 <- df1 |>
-  mutate(log_deaths = log(deaths + 0.5))
+  mutate(log_rate = log(mortality))
 
 fit <- gam(
-  log_deaths ~ s(age, k = 4) + s(year, k = 6),
+  log_rate ~ s(age, k = 4) + s(year, k = 6),
   data = df1,
   method = "REML"
 )
@@ -85,14 +76,14 @@ grid$y_hat <- exp(grid$u_hat)
 grid |>
   ggplot(aes(x = age, y = y_hat, group = year)) +
   geom_line(alpha = 0.3) +
-  labs(x = "Age", y = "Smoothed mortality (relative)")
+  labs(x = "Age", y = "Smoothed log mortality rate")
 ```
 
 ```{r}
 #yrs_keep <- sort(unique(grid$year))
 #yrs_keep <- yrs_keep[seq(1, length(yrs_keep), length.out = 10)] |> round()
 
-yrs_keep <- seq(2000, 2020, by = 2)
+yrs_keep <- seq(2000, 2025, by = 1)
 
 pdat <- grid |> filter(year %in% yrs_keep)
 
@@ -105,7 +96,8 @@ grid_fine <- expand_grid(
   age  = age_fine
 )
 
-grid_fine$y_hat <- exp(predict(fit, newdata = grid_fine))
+## M_{x,t}
+grid_fine$y_hat <- (predict(fit, newdata = grid_fine))
 
 plot_ly() |>
   add_trace(
@@ -113,25 +105,18 @@ plot_ly() |>
     x = ~age, y = ~year, z = ~y_hat,
     type = "scatter3d", mode = "lines",
     split = ~year, line = list(width = 5), opacity = 0.85
-  ) |>
+) |>
   layout(
-  title = list(
-    text = "Opioid Mortality Distribution",
-    x = 0.5, y = 0.94
-  ),
+  title = list(text = "Opioid Mortality Distribution", x = 0.5, y = 0.95),
   scene = list(
-    xaxis = list(
-      title = "Age",
-      autorange = "reversed"
-    ),
-    yaxis = list(
-      title = "Time (Year)",
-      autorange = "reversed"
-    ),
-    zaxis = list(
-      title = "Smoothed Mortality U(x,t)"
-    )
-  )
+    camera = list(eye = list(x = 1.6, y = 1.6, z = 1.1), up  = list(x = 0, y = 0, z = 1)),
+    uirevision = TRUE,
+    domain = list(y = c(0.09, 1)),
+    xaxis = list(title = "Age", autorange = "reversed"),
+    yaxis = list(title = "Time (Year)", autorange = "reversed"),
+    zaxis = list(title = "Smoothed Log Mortality U(x,t)") ),
+  legend = list(title = list(text = "Year"), orientation = "h", x = 0.5, xanchor = "center", y = 0.08, yanchor = "top", font = list(size = 8), itemsizing = "constant", entrywidth = 20, entrywidthmode = "pixels", tracegroupgap = 0),
+  margin = list(b = 30, r = 60, t = 0)
 )
 ```
 
