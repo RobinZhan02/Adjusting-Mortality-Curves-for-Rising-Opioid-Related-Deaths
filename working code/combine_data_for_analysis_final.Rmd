@@ -6,15 +6,14 @@ output: pdf_document
 ---
 
 ```{r setup, message=FALSE, warning=FALSE}
+## ----setup, message=FALSE, warning=FALSE--------------------------------------
 rm(list=ls());gc()
 library(tidyverse)
 library(demography)
 library(StMoMo)
-```
 
-# Load Data
 
-```{r load-data}
+## ----load-data----------------------------------------------------------------
 # Opioid-related deaths from WONDER (monthly, by region/sex/age group)
 wonder <- read.csv("../Data/missing_data/Inferred-WONDER-Census Region-Sex-5Yr.csv")
 
@@ -29,19 +28,9 @@ state_pop <- read.csv("../Data/covariate/state_population.csv")
 
 # Covariates by region and year
 covariates <- read.csv("../Data/covariate/covariate_combine_region_pre_whitening.csv")
-```
 
-# Data Cleaning and Harmonization
 
-The three data sources use different naming conventions for Census Regions:
-
-- WONDER: `"Census Region 1: Northeast"`, `"Census Region 2: Midwest"`, etc.
-- Population: `"North Central"` (= Midwest), `"Northeast"`, `"South"`, `"West"`
-- Covariates: `"Midwest"`, `"Northeast"`, `"South"`, `"West"`
-
-We standardize all to: **Northeast, Midwest, South, West**.
-
-```{r clean-data}
+## ----clean-data---------------------------------------------------------------
 # Define target age groups (5-year bins, ages 15-54)
 age_groups <- c("15-19", "20-24", "25-29", "30-34",
                 "35-39", "40-44", "45-49", "50-54")
@@ -187,11 +176,9 @@ if (nrow(suppressed_summary) > 0) {
 } else {
   cat("All combinations have 12 months of data. No suppression issues.\n")
 }
-```
 
-# Clean Covariates
 
-```{r clean-covariates}
+## ----clean-covariates---------------------------------------------------------
 cov_clean <- covariates %>%
   rename(Region = Census_Region) %>%
   filter(Year %in% target_years) %>%
@@ -201,13 +188,9 @@ cov_clean <- covariates %>%
          socio_score)
 
 cat("Covariate columns:", paste(names(cov_clean), collapse = ", "), "\n")
-```
 
-# Build Flat Data Frames
 
-Yearly and monthly versions for verification.
-
-```{r build-yearly}
+## ----build-yearly-------------------------------------------------------------
 # Helper to build flat data frames
 build_flat_yearly <- function(deaths_df, pop_df, reg_pop) {
   deaths_df %>%
@@ -240,14 +223,9 @@ cat(sprintf("Opioid     — Yearly: %d rows, Monthly: %d rows\n",
             nrow(flat_yearly), nrow(flat_monthly)))
 cat(sprintf("Non-opioid — Yearly: %d rows, Monthly: %d rows\n",
             nrow(flat_yearly_nonopioid), nrow(flat_monthly_nonopioid)))
-```
 
-# Build StMoMo Objects — Yearly
 
-For each **Region x Sex** combination, we create death and exposure
-matrices compatible with `demography` and `StMoMo` packages.
-
-```{r yearly-matrices}
+## ----yearly-matrices----------------------------------------------------------
 regions <- c("Northeast", "Midwest", "South", "West")
 sexes   <- c("Male", "Female")
 
@@ -293,9 +271,9 @@ for (reg in regions) {
 }
 
 cat("Yearly matrices built (opioid + non-opioid)\n")
-```
 
-```{r yearly-demogdata}
+
+## ----yearly-demogdata---------------------------------------------------------
 build_demogdata_yearly <- function(matrices, age_starts, target_years, label_suffix = "") {
   result <- list()
   for (reg in regions) {
@@ -319,9 +297,9 @@ build_demogdata_yearly <- function(matrices, age_starts, target_years, label_suf
 
 hmd_region_yr    <- build_demogdata_yearly(hmd_matrices_yr,    age_starts, target_years)
 hmd_region_yr_no <- build_demogdata_yearly(hmd_matrices_yr_no, age_starts, target_years, "non-opioid")
-```
 
-```{r yearly-stmomodata}
+
+## ----yearly-stmomodata--------------------------------------------------------
 build_stmomo_yearly <- function(demog_list, cov_df = NULL) {
   stmomo_list <- list()
   for (reg in regions) {
@@ -346,14 +324,9 @@ stmomo_yr_no     <- build_stmomo_yearly(hmd_region_yr_no)
 stmomo_yr_no_cov <- build_stmomo_yearly(hmd_region_yr_no, cov_clean)
 
 cat("Yearly StMoMoData created (opioid + non-opioid)\n")
-```
 
-# Build StMoMo Objects — Monthly
 
-Monthly matrices use fractional years (e.g. 2005.000, 2005.083, ...).
-Monthly exposure = annual population / 12.
-
-```{r monthly-matrices}
+## ----monthly-matrices---------------------------------------------------------
 # Time points as fractional years
 monthly_times <- sort(unique(
   wonder_monthly$Year + (wonder_monthly$Month - 1) / 12
@@ -411,9 +384,9 @@ for (reg in regions) {
 }
 
 cat("Monthly matrices built (opioid + non-opioid)\n")
-```
 
-```{r monthly-demogdata}
+
+## ----monthly-demogdata--------------------------------------------------------
 build_demogdata_monthly <- function(matrices, age_starts, monthly_times, label_suffix = "") {
   result <- list()
   for (reg in regions) {
@@ -437,9 +410,9 @@ build_demogdata_monthly <- function(matrices, age_starts, monthly_times, label_s
 
 hmd_region_mo    <- build_demogdata_monthly(hmd_matrices_mo,    age_starts, monthly_times)
 hmd_region_mo_no <- build_demogdata_monthly(hmd_matrices_mo_no, age_starts, monthly_times, "non-opioid")
-```
 
-```{r monthly-stmomodata}
+
+## ----monthly-stmomodata-------------------------------------------------------
 build_stmomo_monthly <- function(demog_list, cov_df = NULL) {
   stmomo_list <- list()
   for (reg in regions) {
@@ -467,11 +440,9 @@ stmomo_mo_no     <- build_stmomo_monthly(hmd_region_mo_no)
 stmomo_mo_no_cov <- build_stmomo_monthly(hmd_region_mo_no, cov_clean)
 
 cat("Monthly StMoMoData created (opioid + non-opioid)\n")
-```
 
-# Verification
 
-```{r summary-table}
+## ----summary-table------------------------------------------------------------
 bind_rows(
   flat_yearly %>% mutate(Type = "Opioid"),
   flat_yearly_nonopioid %>% mutate(Type = "Non-opioid")
@@ -486,9 +457,9 @@ bind_rows(
   ) %>%
   knitr::kable(digits = 6,
                caption = "Summary by Region and Sex (2005-2019, Ages 15-54)")
-```
 
-```{r plot-verify, fig.width=10, fig.height=8}
+
+## ----plot-verify, fig.width=10, fig.height=8----------------------------------
 bind_rows(
   flat_yearly %>% mutate(Type = "Opioid"),
   flat_yearly_nonopioid %>% mutate(Type = "Non-opioid")
@@ -504,11 +475,9 @@ bind_rows(
   ) +
   theme_minimal() +
   theme(legend.position = "bottom")
-```
 
-# Save Outputs
 
-```{r save}
+## ----save---------------------------------------------------------------------
 out <- "../Data/wonder_opioid"
 
 # --- Opioid ---
