@@ -1,0 +1,193 @@
+---
+title: "population_age_sex"
+output: html_document
+---
+
+```{r}
+suppressPackageStartupMessages({
+  library(httr)
+  library(jsonlite)
+  library(dplyr)
+  library(purrr)
+  library(stringr)
+  library(readr)
+  library(tibble)
+})
+
+# --- 1) Small helper: call Census API and return a tibble --------------------
+census_api_get <- function(base_url, query) {
+  resp <- httr::GET(base_url, query = query)
+  httr::stop_for_status(resp)
+
+  txt <- httr::content(resp, as = "text", encoding = "UTF-8")
+  raw <- jsonlite::fromJSON(txt)
+
+  # first row is header, remaining rows are data
+  header <- raw[1, ]
+  dat <- raw[-1, , drop = FALSE]
+
+  out <- as_tibble(dat, .name_repair = "minimal")
+  names(out) <- header
+
+  out
+}
+
+# --- 2) Common transforms -----------------------------------------------------
+region_code_to_name <- function(region_code_int) {
+  dplyr::case_when(
+    region_code_int == 1L ~ "Northeast",
+    region_code_int == 2L ~ "Midwest",
+    region_code_int == 3L ~ "South",
+    region_code_int == 4L ~ "West",
+    TRUE ~ NA_character_
+  )
+}
+
+sex_code_to_name <- function(sex_code_int) {
+  dplyr::case_when(
+    sex_code_int == 1L ~ "Male",
+    sex_code_int == 2L ~ "Female",
+    TRUE ~ NA_character_
+  )
+}
+
+add_age5_group <- function(df, age_col = "age") {
+  df %>%
+    mutate(
+      age5_start = (.data[[age_col]] %/% 5L) * 5L,
+      age5 = if_else(age5_start >= 110L, "110+", str_glue("{age5_start}-{age5_start + 4L}"))
+    )
+}
+
+# --- 3) Pull years <= 2019 from vintage 2018 "charage" (state rows, then sum to region) ---
+# DATE_CODE mapping (for July 1 estimates): year 2010 -> 3, 2011 -> 4, ... 2019 -> 12
+# So: DATE_CODE = year - 2007 for 2010..2019
+fetch_charage_states_one_year <- function(year, api_key = NULL, vintage = 2018L) {
+  if (year < 2010L || year > 2019L) {
+    stop("charage (vintage 2018) helper here is set up for years 2010..2019. Got year = ", year)
+  }
+
+  date_code <- year - 2007L
+  base_url  <- str_glue("https://api.census.gov/data/{vintage}/pep/charage")
+
+  query <- list(
+    get       = "POP,AGE,SEX,REGION",
+    `for`     = "state:*",
+    DATE_CODE = date_code,
+    RACE      = 0,  # all races
+    HISP      = 0   # both Hispanic origins
+  )
+  if (!is.null(api_key) && nzchar(api_key)) query$key <- api_key
+
+  census_api_get(base_url, query) %>%
+    transmute(
+      year   = year,
+      region = suppressWarnings(as.integer(REGION)),
+      sex    = suppressWarnings(as.integer(SEX)),
+      age    = suppressWarnings(as.integer(AGE)),
+      pop    = suppressWarnings(as.integer(POP))
+    ) %>%
+    filter(
+      !is.na(region), region %in% 1:4,
+      !is.na(sex), sex %in% c(1, 2),
+      !is.na(age), age >= 0, age <= 110,
+      !is.na(pop)
+    )
+}
+
+summarise_to_region_age5_sex <- function(df_states) {
+  df_states %>%
+    add_age5_group(age_col = "age") %>%
+    group_by(year, region, sex, age5) %>%
+    summarise(pop = sum(pop), .groups = "drop") %>%
+    mutate(
+      region_name = region_code_to_name(region),
+      sex_name    = sex_code_to_name(sex)
+    ) %>%
+    select(year, region, region_name, sex, sex_name, age5, pop)
+}
+
+# --- 4) Pull years >= 2020 from vintage 2023 "charv" (region geography exists) ---
+fetch_charv_regions_one_year <- function(year, api_key = NULL, vintage = 2023L) {
+  if (year < 2020L || year > 2023L) {
+    stop("charv (vintage 2023) covers 2020..2023. Got year = ", year)
+  }
+
+  base_url <- str_glue("https://api.census.gov/data/{vintage}/pep/charv")
+
+  # Request age-by-sex estimates, at region geography.
+  # MONTH=7 and UNIVERSE=R are used in official examples; keep them explicit.
+  query <- list(
+    get      = "NAME,POP,AGE,SEX",
+    `for`    = "region:*",
+    YEAR     = year,
+    MONTH    = 7,
+    UNIVERSE = "R"
+  )
+  if (!is.null(api_key) && nzchar(api_key)) query$key <- api_key
+
+  census_api_get(base_url, query) %>%
+    transmute(
+      year        = year,
+      region      = suppressWarnings(as.integer(region)),  # from `for=region:*`
+      region_name = NAME,
+      sex         = suppressWarnings(as.integer(SEX)),
+      age         = suppressWarnings(as.integer(AGE)),
+      pop         = suppressWarnings(as.integer(POP))
+    ) %>%
+    filter(
+      !is.na(region), region %in% 1:4,
+      !is.na(sex), sex %in% c(1, 2),
+      !is.na(age), age >= 0, age <= 110,
+      !is.na(pop)
+    ) %>%
+    add_age5_group(age_col = "age") %>%
+    group_by(year, region, region_name, sex, age5) %>%
+    summarise(pop = sum(pop), .groups = "drop") %>%
+    mutate(sex_name = sex_code_to_name(sex)) %>%
+    select(year, region, region_name, sex, sex_name, age5, pop)
+}
+
+# --- 5) Main: given years, return region x sex x 5-year-age x year population ---
+estimate_population_region_sex_age5_by_year <- function(years, api_key = NULL) {
+  years <- sort(unique(as.integer(years)))
+
+  years_charage <- years[years >= 2010L & years <= 2019L]
+  years_charv   <- years[years >= 2020L & years <= 2023L]
+
+  part_pre2020 <- if (length(years_charage) > 0) {
+    map_dfr(years_charage, ~ fetch_charage_states_one_year(.x, api_key = api_key)) %>%
+      summarise_to_region_age5_sex()
+  } else {
+    tibble(year = integer(), region = integer(), region_name = character(),
+           sex = integer(), sex_name = character(), age5 = character(), pop = integer())
+  }
+
+  part_2020plus <- if (length(years_charv) > 0) {
+    map_dfr(years_charv, ~ fetch_charv_regions_one_year(.x, api_key = api_key))
+  } else {
+    tibble(year = integer(), region = integer(), region_name = character(),
+           sex = integer(), sex_name = character(), age5 = character(), pop = integer())
+  }
+
+  bind_rows(part_pre2020, part_2020plus) %>%
+    arrange(year, region, sex, age5)
+}
+
+# --- 6) Example run -----------------------------------------------------------
+# Optional: get an API key from the Census Bureau and paste it here.
+# api_key <- "YOUR_KEY_HERE"
+api_key <- NULL
+
+years_wanted <- 2016:2023
+pop_region_sex_age5_year <- estimate_population_region_sex_age5_by_year(
+  years = years_wanted,
+  api_key = api_key
+)
+
+# View result
+pop_region_sex_age5_year %>% print(n = 50)
+
+
+```
+

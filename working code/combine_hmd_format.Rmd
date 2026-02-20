@@ -1,0 +1,374 @@
+---
+title: "Combine Data to HMD Format"
+author: "PSTAT 296A"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, message=FALSE, warning=FALSE}
+rm(list=ls());gc()
+library(tidyverse)
+library(demography)
+library(StMoMo)
+```
+
+# Load Data
+
+```{r load-data}
+# Deaths from WONDER (monthly, by region/sex/age group)
+wonder <- read.csv("../Data/missing_data/Inferred-WONDER-Census Region-Sex-5Yr.csv")
+
+# Population by region, age, sex (for age-specific exposures)
+pop <- read.csv("../Data/covariate/population_by_region_age_sex.csv")
+
+# State-level total population (for regional total population covariate)
+state_pop <- read.csv("../Data/covariate/state_population.csv")
+
+# Covariates by region and year
+covariates <- read.csv("../Data/covariate/covariate_combine_region_pre_whitening.csv")
+
+covariates <- covariates |> select(-rate_health_care_coverage, -rate_alochol_consum, - rate_health_care_coverage_pw, -rate_alochol_consum_pw, - socio_score_pw, - socio_score_ccf, - opioid_deaths_pw)
+```
+
+# Data Cleaning and Harmonization
+
+The three data sources use different naming conventions for Census Regions:
+
+- WONDER: `"Census Region 1: Northeast"`, `"Census Region 2: Midwest"`, etc.
+- Population: `"North Central"` (= Midwest), `"Northeast"`, `"South"`, `"West"`
+- Covariates: `"Midwest"`, `"Northeast"`, `"South"`, `"West"`
+
+We standardize all to: **Northeast, Midwest, South, West**.
+
+```{r clean-data}
+# Define target age groups (5-year bins, ages 15-54)
+age_groups <- c("15-19", "20-24", "25-29", "30-34",
+                "35-39", "40-44", "45-49", "50-54")
+age_starts <- c(15, 20, 25, 30, 35, 40, 45, 50)
+age_map    <- setNames(age_starts, age_groups)
+
+target_years <- 2005:2019
+
+# ---- Clean WONDER deaths ----
+wonder_clean <- wonder %>%
+  mutate(
+    Region = case_when(
+      Census.Region == "Census Region 1: Northeast" ~ "Northeast",
+      Census.Region == "Census Region 2: Midwest"   ~ "Midwest",
+      Census.Region == "Census Region 3: South"     ~ "South",
+      Census.Region == "Census Region 4: West"      ~ "West"
+    ),
+    Deaths = suppressWarnings(as.numeric(Deaths))
+  ) %>%
+  filter(
+    Year %in% target_years,
+    Age.Group.Code %in% age_groups,
+    Sex.Code %in% c("M", "F")
+  ) %>%
+  # Aggregate monthly to yearly
+  group_by(Region, Sex.Code, Age.Group.Code, Year) %>%
+  summarise(
+    n_months = sum(!is.na(Deaths)),  # track months with non-suppressed data
+    Deaths   = sum(Deaths, na.rm = TRUE),
+    .groups  = "drop"
+  ) %>%
+  mutate(
+    Age = age_map[Age.Group.Code],
+    Sex = ifelse(Sex.Code == "M", "Male", "Female")
+  )
+
+# ---- Clean Population (exposures) ----
+pop_clean <- pop %>%
+  mutate(
+    Region = ifelse(census_region == "North Central", "Midwest", census_region)
+  ) %>%
+  filter(
+    year %in% target_years,
+    age5 %in% age_groups,
+    sex %in% c("Male", "Female")
+  ) %>%
+  mutate(Age = age_map[age5]) %>%
+  rename(Year = year, Sex = sex, Population = population)
+
+# ---- Check for suppressed months ----
+suppressed_summary <- wonder_clean %>% filter(n_months < 12)
+if (nrow(suppressed_summary) > 0) {
+  cat("WARNING: Some year/region/sex/age combinations had months with suppressed data:\n")
+  suppressed_summary %>%
+    group_by(Region, Sex, Age.Group.Code) %>%
+    summarise(
+      n_years_affected = n(),
+      avg_months_observed = mean(n_months),
+      .groups = "drop"
+    ) %>%
+    print(n = 50)
+} else {
+  cat("All combinations have 12 months of data. No suppression issues.\n")
+}
+```
+
+# Create HMD-Format Matrices
+
+For each **Region x Sex** combination, we create:
+
+- `Dxt`: death counts matrix (8 age groups x 15 years)
+- `Ext`: exposure/population matrix (8 age groups x 15 years)
+
+This matches the `StMoMoData` format used in `hmd_analysis.Rmd`.
+
+```{r create-matrices}
+regions <- c("Northeast", "Midwest", "South", "West")
+sexes   <- c("Male", "Female")
+
+# Function to create Dxt and Ext matrices
+make_matrices <- function(deaths_df, pop_df, region, sex) {
+  Dxt <- deaths_df %>%
+    filter(Region == region, Sex == sex) %>%
+    select(Age, Year, Deaths) %>%
+    pivot_wider(names_from = Year, values_from = Deaths) %>%
+    arrange(Age) %>%
+    column_to_rownames("Age") %>%
+    as.matrix()
+
+  Ext <- pop_df %>%
+    filter(Region == region, Sex == sex) %>%
+    select(Age, Year, Population) %>%
+    pivot_wider(names_from = Year, values_from = Population) %>%
+    arrange(Age) %>%
+    column_to_rownames("Age") %>%
+    as.matrix()
+
+  # Validate
+  stopifnot(all(dim(Dxt) == dim(Ext)))
+  stopifnot(all(rownames(Dxt) == rownames(Ext)))
+  stopifnot(all(colnames(Dxt) == colnames(Ext)))
+
+  list(Dxt = Dxt, Ext = Ext)
+}
+
+# Build all matrices
+hmd_matrices <- list()
+for (reg in regions) {
+  for (sex in sexes) {
+    key <- paste(reg, sex, sep = "_")
+    hmd_matrices[[key]] <- make_matrices(wonder_clean, pop_clean, reg, sex)
+    cat(sprintf("  %s: Dxt[%d x %d]\n", key,
+                nrow(hmd_matrices[[key]]$Dxt), ncol(hmd_matrices[[key]]$Dxt)))
+  }
+}
+```
+
+# Version 1: HMD Format Without Covariates
+
+We create `demogdata` objects (compatible with `demography` and `StMoMo` packages) for each
+region, containing both male and female mortality series. Then convert to `StMoMoData`.
+
+```{r version1-demogdata}
+# Create demogdata objects for each region
+hmd_region <- list()
+
+for (reg in regions) {
+  mat_m <- hmd_matrices[[paste(reg, "Male",   sep = "_")]]
+  mat_f <- hmd_matrices[[paste(reg, "Female", sep = "_")]]
+
+  # Central death rates: mx = Dx / Ex
+  rate_male   <- mat_m$Dxt / mat_m$Ext
+  rate_female <- mat_f$Dxt / mat_f$Ext
+
+  # Create demogdata with male series
+  hmd_region[[reg]] <- demogdata(
+    data  = rate_male,
+    pop   = mat_m$Ext,
+    ages  = age_starts,
+    years = target_years,
+    type  = "mortality",
+    label = reg,
+    name  = "male"
+  )
+
+  # Add female series
+  hmd_region[[reg]]$rate$female <- rate_female
+  hmd_region[[reg]]$pop$female  <- mat_f$Ext
+}
+
+cat("demogdata objects created for:", paste(names(hmd_region), collapse = ", "), "\n")
+```
+
+```{r version1-stmomodata}
+# Convert to StMoMoData for each region x sex
+stmomo_data <- list()
+
+for (reg in regions) {
+  for (series in c("male", "female")) {
+    key <- paste(reg, series, sep = "_")
+    stmomo_data[[key]] <- StMoMoData(hmd_region[[reg]],
+                                      series = series,
+                                      type   = "central")
+    cat(sprintf("  StMoMoData %-20s | ages: %s | years: %d-%d\n", key,
+                paste(stmomo_data[[key]]$ages, collapse = ","),
+                min(stmomo_data[[key]]$years),
+                max(stmomo_data[[key]]$years)))
+  }
+}
+```
+
+### Quick Verification: Mortality Rates from StMoMoData
+
+```{r verify-v1, fig.width=10, fig.height=6}
+# Verify: mortality rate = Dxt / Ext
+par(mfrow = c(2, 2), mar = c(4, 4, 3, 1))
+for (reg in regions) {
+  key_m <- paste(reg, "male", sep = "_")
+  mort  <- stmomo_data[[key_m]]
+  mx    <- mort$Dxt / mort$Ext
+  matplot(mort$years, t(log(mx)), type = "l", lty = 1,
+          main = paste(reg, "- Male log(mx)"),
+          xlab = "Year", ylab = "log(mx)",
+          col = rainbow(length(mort$ages)))
+  legend("topright", legend = paste0(age_groups), col = rainbow(8),
+         lty = 1, cex = 0.6, ncol = 2)
+}
+par(mfrow = c(1, 1))
+```
+
+# Version 2: HMD Format With Covariates
+
+We merge covariates into two formats:
+
+1. **Flat data frame**: one row per region/sex/age/year with deaths, population, rate, and covariates
+2. **StMoMoData + covariates list**: StMoMoData objects with covariates attached
+
+```{r version2-flat}
+# Clean covariates
+cov_clean <- covariates %>%
+  rename(Region = Census_Region) %>%
+  filter(Year %in% target_years)
+
+# ---- Flat data frame ----
+hmd_flat <- wonder_clean %>%
+  select(Region, Sex, Age, Age.Group.Code, Year, Deaths, n_months) %>%
+  left_join(
+    pop_clean %>% select(Region, Sex, Age, Year, Population),
+    by = c("Region", "Sex", "Age", "Year")
+  ) %>%
+  mutate(Rate = Deaths / Population) %>%
+  left_join(cov_clean, by = c("Region", "Year"))
+
+cat(sprintf("Flat data: %d rows x %d columns\n", nrow(hmd_flat), ncol(hmd_flat)))
+cat("Columns:", paste(names(hmd_flat), collapse = ", "), "\n")
+```
+
+```{r version2-stmomo-cov}
+# ---- StMoMoData + covariates list ----
+stmomo_data_cov <- list()
+
+for (reg in regions) {
+  cov_reg <- cov_clean %>%
+    filter(Region == reg) %>%
+    arrange(Year) %>%
+    select(-Region)
+
+  for (series in c("male", "female")) {
+    key <- paste(reg, series, sep = "_")
+
+    stmomo_data_cov[[key]] <- stmomo_data[[key]]
+    stmomo_data_cov[[key]]$covariates <- cov_reg
+  }
+}
+
+cat("StMoMoData + covariates created for:", paste(names(stmomo_data_cov), collapse = ", "), "\n")
+cat("\nCovariate columns per region:\n")
+print(names(stmomo_data_cov[["Northeast_male"]]$covariates))
+```
+
+# Add Regional Total Population
+
+Aggregate state-level population to Census Regions and add as an additional covariate.
+
+```{r regional-total-pop}
+state_region_map <- tibble(
+  state_name = c(
+    # Northeast
+    "Connecticut", "Maine", "Massachusetts", "New Hampshire", "New Jersey",
+    "New York", "Pennsylvania", "Rhode Island", "Vermont",
+    # Midwest
+    "Illinois", "Indiana", "Iowa", "Kansas", "Michigan", "Minnesota",
+    "Missouri", "Nebraska", "North Dakota", "Ohio", "South Dakota", "Wisconsin",
+    # South
+    "Alabama", "Arkansas", "Delaware", "District of Columbia", "Florida",
+    "Georgia", "Kentucky", "Louisiana", "Maryland", "Mississippi",
+    "North Carolina", "Oklahoma", "South Carolina", "Tennessee", "Texas",
+    "Virginia", "West Virginia",
+    # West
+    "Alaska", "Arizona", "California", "Colorado", "Hawaii", "Idaho",
+    "Montana", "Nevada", "New Mexico", "Oregon", "Utah", "Washington", "Wyoming"
+  ),
+  Region = c(
+    rep("Northeast", 9), rep("Midwest", 12),
+    rep("South", 17),    rep("West", 13)
+  )
+)
+
+regional_pop <- state_pop %>%
+  filter(year %in% target_years) %>%
+  left_join(state_region_map, by = "state_name") %>%
+  group_by(Region, year) %>%
+  summarise(Total_Population = sum(population), .groups = "drop") %>%
+  rename(Year = year)
+
+# Add to flat data
+hmd_flat <- hmd_flat %>%
+  left_join(regional_pop, by = c("Region", "Year"))
+
+cat("Final flat data columns:\n")
+str(hmd_flat, give.attr = FALSE)
+```
+
+# Verification
+
+```{r summary-table}
+hmd_flat %>%
+  group_by(Region, Sex) %>%
+  summarise(
+    Total_Deaths  = sum(Deaths),
+    Mean_Rate     = mean(Rate),
+    Min_Rate      = min(Rate),
+    Max_Rate      = max(Rate),
+    .groups = "drop"
+  ) %>%
+  knitr::kable(digits = 6, caption = "Summary by Region and Sex (2005-2019, Ages 15-54)")
+```
+
+```{r plot-verify, fig.width=10, fig.height=8}
+hmd_flat %>%
+  ggplot(aes(x = Year, y = log(Rate), color = Age.Group.Code, linetype = Sex)) +
+  geom_line() +
+  facet_wrap(~Region, ncol = 2) +
+  labs(
+    title = "Log Mortality Rate by Region, Age Group, and Sex (2005-2019)",
+    y     = "Log(Central Death Rate)",
+    color = "Age Group"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+# Save Outputs
+
+```{r save}
+# Version 1: Without covariates
+saveRDS(stmomo_data, file = "../Data/wonder_opioid/hmd_format_no_cov.rds")
+saveRDS(hmd_region,  file = "../Data/wonder_opioid/demogdata_by_region.rds")
+
+# Version 2: With covariates
+saveRDS(stmomo_data_cov, file = "../Data/wonder_opioid/hmd_format_with_cov.rds")
+write.csv(hmd_flat, file = "../Data/wonder_opioid/hmd_flat_with_covariates.csv", row.names = FALSE)
+
+cat("Saved outputs:\n")
+cat("  Version 1 (no covariates):\n")
+cat("    ../Data/hmd_format_no_cov.rds    - list of 8 StMoMoData objects (4 regions x 2 sexes)\n")
+cat("    ../Data/demogdata_by_region.rds  - list of 4 demogdata objects (male + female per region)\n")
+cat("  Version 2 (with covariates):\n")
+cat("    ../Data/hmd_format_with_cov.rds  - list of 8 StMoMoData objects + $covariates\n")
+cat("    ../Data/hmd_flat_with_covariates.csv - flat data frame for analysis\n")
+```

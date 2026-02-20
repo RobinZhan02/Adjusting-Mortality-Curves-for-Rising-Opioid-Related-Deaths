@@ -4,60 +4,382 @@ output: html_document
 ---
 
 ```{r}
-# install.packages(c("readr","dplyr","tidyr","stringr"))
-rm(list=ls()); gc()
+#declare your api key here
+api_key <- "27f3f6959deb2934d3f04ef434df400e8f9e8608"
+# ============================================================
+# Population by census region x sex x 5-year age group x year
+# 2004–2020
+#
+# 2004–2009: Census API (2000/pep/int_charagegroups) via httr
+# 2010–2019: Census API (2019/pep/charagegroups) via httr
+# 2020:      tidycensus::get_estimates(product = "characteristics")
+#
+# Caching:
+#   cache_dir/raw_2000_2009_YEAR.rds
+#   cache_dir/raw_2010_2019_YEAR.rds
+#   cache_dir/raw_2010_2020_YEAR.rds  (for 2020)
+# ============================================================
 
-library(readr)
-library(dplyr)
-library(tidyr)
-library(stringr)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(tidycensus)
+  library(tigris)
+  library(httr)
+  library(jsonlite)
+  library(stringr)
+})
 
-# 1) Source files (official Census PEP CSVs)
-url_2000_2009 <- "https://www2.census.gov/programs-surveys/popest/datasets/2000-2009/national/totals/nst_est2009_alldata.csv"
-url_2010_2019 <- "https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/national/totals/nst-est2019-alldata.csv"
-url_2020_2025 <- "https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/state/totals/NST-EST2025-ALLDATA.csv"
+options(tigris_use_cache = TRUE)
 
-# 2) Read the three files
-df_2000_2009 <- read_csv(url_2000_2009, show_col_types = FALSE) %>% mutate(vintage = 2009)
-df_2010_2019 <- read_csv(url_2010_2019, show_col_types = FALSE) %>% mutate(vintage = 2019)
-df_2020_2025 <- read_csv(url_2020_2025, show_col_types = FALSE) %>% mutate(vintage = 2025)
+# -----------------------------
+# 0) user inputs
+# -----------------------------
+cache_dir <- "pep_cache"
+years     <- 2004:2020
 
-# 3) Keep state-level rows (SUMLEV 040) and reshape into (state, year, population)
-to_state_year <- function(df) {
-
-  df_clean <- df %>%
-    mutate(
-      SUMLEV = as.character(SUMLEV),
-      STATE  = as.integer(STATE)
-    ) %>%
-    filter(SUMLEV %in% c("40","040")) %>%     # robust to numeric vs "040"
-    filter(!is.na(STATE), STATE > 0)
-
-  long <- df_clean %>%
-    select(STATE, NAME, vintage, starts_with("POPESTIMATE")) %>%
-    pivot_longer(
-      cols = starts_with("POPESTIMATE"),
-      names_to = "year",
-      values_to = "population"
-    ) %>%
-    mutate(
-      year = parse_number(year),
-      state_fips = str_pad(as.character(STATE), width = 2, side = "left", pad = "0")
-    ) %>%
-    filter(state_fips != "72") %>%            # drop Puerto Rico (state-equivalent) if you only want 50 + DC
-    select(state_fips, state_name = NAME, year, population)
-
-  long
+# -----------------------------
+# 1) utilities
+# -----------------------------
+ensure_dir <- function(path) {
+  if (!dir.exists(path)) dir.create(path, recursive = TRUE)
+  invisible(path)
 }
 
-pop_2000_2009 <- to_state_year(df_2000_2009) %>% filter(year >= 2004, year <= 2009)
-pop_2010_2019 <- to_state_year(df_2010_2019)
-pop_2020_2025 <- to_state_year(df_2020_2025)
+cache_get_or_set <- function(path, fn) {
+  if (file.exists(path)) return(readRDS(path))
+  ensure_dir(dirname(path))
+  obj <- fn()
+  saveRDS(obj, path, compress = "xz")
+  obj
+}
 
-state_pop <- bind_rows(pop_2000_2009, pop_2010_2019, pop_2020_2025) %>%
-  arrange(state_fips, year)
+# JSON -> tibble (Census API returns [header, rows...])
+census_json_to_tibble <- function(x) {
+  header <- x[[1]]
+  rows   <- x[-1]
+  purrr::map_dfr(rows, function(r) {
+    out <- as.list(r)
+    names(out) <- header
+    tibble::as_tibble(out, .name_repair = "unique")
+  })
+}
 
-write_csv(state_pop, "state_population.csv")
+census_get_json_httr <- function(base_url, query_list, max_tries = 6, sleep_base = 0.8) {
+  last_txt <- NULL
+  for (i in seq_len(max_tries)) {
+    resp <- try(GET(base_url, query = query_list), silent = TRUE)
+    if (inherits(resp, "try-error")) {
+      Sys.sleep(sleep_base * i)
+      next
+    }
+
+    txt <- content(resp, as = "text", encoding = "UTF-8")
+    last_txt <- txt
+
+    if (status_code(resp) >= 200 && status_code(resp) < 300) {
+      # retry if truncated
+      if (!str_ends(str_trim(txt), "]")) {
+        Sys.sleep(sleep_base * i)
+        next
+      }
+      parsed <- try(fromJSON(txt, simplifyVector = FALSE), silent = TRUE)
+      if (inherits(parsed, "try-error")) {
+        Sys.sleep(sleep_base * i)
+        next
+      }
+      return(parsed)
+    }
+
+    Sys.sleep(sleep_base * i)
+  }
+
+  stop(
+    paste0(
+      "Census API failed after retries.\n",
+      "Last response: ", str_trim(str_sub(last_txt %||% "", 1, 400))
+    ),
+    call. = FALSE
+  )
+}
+
+# -----------------------------
+# 2) region crosswalk (state FIPS -> Census region)
+# -----------------------------
+make_state_region_lookup <- function() {
+  # state.region is in base R (maps state name -> region); DC is not included
+  region_by_abb <- tibble(
+    state_abb = c(state.abb, "DC"),
+    census_region = c(as.character(state.region), "South")
+  )
+
+  # tigris::fips_codes has state_code (FIPS) + state (abbrev)
+  fips_lu <- tibble(tigris::fips_codes) %>%
+    transmute(
+      state_fips = str_pad(as.character(state_code), 2, pad = "0"),
+      state_abb  = as.character(state)
+    ) %>%
+    distinct() %>%
+    filter(state_abb %in% c(state.abb, "DC"))
+
+  fips_lu %>%
+    left_join(region_by_abb, by = "state_abb")
+}
+
+state_region_lu <- make_state_region_lookup()
+
+# -----------------------------
+# 3) helpers for age/sex labels
+# -----------------------------
+age5_lookup_2000s <- function() {
+  tibble(
+    AGEGROUP = as.character(1:18),
+    age5 = c(
+      "0-4","5-9","10-14","15-19","20-24","25-29","30-34","35-39","40-44",
+      "45-49","50-54","55-59","60-64","65-69","70-74","75-79","80-84","85+"
+    )
+  )
+}
+
+normalize_agegroup_label_to_age5 <- function(x) {
+  # tidycensus AGEGROUP strings typically look like:
+  # "Age 0 to 4 years", "Age 85 years and older", "All ages"
+  x <- as.character(x)
+  out <- rep(NA_character_, length(x))
+
+  out[x == "Age 85 years and older"] <- "85+"
+
+  idx <- is.na(out) & str_detect(x, "^Age\\s+\\d+\\s+to\\s+\\d+")
+  if (any(idx)) {
+    nums <- str_extract_all(x[idx], "\\d+")
+    out[idx] <- purrr::map_chr(nums, ~ paste0(.x[1], "-", .x[2]))
+  }
+
+  out
+}
+
+# -----------------------------
+# 4) 2000–2009 via Census API (int_charagegroups)
+#    Fix for "too many predicates": only DATE_ is a predicate; RACE/HISP are columns.
+# -----------------------------
+build_date_map_int_charagegroups <- function(api_key) {
+  base_url <- "https://api.census.gov/data/2000/pep/int_charagegroups"
+  codes <- 1:12
+
+  purrr::map_dfr(codes, function(cd) {
+    q <- list(
+      get = "DATE_DESC",
+      `for` = "us:1",
+      DATE_ = cd
+    )
+    if (nzchar(api_key)) q$key <- api_key
+
+    out <- census_get_json_httr(base_url, q)
+    df  <- census_json_to_tibble(out)
+
+    tibble(code = cd, date_desc = as.character(df$DATE_DESC[1]))
+  })
+}
+
+pick_date_code_for_july1 <- function(date_map, year) {
+  target <- paste0("7/1/", year)
+  hit <- date_map %>% filter(str_detect(date_desc, fixed(target)))
+  if (nrow(hit) < 1) stop(paste0("No DATE_ code found for ", target), call. = FALSE)
+  hit$code[1]
+}
+
+download_2000_2009_one_year <- function(year, api_key, cache_dir, date_map) {
+  stopifnot(year >= 2000, year <= 2009)
+  path <- file.path(cache_dir, paste0("raw_2000_2009_", year, ".rds"))
+
+  cache_get_or_set(path, function() {
+    base_url <- "https://api.census.gov/data/2000/pep/int_charagegroups"
+    date_code <- pick_date_code_for_july1(date_map, year)
+
+    q <- list(
+      # include RACE and HISP as columns so we can filter totals locally
+      get = "POP,AGEGROUP,SEX,RACE,HISP",
+      `for` = "state:*",
+      DATE_ = date_code
+    )
+    if (nzchar(api_key)) q$key <- api_key
+
+    out <- census_get_json_httr(base_url, q)
+    df  <- census_json_to_tibble(out)
+
+    df %>%
+      transmute(
+        year = year,
+        state_fips = str_pad(as.character(state), 2, pad = "0"),
+        AGEGROUP = as.character(AGEGROUP),
+        SEX = as.integer(SEX),
+        RACE = as.integer(RACE),
+        HISP = as.integer(HISP),
+        pop = as.double(POP)
+      )
+  })
+}
+
+aggregate_2000_2009_to_region <- function(years_2000_2009_raw) {
+  age5_lu <- age5_lookup_2000s()
+
+  years_2000_2009_raw %>%
+    # keep totals over race/hispanic origin
+    filter(RACE == 0L, HISP == 0L) %>%
+    filter(SEX %in% c(1L, 2L)) %>%
+    filter(AGEGROUP %in% as.character(1:18)) %>%
+    left_join(age5_lu, by = "AGEGROUP") %>%
+    left_join(state_region_lu, by = "state_fips") %>%
+    filter(!is.na(census_region)) %>%
+    mutate(sex = if_else(SEX == 1L, "Male", "Female")) %>%
+    group_by(year, census_region, sex, age5) %>%
+    summarise(population = sum(pop, na.rm = TRUE), .groups = "drop")
+}
+
+# -----------------------------
+# 5) 2010–2019 via Census API (2019/pep/charagegroups)
+# -----------------------------
+download_2010_2019_one_year <- function(year, api_key, cache_dir) {
+  stopifnot(year >= 2010, year <= 2019)
+  path <- file.path(cache_dir, paste0("raw_2010_2019_", year, ".rds"))
+
+  cache_get_or_set(path, function() {
+    base_url <- "https://api.census.gov/data/2019/pep/charagegroups"
+    # DATE_CODE: 3 = 7/1/2010, 4 = 7/1/2011, …, 12 = 7/1/2019
+    date_code <- year - 2010 + 3
+
+    q <- list(
+      get   = "POP,AGEGROUP,SEX",
+      `for` = "state:*",
+      DATE_CODE = date_code,
+      RACE  = 0,
+      HISP  = 0
+    )
+    if (nzchar(api_key)) q$key <- api_key
+
+    out <- census_get_json_httr(base_url, q)
+    df  <- census_json_to_tibble(out)
+
+    df %>%
+      transmute(
+        year       = year,
+        state_fips = str_pad(as.character(state), 2, pad = "0"),
+        AGEGROUP   = as.integer(AGEGROUP),
+        SEX        = as.integer(SEX),
+        pop        = as.double(POP)
+      )
+  })
+}
+
+aggregate_2010_2019_to_region <- function(df) {
+  age5_lu <- tibble(
+    AGEGROUP = 1L:18L,
+    age5 = c(
+      "0-4","5-9","10-14","15-19","20-24","25-29","30-34","35-39","40-44",
+      "45-49","50-54","55-59","60-64","65-69","70-74","75-79","80-84","85+"
+    )
+  )
+
+  df %>%
+    filter(SEX %in% c(1L, 2L)) %>%
+    filter(AGEGROUP %in% 1L:18L) %>%
+    left_join(age5_lu, by = "AGEGROUP") %>%
+    left_join(state_region_lu, by = "state_fips") %>%
+    filter(!is.na(census_region)) %>%
+    mutate(sex = if_else(SEX == 1L, "Male", "Female")) %>%
+    group_by(year, census_region, sex, age5) %>%
+    summarise(population = sum(pop, na.rm = TRUE), .groups = "drop")
+}
+
+# -----------------------------
+# 5b) 2020 via tidycensus
+# -----------------------------
+download_2020_one_year <- function(api_key, cache_dir) {
+  path <- file.path(cache_dir, "raw_2010_2020_2020.rds")
+
+  cache_get_or_set(path, function() {
+    get_estimates(
+      geography = "state",
+      product = "characteristics",
+      breakdown = c("SEX", "AGEGROUP"),
+      breakdown_labels = TRUE,
+      year = 2020,
+      vintage = 2023,
+      key = api_key
+    ) %>%
+      transmute(
+        year = 2020L,
+        state_fips = str_pad(as.character(GEOID), 2, pad = "0"),
+        sex = as.character(SEX),
+        agegroup_label = as.character(AGEGROUP),
+        pop = as.double(value)
+      )
+  })
+}
+
+aggregate_2020_to_region <- function(df) {
+  df %>%
+    filter(sex %in% c("Male", "Female")) %>%
+    mutate(age5 = normalize_agegroup_label_to_age5(agegroup_label)) %>%
+    filter(!is.na(age5)) %>%
+    left_join(state_region_lu, by = "state_fips") %>%
+    group_by(year, census_region, sex, age5) %>%
+    summarise(population = sum(pop, na.rm = TRUE), .groups = "drop")
+}
+
+# -----------------------------
+# 6) main wrapper
+# -----------------------------
+estimate_population_region_sex_age5_by_year <- function(years, api_key, cache_dir = "pep_cache") {
+  ensure_dir(cache_dir)
+  years <- sort(unique(as.integer(years)))
+
+  # 2004–2009 via Census API (int_charagegroups)
+  y_2000_2009 <- years[years >= 2000 & years <= 2009]
+  out_2000s <- tibble()
+  if (length(y_2000_2009) > 0) {
+    date_map <- build_date_map_int_charagegroups(api_key)
+    raw_2000s <- purrr::map_dfr(
+      y_2000_2009,
+      ~ download_2000_2009_one_year(.x, api_key, cache_dir, date_map)
+    )
+    out_2000s <- aggregate_2000_2009_to_region(raw_2000s)
+  }
+
+  # 2010–2019 via Census API (charagegroups)
+  y_2010_2019 <- years[years >= 2010 & years <= 2019]
+  out_2010s <- tibble()
+  if (length(y_2010_2019) > 0) {
+    raw_2010s <- purrr::map_dfr(
+      y_2010_2019,
+      ~ download_2010_2019_one_year(.x, api_key, cache_dir)
+    )
+    out_2010s <- aggregate_2010_2019_to_region(raw_2010s)
+  }
+
+  # 2020 via tidycensus
+  out_2020 <- tibble()
+  if (2020L %in% years) {
+    raw_2020 <- download_2020_one_year(api_key, cache_dir)
+    out_2020 <- aggregate_2020_to_region(raw_2020)
+  }
+
+  bind_rows(out_2000s, out_2010s, out_2020) %>%
+    arrange(year, census_region, sex, age5)
+}
+
+# -----------------------------
+# 7) run
+# -----------------------------
+pop_region_sex_age5_year <- estimate_population_region_sex_age5_by_year(
+  years = years,
+  api_key = api_key,
+  cache_dir = cache_dir
+)
+
+pop_region_sex_age5_year
+
+
+pop_region_sex_age5_year |> write_csv("population_by_region_age_sex.csv")
 
 ```
 

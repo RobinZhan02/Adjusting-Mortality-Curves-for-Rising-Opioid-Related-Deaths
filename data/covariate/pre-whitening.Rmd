@@ -9,62 +9,90 @@ rm(list=ls());gc()
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(tidyverse)
+library(readr)
+library(stringr)
 library(forecast)
-
 
 covariate_combine_region <- read_csv("covariate_combine_region.csv")
 covariate_combine_division <- read_csv("covariate_combine_division.csv")
-
 ```
 
 ```{r}
-prewhiten_arima <- function(x, year) {
-  x <- as.numeric(x)
+# --- Opioid deaths by region ---
+opioid_region <- read_csv("../wonder_opioid/Census-Region.csv") %>%
+  filter(!is.na(Year)) %>%
+  mutate(
+    Census_Region = str_replace(`Census Region`, "Census Region \\d+: ", ""),
+    Year = as.numeric(Year),
+    opioid_deaths = as.numeric(Deaths)
+  ) %>%
+  filter(Year >= 2005, Year <= 2019) %>%
+  select(Year, Census_Region, opioid_deaths)
 
-  if (all(is.na(x))) return(rep(NA_real_, length(x)))
+# --- Opioid deaths by division ---
+opioid_division <- read_csv("../wonder_opioid/Census-Division.csv") %>%
+  filter(!is.na(Year)) %>%
+  mutate(
+    Census_Division = str_replace(`Census Division`, "Division \\d+: ", ""),
+    Year = as.numeric(Year),
+    opioid_deaths = as.numeric(Deaths)
+  ) %>%
+  filter(Year >= 2005, Year <= 2019) %>%
+  select(Year, Census_Division, opioid_deaths)
+```
 
-  if (sd(x, na.rm = TRUE) < 1e-10) return(rep(0, length(x)))
+```{r}
+# --- Merge ---
+region_panel <- covariate_combine_region %>%
+  left_join(opioid_region, by = c("Year", "Census_Region"))
 
-  tsx <- ts(x, start = min(year, na.rm = TRUE), frequency = 1)
-  fit <- forecast::auto.arima(tsx, seasonal = FALSE)
-  as.numeric(residuals(fit))
+division_panel <- covariate_combine_division %>%
+  left_join(opioid_division, by = c("Year", "Census_Division"))
+```
+
+```{r}
+# Pre-whitening (Pierce, 1977): fit ARIMA to opioid deaths
+# (no drift to avoid scale contamination), then apply the
+# SAME filter to covariates. socio_score kept as-is (not
+# pre-whitened since it is piecewise constant over 5-year blocks).
+prewhiten_by_response <- function(df, response_col, covariate_cols, year_col = "Year") {
+  year <- df[[year_col]]
+  y <- ts(as.numeric(df[[response_col]]), start = min(year), frequency = 1)
+  fit <- auto.arima(y, seasonal = FALSE, allowdrift = FALSE)
+
+  # Apply the SAME ARIMA filter to each covariate
+  for (cov in covariate_cols) {
+    x <- ts(as.numeric(df[[cov]]), start = min(year), frequency = 1)
+    df[[paste0(cov, "_pw")]] <- as.numeric(residuals(Arima(x, model = fit)))
+  }
+  df
 }
 
-region_pw <- covariate_combine_region %>%
+pw_covariates <- c("rate_health_care_coverage", "rate_alochol_consum")
+
+region_pw <- region_panel %>%
   group_by(Census_Region) %>%
-  arrange(Year, .by_group = TRUE) %>%
-  mutate(
-    rate_health_care_coverage_pw = prewhiten_arima(rate_health_care_coverage, Year),
-    rate_alochol_consum_pw       = prewhiten_arima(rate_alochol_consum, Year),
-    socio_score_pw               = prewhiten_arima(socio_score, Year)
-  ) %>%
+  arrange(Year) %>%
+  group_modify(~prewhiten_by_response(.x, "opioid_deaths", pw_covariates)) %>%
   ungroup()
 
-
-division_pw <- covariate_combine_division %>%
+division_pw <- division_panel %>%
   group_by(Census_Division) %>%
-  arrange(Year, .by_group = TRUE) %>%
-  mutate(
-    rate_health_care_coverage_pw = prewhiten_arima(rate_health_care_coverage, Year),
-    rate_alochol_consum_pw       = prewhiten_arima(rate_alochol_consum, Year),
-    socio_score_pw               = prewhiten_arima(socio_score, Year)
-  ) %>%
+  arrange(Year) %>%
+  group_modify(~prewhiten_by_response(.x, "opioid_deaths", pw_covariates)) %>%
   ungroup()
 
 
-division_pw |> write_csv("covariate_combine_division_pre_whitening.csv")
-region_pw |> write_csv("covariate_combine_region_pre_whitening.csv")
+division_pw |> select(-opioid_deaths) |> write_csv("covariate_combine_division_pre_whitening.csv")
+region_pw |> select(-opioid_deaths) |> write_csv("covariate_combine_region_pre_whitening.csv")
 ```
 
 ```{r}
-vars_pw <- c("rate_health_care_coverage_pw", "rate_alochol_consum_pw", "socio_score_pw")
-
-make_corr_long <- function(df, group_var) {
+make_corr_long <- function(df, group_var, vars) {
   df %>%
     group_by(.data[[group_var]]) %>%
     group_modify(~{
-      m <- cor(dplyr::select(.x, dplyr::all_of(vars_pw)),
+      m <- cor(dplyr::select(.x, dplyr::all_of(vars)),
                use = "pairwise.complete.obs")
       as.data.frame(as.table(m)) %>%
         dplyr::rename(var1 = Var1, var2 = Var2, corr = Freq)
@@ -72,8 +100,8 @@ make_corr_long <- function(df, group_var) {
     ungroup() %>%
     dplyr::rename(group = !!group_var) %>%
     mutate(
-      var1 = factor(var1, levels = vars_pw),
-      var2 = factor(var2, levels = vars_pw)
+      var1 = factor(var1, levels = vars),
+      var2 = factor(var2, levels = vars)
     )
 }
 
@@ -95,61 +123,27 @@ plot_corr_heatmap <- function(corr_long, facet_title = NULL) {
     )
 }
 
-# ---- Region heatmap ----
-corr_region_long <- make_corr_long(region_pw, "Census_Region")
+# ---- Pre-whitened heatmaps ----
+vars_pw <- c("rate_health_care_coverage_pw",
+             "rate_alochol_consum_pw", "socio_score")
+
+corr_region_long <- make_corr_long(region_pw, "Census_Region", vars_pw)
 plot_corr_heatmap(corr_region_long, "Pre-whitened correlations by Census Region")
 
-
-corr_division_long <- make_corr_long(division_pw, "Census_Division")
+corr_division_long <- make_corr_long(division_pw, "Census_Division", vars_pw)
 plot_corr_heatmap(corr_division_long, "Pre-whitened correlations by Census Division")
 ```
 
 ```{r}
-vars_pw <- c("rate_health_care_coverage", "rate_alochol_consum", "socio_score")
+# ---- Raw (un-pre-whitened) heatmaps ----
+vars_raw <- c("rate_health_care_coverage",
+              "rate_alochol_consum", "socio_score")
 
-make_corr_long <- function(df, group_var) {
-  df %>%
-    group_by(.data[[group_var]]) %>%
-    group_modify(~{
-      m <- cor(dplyr::select(.x, dplyr::all_of(vars_pw)),
-               use = "pairwise.complete.obs")
-      as.data.frame(as.table(m)) %>%
-        dplyr::rename(var1 = Var1, var2 = Var2, corr = Freq)
-    }) %>%
-    ungroup() %>%
-    dplyr::rename(group = !!group_var) %>%
-    mutate(
-      var1 = factor(var1, levels = vars_pw),
-      var2 = factor(var2, levels = vars_pw)
-    )
-}
+corr_region_raw <- make_corr_long(region_pw, "Census_Region", vars_raw)
+plot_corr_heatmap(corr_region_raw, "Raw correlations by Census Region")
 
-plot_corr_heatmap <- function(corr_long, facet_title = NULL) {
-  ggplot(corr_long, aes(x = var1, y = var2, fill = corr)) +
-    geom_tile(color = "white", linewidth = 0.3) +
-    geom_text(aes(label = ifelse(is.na(corr), "", sprintf("%.2f", corr))), size = 3) +
-    coord_equal() +
-    facet_wrap(~ group) +
-    scale_fill_gradient2(limits = c(-1, 1), na.value = "grey90") +
-    labs(
-      title = facet_title,
-      x = NULL, y = NULL, fill = "Corr"
-    ) +
-    theme_minimal(base_size = 12) +
-    theme(
-      axis.text.x = element_text(angle = 45, hjust = 1),
-      panel.grid = element_blank()
-    )
-}
-
-# ---- Region heatmap ----
-corr_region_long <- make_corr_long(region_pw, "Census_Region")
-plot_corr_heatmap(corr_region_long, "Pre-whitened correlations by Census Region")
-
-
-corr_division_long <- make_corr_long(division_pw, "Census_Division")
-plot_corr_heatmap(corr_division_long, "Pre-whitened correlations by Census Division")
+corr_division_raw <- make_corr_long(division_pw, "Census_Division", vars_raw)
+plot_corr_heatmap(corr_division_raw, "Raw correlations by Census Division")
 ```
-
 
 

@@ -1,0 +1,2449 @@
+year,census_region,sex,age5,population
+2004,North Central,Female,0-4,2129529
+2004,North Central,Female,10-14,2349617
+2004,North Central,Female,15-19,2343014
+2004,North Central,Female,20-24,2297253
+2004,North Central,Female,25-29,2018937
+2004,North Central,Female,30-34,2156467
+2004,North Central,Female,35-39,2251566
+2004,North Central,Female,40-44,2574663
+2004,North Central,Female,45-49,2542586
+2004,North Central,Female,5-9,2153028
+2004,North Central,Female,50-54,2261178
+2004,North Central,Female,55-59,1884279
+2004,North Central,Female,60-64,1475070
+2004,North Central,Female,65-69,1199807
+2004,North Central,Female,70-74,1076362
+2004,North Central,Female,75-79,1005604
+2004,North Central,Female,80-84,815612
+2004,North Central,Female,85+,803282
+2004,North Central,Male,0-4,2227340
+2004,North Central,Male,10-14,2471955
+2004,North Central,Male,15-19,2475454
+2004,North Central,Male,20-24,2374800
+2004,North Central,Male,25-29,2059593
+2004,North Central,Male,30-34,2176909
+2004,North Central,Male,35-39,2257402
+2004,North Central,Male,40-44,2542883
+2004,North Central,Male,45-49,2500077
+2004,North Central,Male,5-9,2254335
+2004,North Central,Male,50-54,2208546
+2004,North Central,Male,55-59,1807893
+2004,North Central,Male,60-64,1361621
+2004,North Central,Male,65-69,1055253
+2004,North Central,Male,70-74,865208
+2004,North Central,Male,75-79,732290
+2004,North Central,Male,80-84,491373
+2004,North Central,Male,85+,331519
+2004,Northeast,Female,0-4,1627643
+2004,Northeast,Female,10-14,1873852
+2004,Northeast,Female,15-19,1861683
+2004,Northeast,Female,20-24,1747744
+2004,Northeast,Female,25-29,1700753
+2004,Northeast,Female,30-34,1834701
+2004,Northeast,Female,35-39,2038369
+2004,Northeast,Female,40-44,2243344
+2004,Northeast,Female,45-49,2168389
+2004,Northeast,Female,5-9,1675542
+2004,Northeast,Female,50-54,1925607
+2004,Northeast,Female,55-59,1673010
+2004,Northeast,Female,60-64,1294379
+2004,Northeast,Female,65-69,1042064
+2004,Northeast,Female,70-74,959977
+2004,Northeast,Female,75-79,919399
+2004,Northeast,Female,80-84,747799
+2004,Northeast,Female,85+,716859
+2004,Northeast,Male,0-4,1701761
+2004,Northeast,Male,10-14,1970846
+2004,Northeast,Male,15-19,1953107
+2004,Northeast,Male,20-24,1794140
+2004,Northeast,Male,25-29,1676480
+2004,Northeast,Male,30-34,1784947
+2004,Northeast,Male,35-39,1969032
+2004,Northeast,Male,40-44,2166904
+2004,Northeast,Male,45-49,2077096
+2004,Northeast,Male,5-9,1754516
+2004,Northeast,Male,50-54,1817004
+2004,Northeast,Male,55-59,1540826
+2004,Northeast,Male,60-64,1153026
+2004,Northeast,Male,65-69,885506
+2004,Northeast,Male,70-74,751123
+2004,Northeast,Male,75-79,641263
+2004,Northeast,Male,80-84,439753
+2004,Northeast,Male,85+,295089
+2004,South,Female,0-4,3579730
+2004,South,Female,10-14,3733752
+2004,South,Female,15-19,3671076
+2004,South,Female,20-24,3749999
+2004,South,Female,25-29,3469259
+2004,South,Female,30-34,3692475
+2004,South,Female,35-39,3787659
+2004,South,Female,40-44,4171443
+2004,South,Female,45-49,4002570
+2004,South,Female,5-9,3417293
+2004,South,Female,50-54,3588507
+2004,South,Female,55-59,3129410
+2004,South,Female,60-64,2471624
+2004,South,Female,65-69,2025091
+2004,South,Female,70-74,1754785
+2004,South,Female,75-79,1545875
+2004,South,Female,80-84,1181040
+2004,South,Female,85+,1044570
+2004,South,Male,0-4,3734722
+2004,South,Male,10-14,3909481
+2004,South,Male,15-19,3893101
+2004,South,Male,20-24,3899927
+2004,South,Male,25-29,3483417
+2004,South,Male,30-34,3684227
+2004,South,Male,35-39,3738849
+2004,South,Male,40-44,4057243
+2004,South,Male,45-49,3853985
+2004,South,Male,5-9,3576691
+2004,South,Male,50-54,3380117
+2004,South,Male,55-59,2922943
+2004,South,Male,60-64,2240934
+2004,South,Male,65-69,1766399
+2004,South,Male,70-74,1429483
+2004,South,Male,75-79,1118807
+2004,South,Male,80-84,725098
+2004,South,Male,85+,452395
+2004,West,Female,0-4,2338489
+2004,West,Female,10-14,2486485
+2004,West,Female,15-19,2367020
+2004,West,Female,20-24,2395645
+2004,West,Female,25-29,2290131
+2004,West,Female,30-34,2357502
+2004,West,Female,35-39,2375726
+2004,West,Female,40-44,2572964
+2004,West,Female,45-49,2470961
+2004,West,Female,5-9,2257368
+2004,West,Female,50-54,2224331
+2004,West,Female,55-59,1861250
+2004,West,Female,60-64,1396725
+2004,West,Female,65-69,1103456
+2004,West,Female,70-74,948821
+2004,West,Female,75-79,850441
+2004,West,Female,80-84,672972
+2004,West,Female,85+,601873
+2004,West,Male,0-4,2446671
+2004,West,Male,10-14,2615692
+2004,West,Male,15-19,2538097
+2004,West,Male,20-24,2586052
+2004,West,Male,25-29,2408485
+2004,West,Male,30-34,2472273
+2004,West,Male,35-39,2456046
+2004,West,Male,40-44,2596182
+2004,West,Male,45-49,2449598
+2004,West,Male,5-9,2365464
+2004,West,Male,50-54,2159378
+2004,West,Male,55-59,1787565
+2004,West,Male,60-64,1304749
+2004,West,Male,65-69,995853
+2004,West,Male,70-74,808345
+2004,West,Male,75-79,647720
+2004,West,Male,80-84,454857
+2004,West,Male,85+,300296
+2005,North Central,Female,0-4,2126361
+2005,North Central,Female,10-14,2314345
+2005,North Central,Female,15-19,2361751
+2005,North Central,Female,20-24,2294184
+2005,North Central,Female,25-29,2055685
+2005,North Central,Female,30-34,2103604
+2005,North Central,Female,35-39,2223338
+2005,North Central,Female,40-44,2522073
+2005,North Central,Female,45-49,2569230
+2005,North Central,Female,5-9,2140171
+2005,North Central,Female,50-54,2317829
+2005,North Central,Female,55-59,1987921
+2005,North Central,Female,60-64,1508673
+2005,North Central,Female,65-69,1212517
+2005,North Central,Female,70-74,1064528
+2005,North Central,Female,75-79,996281
+2005,North Central,Female,80-84,820892
+2005,North Central,Female,85+,817438
+2005,North Central,Male,0-4,2222790
+2005,North Central,Male,10-14,2434432
+2005,North Central,Male,15-19,2493753
+2005,North Central,Male,20-24,2375404
+2005,North Central,Male,25-29,2090857
+2005,North Central,Male,30-34,2121433
+2005,North Central,Male,35-39,2234944
+2005,North Central,Male,40-44,2492262
+2005,North Central,Male,45-49,2523598
+2005,North Central,Male,5-9,2240102
+2005,North Central,Male,50-54,2264091
+2005,North Central,Male,55-59,1910728
+2005,North Central,Male,60-64,1398879
+2005,North Central,Male,65-69,1069927
+2005,North Central,Male,70-74,864075
+2005,North Central,Male,75-79,731722
+2005,North Central,Male,80-84,502987
+2005,North Central,Male,85+,343067
+2005,Northeast,Female,0-4,1611894
+2005,Northeast,Female,10-14,1837637
+2005,Northeast,Female,15-19,1895949
+2005,Northeast,Female,20-24,1758828
+2005,Northeast,Female,25-29,1721581
+2005,Northeast,Female,30-34,1760362
+2005,Northeast,Female,35-39,2000330
+2005,Northeast,Female,40-44,2211862
+2005,Northeast,Female,45-49,2193903
+2005,Northeast,Female,5-9,1645342
+2005,Northeast,Female,50-54,1960801
+2005,Northeast,Female,55-59,1747286
+2005,Northeast,Female,60-64,1323622
+2005,Northeast,Female,65-69,1047441
+2005,Northeast,Female,70-74,941412
+2005,Northeast,Female,75-79,904587
+2005,Northeast,Female,80-84,750215
+2005,Northeast,Female,85+,734381
+2005,Northeast,Male,0-4,1684651
+2005,Northeast,Male,10-14,1930761
+2005,Northeast,Male,15-19,1990394
+2005,Northeast,Male,20-24,1813981
+2005,Northeast,Male,25-29,1699081
+2005,Northeast,Male,30-34,1711804
+2005,Northeast,Male,35-39,1931823
+2005,Northeast,Male,40-44,2135952
+2005,Northeast,Male,45-49,2102729
+2005,Northeast,Male,5-9,1722005
+2005,Northeast,Male,50-54,1856327
+2005,Northeast,Male,55-59,1614048
+2005,Northeast,Male,60-64,1182520
+2005,Northeast,Male,65-69,893459
+2005,Northeast,Male,70-74,741082
+2005,Northeast,Male,75-79,637884
+2005,Northeast,Male,80-84,446587
+2005,Northeast,Male,85+,308709
+2005,South,Female,0-4,3633475
+2005,South,Female,10-14,3721995
+2005,South,Female,15-19,3755168
+2005,South,Female,20-24,3768141
+2005,South,Female,25-29,3577385
+2005,South,Female,30-34,3653293
+2005,South,Female,35-39,3793434
+2005,South,Female,40-44,4168623
+2005,South,Female,45-49,4083357
+2005,South,Female,5-9,3447955
+2005,South,Female,50-54,3695502
+2005,South,Female,55-59,3300345
+2005,South,Female,60-64,2567915
+2005,South,Female,65-69,2074316
+2005,South,Female,70-74,1769318
+2005,South,Female,75-79,1548626
+2005,South,Female,80-84,1196346
+2005,South,Female,85+,1072622
+2005,South,Male,0-4,3792402
+2005,South,Male,10-14,3898171
+2005,South,Male,15-19,3973458
+2005,South,Male,20-24,3932999
+2005,South,Male,25-29,3569795
+2005,South,Male,30-34,3631619
+2005,South,Male,35-39,3745109
+2005,South,Male,40-44,4051020
+2005,South,Male,45-49,3939037
+2005,South,Male,5-9,3604969
+2005,South,Male,50-54,3482759
+2005,South,Male,55-59,3075838
+2005,South,Male,60-64,2331887
+2005,South,Male,65-69,1818184
+2005,South,Male,70-74,1451370
+2005,South,Male,75-79,1136765
+2005,South,Male,80-84,742423
+2005,South,Male,85+,474150
+2005,West,Female,0-4,2370075
+2005,West,Female,10-14,2474405
+2005,West,Female,15-19,2421921
+2005,West,Female,20-24,2401653
+2005,West,Female,25-29,2357893
+2005,West,Female,30-34,2317895
+2005,West,Female,35-39,2394518
+2005,West,Female,40-44,2551165
+2005,West,Female,45-49,2510598
+2005,West,Female,5-9,2240432
+2005,West,Female,50-54,2283309
+2005,West,Female,55-59,1972307
+2005,West,Female,60-64,1460341
+2005,West,Female,65-69,1135226
+2005,West,Female,70-74,953811
+2005,West,Female,75-79,849762
+2005,West,Female,80-84,687126
+2005,West,Female,85+,625014
+2005,West,Male,0-4,2475752
+2005,West,Male,10-14,2600833
+2005,West,Male,15-19,2593820
+2005,West,Male,20-24,2614765
+2005,West,Male,25-29,2462433
+2005,West,Male,30-34,2423927
+2005,West,Male,35-39,2475157
+2005,West,Male,40-44,2573928
+2005,West,Male,45-49,2494719
+2005,West,Male,5-9,2348091
+2005,West,Male,50-54,2218115
+2005,West,Male,55-59,1894747
+2005,West,Male,60-64,1364440
+2005,West,Male,65-69,1027557
+2005,West,Male,70-74,817474
+2005,West,Male,75-79,657982
+2005,West,Male,80-84,464617
+2005,West,Male,85+,317918
+2006,North Central,Female,0-4,2118313
+2006,North Central,Female,10-14,2284426
+2006,North Central,Female,15-19,2375295
+2006,North Central,Female,20-24,2281862
+2006,North Central,Female,25-29,2111494
+2006,North Central,Female,30-34,2038897
+2006,North Central,Female,35-39,2227299
+2006,North Central,Female,40-44,2443519
+2006,North Central,Female,45-49,2591216
+2006,North Central,Female,5-9,2145727
+2006,North Central,Female,50-54,2368058
+2006,North Central,Female,55-59,2099400
+2006,North Central,Female,60-64,1535222
+2006,North Central,Female,65-69,1236962
+2006,North Central,Female,70-74,1060451
+2006,North Central,Female,75-79,987646
+2006,North Central,Female,80-84,819678
+2006,North Central,Female,85+,838144
+2006,North Central,Male,0-4,2214897
+2006,North Central,Male,10-14,2402981
+2006,North Central,Male,15-19,2506899
+2006,North Central,Male,20-24,2371628
+2006,North Central,Male,25-29,2143493
+2006,North Central,Male,30-34,2058291
+2006,North Central,Male,35-39,2238564
+2006,North Central,Male,40-44,2421488
+2006,North Central,Male,45-49,2541737
+2006,North Central,Male,5-9,2242216
+2006,North Central,Male,50-54,2312725
+2006,North Central,Male,55-59,2016951
+2006,North Central,Male,60-64,1430429
+2006,North Central,Male,65-69,1093592
+2006,North Central,Male,70-74,868446
+2006,North Central,Male,75-79,729931
+2006,North Central,Male,80-84,511375
+2006,North Central,Male,85+,359303
+2006,Northeast,Female,0-4,1592547
+2006,Northeast,Female,10-14,1804857
+2006,Northeast,Female,15-19,1918439
+2006,Northeast,Female,20-24,1778406
+2006,Northeast,Female,25-29,1744733
+2006,Northeast,Female,30-34,1698282
+2006,Northeast,Female,35-39,1974652
+2006,Northeast,Female,40-44,2166590
+2006,Northeast,Female,45-49,2214265
+2006,Northeast,Female,5-9,1631357
+2006,Northeast,Female,50-54,1998116
+2006,Northeast,Female,55-59,1818890
+2006,Northeast,Female,60-64,1354479
+2006,Northeast,Female,65-69,1059889
+2006,Northeast,Female,70-74,926773
+2006,Northeast,Female,75-79,887710
+2006,Northeast,Female,80-84,748247
+2006,Northeast,Female,85+,754794
+2006,Northeast,Male,0-4,1665095
+2006,Northeast,Male,10-14,1893954
+2006,Northeast,Male,15-19,2014809
+2006,Northeast,Male,20-24,1835195
+2006,Northeast,Male,25-29,1720857
+2006,Northeast,Male,30-34,1655234
+2006,Northeast,Male,35-39,1905496
+2006,Northeast,Male,40-44,2090480
+2006,Northeast,Male,45-49,2122361
+2006,Northeast,Male,5-9,1705824
+2006,Northeast,Male,50-54,1895756
+2006,Northeast,Male,55-59,1685213
+2006,Northeast,Male,60-64,1212189
+2006,Northeast,Male,65-69,905599
+2006,Northeast,Male,70-74,734601
+2006,Northeast,Male,75-79,632502
+2006,Northeast,Male,80-84,449895
+2006,Northeast,Male,85+,324573
+2006,South,Female,0-4,3654673
+2006,South,Female,10-14,3713018
+2006,South,Female,15-19,3829111
+2006,South,Female,20-24,3772372
+2006,South,Female,25-29,3714081
+2006,South,Female,30-34,3586250
+2006,South,Female,35-39,3855089
+2006,South,Female,40-44,4120335
+2006,South,Female,45-49,4156301
+2006,South,Female,5-9,3520699
+2006,South,Female,50-54,3795460
+2006,South,Female,55-59,3472723
+2006,South,Female,60-64,2648399
+2006,South,Female,65-69,2139322
+2006,South,Female,70-74,1792246
+2006,South,Female,75-79,1547966
+2006,South,Female,80-84,1204007
+2006,South,Female,85+,1105352
+2006,South,Male,0-4,3813728
+2006,South,Male,10-14,3891689
+2006,South,Male,15-19,4043745
+2006,South,Male,20-24,3963297
+2006,South,Male,25-29,3686213
+2006,South,Male,30-34,3569922
+2006,South,Male,35-39,3798853
+2006,South,Male,40-44,4012222
+2006,South,Male,45-49,4015135
+2006,South,Male,5-9,3676265
+2006,South,Male,50-54,3580265
+2006,South,Male,55-59,3225873
+2006,South,Male,60-64,2409656
+2006,South,Male,65-69,1881032
+2006,South,Male,70-74,1477343
+2006,South,Male,75-79,1151011
+2006,South,Male,80-84,755193
+2006,South,Male,85+,498087
+2006,West,Female,0-4,2385478
+2006,West,Female,10-14,2459643
+2006,West,Female,15-19,2474448
+2006,West,Female,20-24,2406144
+2006,West,Female,25-29,2444114
+2006,West,Female,30-34,2288489
+2006,West,Female,35-39,2432408
+2006,West,Female,40-44,2507719
+2006,West,Female,45-49,2543673
+2006,West,Female,5-9,2257390
+2006,West,Female,50-54,2344486
+2006,West,Female,55-59,2082052
+2006,West,Female,60-64,1520889
+2006,West,Female,65-69,1173029
+2006,West,Female,70-74,961966
+2006,West,Female,75-79,845814
+2006,West,Female,80-84,691617
+2006,West,Female,85+,649249
+2006,West,Male,0-4,2494152
+2006,West,Male,10-14,2582570
+2006,West,Male,15-19,2644963
+2006,West,Male,20-24,2627231
+2006,West,Male,25-29,2545026
+2006,West,Male,30-34,2389803
+2006,West,Male,35-39,2508872
+2006,West,Male,40-44,2540215
+2006,West,Male,45-49,2530598
+2006,West,Male,5-9,2365210
+2006,West,Male,50-54,2276007
+2006,West,Male,55-59,1995758
+2006,West,Male,60-64,1421990
+2006,West,Male,65-69,1063776
+2006,West,Male,70-74,828000
+2006,West,Male,75-79,664454
+2006,West,Male,80-84,468105
+2006,West,Male,85+,336427
+2007,North Central,Female,0-4,2127473
+2007,North Central,Female,10-14,2252253
+2007,North Central,Female,15-19,2386817
+2007,North Central,Female,20-24,2256818
+2007,North Central,Female,25-29,2160008
+2007,North Central,Female,30-34,2015028
+2007,North Central,Female,35-39,2213670
+2007,North Central,Female,40-44,2367087
+2007,North Central,Female,45-49,2581924
+2007,North Central,Female,5-9,2150367
+2007,North Central,Female,50-54,2425099
+2007,North Central,Female,55-59,2109153
+2007,North Central,Female,60-64,1656280
+2007,North Central,Female,65-69,1280120
+2007,North Central,Female,70-74,1061142
+2007,North Central,Female,75-79,973372
+2007,North Central,Female,80-84,818148
+2007,North Central,Female,85+,858648
+2007,North Central,Male,0-4,2225002
+2007,North Central,Male,10-14,2366798
+2007,North Central,Male,15-19,2516259
+2007,North Central,Male,20-24,2339867
+2007,North Central,Male,25-29,2190858
+2007,North Central,Male,30-34,2034728
+2007,North Central,Male,35-39,2224153
+2007,North Central,Male,40-44,2346921
+2007,North Central,Male,45-49,2532352
+2007,North Central,Male,5-9,2247669
+2007,North Central,Male,50-54,2364373
+2007,North Central,Male,55-59,2030321
+2007,North Central,Male,60-64,1549049
+2007,North Central,Male,65-69,1136851
+2007,North Central,Male,70-74,876978
+2007,North Central,Male,75-79,722689
+2007,North Central,Male,80-84,520057
+2007,North Central,Male,85+,375357
+2007,Northeast,Female,0-4,1587948
+2007,Northeast,Female,10-14,1769871
+2007,Northeast,Female,15-19,1930373
+2007,Northeast,Female,20-24,1800783
+2007,Northeast,Female,25-29,1760604
+2007,Northeast,Female,30-34,1677059
+2007,Northeast,Female,35-39,1934857
+2007,Northeast,Female,40-44,2114984
+2007,Northeast,Female,45-49,2211236
+2007,Northeast,Female,5-9,1622601
+2007,Northeast,Female,50-54,2047161
+2007,Northeast,Female,55-59,1802226
+2007,Northeast,Female,60-64,1462491
+2007,Northeast,Female,65-69,1093842
+2007,Northeast,Female,70-74,920780
+2007,Northeast,Female,75-79,870427
+2007,Northeast,Female,80-84,746797
+2007,Northeast,Female,85+,774156
+2007,Northeast,Male,0-4,1661009
+2007,Northeast,Male,10-14,1858586
+2007,Northeast,Male,15-19,2025800
+2007,Northeast,Male,20-24,1854633
+2007,Northeast,Male,25-29,1742510
+2007,Northeast,Male,30-34,1636495
+2007,Northeast,Male,35-39,1870791
+2007,Northeast,Male,40-44,2037193
+2007,Northeast,Male,45-49,2120979
+2007,Northeast,Male,5-9,1695420
+2007,Northeast,Male,50-54,1942045
+2007,Northeast,Male,55-59,1672468
+2007,Northeast,Male,60-64,1317013
+2007,Northeast,Male,65-69,937211
+2007,Northeast,Male,70-74,733714
+2007,Northeast,Male,75-79,624271
+2007,Northeast,Male,80-84,456052
+2007,Northeast,Male,85+,338976
+2007,South,Female,0-4,3710237
+2007,South,Female,10-14,3709523
+2007,South,Female,15-19,3895881
+2007,South,Female,20-24,3800421
+2007,South,Female,25-29,3809173
+2007,South,Female,30-34,3574090
+2007,South,Female,35-39,3904765
+2007,South,Female,40-44,4057632
+2007,South,Female,45-49,4194310
+2007,South,Female,5-9,3590442
+2007,South,Female,50-54,3914870
+2007,South,Female,55-59,3493849
+2007,South,Female,60-64,2864271
+2007,South,Female,65-69,2226188
+2007,South,Female,70-74,1810934
+2007,South,Female,75-79,1540697
+2007,South,Female,80-84,1211079
+2007,South,Female,85+,1138073
+2007,South,Male,0-4,3871685
+2007,South,Male,10-14,3887293
+2007,South,Male,15-19,4106876
+2007,South,Male,20-24,3981278
+2007,South,Male,25-29,3779080
+2007,South,Male,30-34,3552633
+2007,South,Male,35-39,3845126
+2007,South,Male,40-44,3955369
+2007,South,Male,45-49,4055628
+2007,South,Male,5-9,3747639
+2007,South,Male,50-54,3698135
+2007,South,Male,55-59,3231340
+2007,South,Male,60-64,2615209
+2007,South,Male,65-69,1960543
+2007,South,Male,70-74,1502816
+2007,South,Male,75-79,1158723
+2007,South,Male,80-84,770045
+2007,South,Male,85+,522889
+2007,West,Female,0-4,2414611
+2007,West,Female,10-14,2438435
+2007,West,Female,15-19,2518255
+2007,West,Female,20-24,2412141
+2007,West,Female,25-29,2499474
+2007,West,Female,30-34,2293157
+2007,West,Female,35-39,2449547
+2007,West,Female,40-44,2459460
+2007,West,Female,45-49,2554743
+2007,West,Female,5-9,2277273
+2007,West,Female,50-54,2408619
+2007,West,Female,55-59,2104245
+2007,West,Female,60-64,1656156
+2007,West,Female,65-69,1224655
+2007,West,Female,70-74,978141
+2007,West,Female,75-79,840728
+2007,West,Female,80-84,693243
+2007,West,Female,85+,675432
+2007,West,Male,0-4,2527997
+2007,West,Male,10-14,2558283
+2007,West,Male,15-19,2687555
+2007,West,Male,20-24,2632058
+2007,West,Male,25-29,2600991
+2007,West,Male,30-34,2387575
+2007,West,Male,35-39,2520982
+2007,West,Male,40-44,2493693
+2007,West,Male,45-49,2548589
+2007,West,Male,5-9,2383200
+2007,West,Male,50-54,2339876
+2007,West,Male,55-59,2011170
+2007,West,Male,60-64,1553193
+2007,West,Male,65-69,1110825
+2007,West,Male,70-74,843987
+2007,West,Male,75-79,669456
+2007,West,Male,80-84,471655
+2007,West,Male,85+,356014
+2008,North Central,Female,0-4,2131267
+2008,North Central,Female,10-14,2230133
+2008,North Central,Female,15-19,2384252
+2008,North Central,Female,20-24,2246482
+2008,North Central,Female,25-29,2189268
+2008,North Central,Female,30-34,2018043
+2008,North Central,Female,35-39,2182658
+2008,North Central,Female,40-44,2288418
+2008,North Central,Female,45-49,2559631
+2008,North Central,Female,5-9,2155365
+2008,North Central,Female,50-54,2477183
+2008,North Central,Female,55-59,2154583
+2008,North Central,Female,60-64,1721118
+2008,North Central,Female,65-69,1343522
+2008,North Central,Female,70-74,1074818
+2008,North Central,Female,75-79,955106
+2008,North Central,Female,80-84,817737
+2008,North Central,Female,85+,873469
+2008,North Central,Male,0-4,2225461
+2008,North Central,Male,10-14,2339584
+2008,North Central,Male,15-19,2513306
+2008,North Central,Male,20-24,2326691
+2008,North Central,Male,25-29,2220298
+2008,North Central,Male,30-34,2039572
+2008,North Central,Male,35-39,2190695
+2008,North Central,Male,40-44,2273917
+2008,North Central,Male,45-49,2510602
+2008,North Central,Male,5-9,2252885
+2008,North Central,Male,50-54,2413915
+2008,North Central,Male,55-59,2075359
+2008,North Central,Male,60-64,1614405
+2008,North Central,Male,65-69,1198522
+2008,North Central,Male,70-74,894793
+2008,North Central,Male,75-79,713087
+2008,North Central,Male,80-84,527518
+2008,North Central,Male,85+,390272
+2008,Northeast,Female,0-4,1586401
+2008,Northeast,Female,10-14,1742174
+2008,Northeast,Female,15-19,1930948
+2008,Northeast,Female,20-24,1821887
+2008,Northeast,Female,25-29,1790084
+2008,Northeast,Female,30-34,1682865
+2008,Northeast,Female,35-39,1886900
+2008,Northeast,Female,40-44,2063660
+2008,Northeast,Female,45-49,2205291
+2008,Northeast,Female,5-9,1624223
+2008,Northeast,Female,50-54,2092263
+2008,Northeast,Female,55-59,1827986
+2008,Northeast,Female,60-64,1511356
+2008,Northeast,Female,65-69,1155385
+2008,Northeast,Female,70-74,927288
+2008,Northeast,Female,75-79,846668
+2008,Northeast,Female,80-84,745074
+2008,Northeast,Female,85+,791186
+2008,Northeast,Male,0-4,1658386
+2008,Northeast,Male,10-14,1825598
+2008,Northeast,Male,15-19,2028880
+2008,Northeast,Male,20-24,1875591
+2008,Northeast,Male,25-29,1772507
+2008,Northeast,Male,30-34,1645588
+2008,Northeast,Male,35-39,1825377
+2008,Northeast,Male,40-44,1985878
+2008,Northeast,Male,45-49,2111776
+2008,Northeast,Male,5-9,1697689
+2008,Northeast,Male,50-54,1990232
+2008,Northeast,Male,55-59,1699114
+2008,Northeast,Male,60-64,1365278
+2008,Northeast,Male,65-69,993377
+2008,Northeast,Male,70-74,743059
+2008,Northeast,Male,75-79,612841
+2008,Northeast,Male,80-84,460988
+2008,Northeast,Male,85+,352128
+2008,South,Female,0-4,3755914
+2008,South,Female,10-14,3712723
+2008,South,Female,15-19,3943000
+2008,South,Female,20-24,3834281
+2008,South,Female,25-29,3874861
+2008,South,Female,30-34,3601694
+2008,South,Female,35-39,3919659
+2008,South,Female,40-44,3985002
+2008,South,Female,45-49,4228586
+2008,South,Female,5-9,3653164
+2008,South,Female,50-54,4013730
+2008,South,Female,55-59,3558771
+2008,South,Female,60-64,3002963
+2008,South,Female,65-69,2348223
+2008,South,Female,70-74,1850773
+2008,South,Female,75-79,1539117
+2008,South,Female,80-84,1221618
+2008,South,Female,85+,1168451
+2008,South,Male,0-4,3917632
+2008,South,Male,10-14,3891950
+2008,South,Male,15-19,4149412
+2008,South,Male,20-24,3989610
+2008,South,Male,25-29,3860481
+2008,South,Male,30-34,3577180
+2008,South,Male,35-39,3851885
+2008,South,Male,40-44,3893948
+2008,South,Male,45-49,4086674
+2008,South,Male,5-9,3807520
+2008,South,Male,50-54,3800662
+2008,South,Male,55-59,3279887
+2008,South,Male,60-64,2743107
+2008,South,Male,65-69,2074954
+2008,South,Male,70-74,1546172
+2008,South,Male,75-79,1167478
+2008,South,Male,80-84,786871
+2008,South,Male,85+,546977
+2008,West,Female,0-4,2440601
+2008,West,Female,10-14,2423444
+2008,West,Female,15-19,2546948
+2008,West,Female,20-24,2436916
+2008,West,Female,25-29,2539319
+2008,West,Female,30-34,2323277
+2008,West,Female,35-39,2448592
+2008,West,Female,40-44,2420844
+2008,West,Female,45-49,2563475
+2008,West,Female,5-9,2315736
+2008,West,Female,50-54,2457377
+2008,West,Female,55-59,2160898
+2008,West,Female,60-64,1744088
+2008,West,Female,65-69,1300778
+2008,West,Female,70-74,1003457
+2008,West,Female,75-79,837606
+2008,West,Female,80-84,693517
+2008,West,Female,85+,699920
+2008,West,Male,0-4,2555465
+2008,West,Male,10-14,2541049
+2008,West,Male,15-19,2714134
+2008,West,Male,20-24,2649154
+2008,West,Male,25-29,2655850
+2008,West,Male,30-34,2416586
+2008,West,Male,35-39,2511697
+2008,West,Male,40-44,2463356
+2008,West,Male,45-49,2554938
+2008,West,Male,5-9,2423020
+2008,West,Male,50-54,2394112
+2008,West,Male,55-59,2057970
+2008,West,Male,60-64,1640180
+2008,West,Male,65-69,1179586
+2008,West,Male,70-74,870972
+2008,West,Male,75-79,673840
+2008,West,Male,80-84,477036
+2008,West,Male,85+,373437
+2009,North Central,Female,0-4,2124398
+2009,North Central,Female,10-14,2216124
+2009,North Central,Female,15-19,2367965
+2009,North Central,Female,20-24,2248494
+2009,North Central,Female,25-29,2198322
+2009,North Central,Female,30-34,2047045
+2009,North Central,Female,35-39,2135202
+2009,North Central,Female,40-44,2225102
+2009,North Central,Female,45-49,2537348
+2009,North Central,Female,5-9,2163975
+2009,North Central,Female,50-54,2510501
+2009,North Central,Female,55-59,2210807
+2009,North Central,Female,60-64,1808600
+2009,North Central,Female,65-69,1386832
+2009,North Central,Female,70-74,1096711
+2009,North Central,Female,75-79,938424
+2009,North Central,Female,80-84,808284
+2009,North Central,Female,85+,889873
+2009,North Central,Male,0-4,2216192
+2009,North Central,Male,10-14,2322083
+2009,North Central,Male,15-19,2493250
+2009,North Central,Male,20-24,2321808
+2009,North Central,Male,25-29,2226091
+2009,North Central,Male,30-34,2071019
+2009,North Central,Male,35-39,2136745
+2009,North Central,Male,40-44,2215213
+2009,North Central,Male,45-49,2490390
+2009,North Central,Male,5-9,2263688
+2009,North Central,Male,50-54,2447567
+2009,North Central,Male,55-59,2128610
+2009,North Central,Male,60-64,1702121
+2009,North Central,Male,65-69,1240492
+2009,North Central,Male,70-74,919996
+2009,North Central,Male,75-79,704305
+2009,North Central,Male,80-84,529550
+2009,North Central,Male,85+,405310
+2009,Northeast,Female,0-4,1578996
+2009,Northeast,Female,10-14,1721876
+2009,Northeast,Female,15-19,1919120
+2009,Northeast,Female,20-24,1858289
+2009,Northeast,Female,25-29,1806981
+2009,Northeast,Female,30-34,1707179
+2009,Northeast,Female,35-39,1832098
+2009,Northeast,Female,40-44,2008600
+2009,Northeast,Female,45-49,2202756
+2009,Northeast,Female,5-9,1632573
+2009,Northeast,Female,50-54,2134627
+2009,Northeast,Female,55-59,1865120
+2009,Northeast,Female,60-64,1581836
+2009,Northeast,Female,65-69,1198101
+2009,Northeast,Female,70-74,939716
+2009,Northeast,Female,75-79,825567
+2009,Northeast,Female,80-84,735549
+2009,Northeast,Female,85+,810265
+2009,Northeast,Male,0-4,1651779
+2009,Northeast,Male,10-14,1804077
+2009,Northeast,Male,15-19,2015640
+2009,Northeast,Male,20-24,1907466
+2009,Northeast,Male,25-29,1790434
+2009,Northeast,Male,30-34,1668748
+2009,Northeast,Male,35-39,1772302
+2009,Northeast,Male,40-44,1932365
+2009,Northeast,Male,45-49,2108106
+2009,Northeast,Male,5-9,1703688
+2009,Northeast,Male,50-54,2028419
+2009,Northeast,Male,55-59,1739689
+2009,Northeast,Male,60-64,1432333
+2009,Northeast,Male,65-69,1032104
+2009,Northeast,Male,70-74,756510
+2009,Northeast,Male,75-79,603155
+2009,Northeast,Male,80-84,461426
+2009,Northeast,Male,85+,365611
+2009,South,Female,0-4,3763288
+2009,South,Female,10-14,3733518
+2009,South,Female,15-19,3960040
+2009,South,Female,20-24,3885583
+2009,South,Female,25-29,3908162
+2009,South,Female,30-34,3671079
+2009,South,Female,35-39,3894038
+2009,South,Female,40-44,3920263
+2009,South,Female,45-49,4264572
+2009,South,Female,5-9,3715789
+2009,South,Female,50-54,4088030
+2009,South,Female,55-59,3644918
+2009,South,Female,60-64,3149563
+2009,South,Female,65-69,2452834
+2009,South,Female,70-74,1896764
+2009,South,Female,75-79,1532696
+2009,South,Female,80-84,1220977
+2009,South,Female,85+,1203875
+2009,South,Male,0-4,3921816
+2009,South,Male,10-14,3911987
+2009,South,Male,15-19,4160638
+2009,South,Male,20-24,4028706
+2009,South,Male,25-29,3913684
+2009,South,Male,30-34,3639703
+2009,South,Male,35-39,3819929
+2009,South,Male,40-44,3839558
+2009,South,Male,45-49,4121492
+2009,South,Male,5-9,3871120
+2009,South,Male,50-54,3878057
+2009,South,Male,55-59,3352003
+2009,South,Male,60-64,2874709
+2009,South,Male,65-69,2169634
+2009,South,Male,70-74,1594124
+2009,South,Male,75-79,1172570
+2009,South,Male,80-84,800155
+2009,South,Male,85+,572741
+2009,West,Female,0-4,2435747
+2009,West,Female,10-14,2417214
+2009,West,Female,15-19,2557446
+2009,West,Female,20-24,2467047
+2009,West,Female,25-29,2553406
+2009,West,Female,30-34,2375256
+2009,West,Female,35-39,2430831
+2009,West,Female,40-44,2395476
+2009,West,Female,45-49,2571898
+2009,West,Female,5-9,2362407
+2009,West,Female,50-54,2488122
+2009,West,Female,55-59,2225372
+2009,West,Female,60-64,1843325
+2009,West,Female,65-69,1370111
+2009,West,Female,70-74,1034088
+2009,West,Female,75-79,839093
+2009,West,Female,80-84,690050
+2009,West,Female,85+,727941
+2009,West,Male,0-4,2552302
+2009,West,Male,10-14,2533685
+2009,West,Male,15-19,2718711
+2009,West,Male,20-24,2666729
+2009,West,Male,25-29,2681148
+2009,West,Male,30-34,2465085
+2009,West,Male,35-39,2486651
+2009,West,Male,40-44,2443438
+2009,West,Male,45-49,2565683
+2009,West,Male,5-9,2469259
+2009,West,Male,50-54,2429520
+2009,West,Male,55-59,2114084
+2009,West,Male,60-64,1732510
+2009,West,Male,65-69,1242269
+2009,West,Male,70-74,902813
+2009,West,Male,75-79,679254
+2009,West,Male,80-84,481720
+2009,West,Male,85+,391685
+2010,North Central,Female,0-4,2117702
+2010,North Central,Female,10-14,2208382
+2010,North Central,Female,15-19,2335541
+2010,North Central,Female,20-24,2262176
+2010,North Central,Female,25-29,2192180
+2010,North Central,Female,30-34,2086614
+2010,North Central,Female,35-39,2080273
+2010,North Central,Female,40-44,2197075
+2010,North Central,Female,45-49,2484884
+2010,North Central,Female,5-9,2162341
+2010,North Central,Female,50-54,2537854
+2010,North Central,Female,55-59,2268710
+2010,North Central,Female,60-64,1910559
+2010,North Central,Female,65-69,1421496
+2010,North Central,Female,70-74,1110807
+2010,North Central,Female,75-79,930792
+2010,North Central,Female,80-84,804745
+2010,North Central,Female,85+,909215
+2010,North Central,Male,0-4,2209614
+2010,North Central,Male,10-14,2311842
+2010,North Central,Male,15-19,2460517
+2010,North Central,Male,20-24,2332068
+2010,North Central,Male,25-29,2223286
+2010,North Central,Male,30-34,2108941
+2010,North Central,Male,35-39,2079605
+2010,North Central,Male,40-44,2191454
+2010,North Central,Male,45-49,2439793
+2010,North Central,Male,5-9,2261086
+2010,North Central,Male,50-54,2472558
+2010,North Central,Male,55-59,2185150
+2010,North Central,Male,60-64,1801419
+2010,North Central,Male,65-69,1278602
+2010,North Central,Male,70-74,935567
+2010,North Central,Male,75-79,707265
+2010,North Central,Male,80-84,532478
+2010,North Central,Male,85+,421825
+2010,Northeast,Female,0-4,1576846
+2010,Northeast,Female,10-14,1706291
+2010,Northeast,Female,15-19,1897636
+2010,Northeast,Female,20-24,1891291
+2010,Northeast,Female,25-29,1822700
+2010,Northeast,Female,30-34,1732935
+2010,Northeast,Female,35-39,1770931
+2010,Northeast,Female,40-44,1977095
+2010,Northeast,Female,45-49,2180900
+2010,Northeast,Female,5-9,1629802
+2010,Northeast,Female,50-54,2165918
+2010,Northeast,Female,55-59,1910106
+2010,Northeast,Female,60-64,1658378
+2010,Northeast,Female,65-69,1233582
+2010,Northeast,Female,70-74,949712
+2010,Northeast,Female,75-79,813574
+2010,Northeast,Female,80-84,728354
+2010,Northeast,Female,85+,829878
+2010,Northeast,Male,0-4,1649551
+2010,Northeast,Male,10-14,1786927
+2010,Northeast,Male,15-19,1988841
+2010,Northeast,Male,20-24,1940328
+2010,Northeast,Male,25-29,1809867
+2010,Northeast,Male,30-34,1696382
+2010,Northeast,Male,35-39,1713203
+2010,Northeast,Male,40-44,1902068
+2010,Northeast,Male,45-49,2085175
+2010,Northeast,Male,5-9,1700655
+2010,Northeast,Male,50-54,2059593
+2010,Northeast,Male,55-59,1786752
+2010,Northeast,Male,60-64,1507055
+2010,Northeast,Male,65-69,1067414
+2010,Northeast,Male,70-74,767589
+2010,Northeast,Male,75-79,599715
+2010,Northeast,Male,80-84,463015
+2010,Northeast,Male,85+,380075
+2010,South,Female,0-4,3755313
+2010,South,Female,10-14,3770720
+2010,South,Female,15-19,3932166
+2010,South,Female,20-24,3961818
+2010,South,Female,25-29,3915936
+2010,South,Female,30-34,3763978
+2010,South,Female,35-39,3838899
+2010,South,Female,40-44,3917683
+2010,South,Female,45-49,4250120
+2010,South,Female,5-9,3758841
+2010,South,Female,50-54,4161609
+2010,South,Female,55-59,3743634
+2010,South,Female,60-64,3309850
+2010,South,Female,65-69,2539030
+2010,South,Female,70-74,1938443
+2010,South,Female,75-79,1545470
+2010,South,Female,80-84,1227275
+2010,South,Female,85+,1240470
+2010,South,Male,0-4,3911550
+2010,South,Male,10-14,3946897
+2010,South,Male,15-19,4136826
+2010,South,Male,20-24,4095979
+2010,South,Male,25-29,3939257
+2010,South,Male,30-34,3729809
+2010,South,Male,35-39,3756369
+2010,South,Male,40-44,3842845
+2010,South,Male,45-49,4109777
+2010,South,Male,5-9,3914410
+2010,South,Male,50-54,3956329
+2010,South,Male,55-59,3445143
+2010,South,Male,60-64,3014531
+2010,South,Male,65-69,2248777
+2010,South,Male,70-74,1637604
+2010,South,Male,75-79,1191744
+2010,South,Male,80-84,817816
+2010,South,Male,85+,599762
+2010,West,Female,0-4,2426337
+2010,West,Female,10-14,2417007
+2010,West,Female,15-19,2537862
+2010,West,Female,20-24,2513931
+2010,West,Female,25-29,2551310
+2010,West,Female,30-34,2433248
+2010,West,Female,35-39,2395341
+2010,West,Female,40-44,2412043
+2010,West,Female,45-49,2543997
+2010,West,Female,5-9,2399946
+2010,West,Female,50-54,2526781
+2010,West,Female,55-59,2284210
+2010,West,Female,60-64,1952345
+2010,West,Female,65-69,1431660
+2010,West,Female,70-74,1063774
+2010,West,Female,75-79,843258
+2010,West,Female,80-84,691750
+2010,West,Female,85+,753578
+2010,West,Male,0-4,2541902
+2010,West,Male,10-14,2532540
+2010,West,Male,15-19,2691710
+2010,West,Male,20-24,2703707
+2010,West,Male,25-29,2688341
+2010,West,Male,30-34,2516030
+2010,West,Male,35-39,2442642
+2010,West,Male,40-44,2462946
+2010,West,Male,45-49,2540290
+2010,West,Male,5-9,2504147
+2010,West,Male,50-54,2470814
+2010,West,Male,55-59,2169955
+2010,West,Male,60-64,1834921
+2010,West,Male,65-69,1300018
+2010,West,Male,70-74,932354
+2010,West,Male,75-79,688000
+2010,West,Male,80-84,493037
+2010,West,Male,85+,408704
+2011,North Central,Female,0-4,2095021
+2011,North Central,Female,10-14,2205302
+2011,North Central,Female,15-19,2301829
+2011,North Central,Female,20-24,2296521
+2011,North Central,Female,25-29,2183966
+2011,North Central,Female,30-34,2131359
+2011,North Central,Female,35-39,2017446
+2011,North Central,Female,40-44,2199331
+2011,North Central,Female,45-49,2403255
+2011,North Central,Female,5-9,2152298
+2011,North Central,Female,50-54,2553103
+2011,North Central,Female,55-59,2316103
+2011,North Central,Female,60-64,2017487
+2011,North Central,Female,65-69,1445931
+2011,North Central,Female,70-74,1134262
+2011,North Central,Female,75-79,927872
+2011,North Central,Female,80-84,798853
+2011,North Central,Female,85+,922308
+2011,North Central,Male,0-4,2188887
+2011,North Central,Male,10-14,2306065
+2011,North Central,Male,15-19,2428279
+2011,North Central,Male,20-24,2372292
+2011,North Central,Male,25-29,2217440
+2011,North Central,Male,30-34,2151298
+2011,North Central,Male,35-39,2018479
+2011,North Central,Male,40-44,2193576
+2011,North Central,Male,45-49,2364138
+2011,North Central,Male,5-9,2250080
+2011,North Central,Male,50-54,2484272
+2011,North Central,Male,55-59,2231066
+2011,North Central,Male,60-64,1900485
+2011,North Central,Male,65-69,1308413
+2011,North Central,Male,70-74,957551
+2011,North Central,Male,75-79,712919
+2011,North Central,Male,80-84,533456
+2011,North Central,Male,85+,436857
+2011,Northeast,Female,0-4,1575964
+2011,Northeast,Female,10-14,1694485
+2011,Northeast,Female,15-19,1878556
+2011,Northeast,Female,20-24,1907696
+2011,Northeast,Female,25-29,1846139
+2011,Northeast,Female,30-34,1766931
+2011,Northeast,Female,35-39,1712164
+2011,Northeast,Female,40-44,1959847
+2011,Northeast,Female,45-49,2138581
+2011,Northeast,Female,5-9,1619782
+2011,Northeast,Female,50-54,2183774
+2011,Northeast,Female,55-59,1954279
+2011,Northeast,Female,60-64,1729958
+2011,Northeast,Female,65-69,1265780
+2011,Northeast,Female,70-74,968445
+2011,Northeast,Female,75-79,806996
+2011,Northeast,Female,80-84,719634
+2011,Northeast,Female,85+,844863
+2011,Northeast,Male,0-4,1648348
+2011,Northeast,Male,10-14,1773141
+2011,Northeast,Male,15-19,1963346
+2011,Northeast,Male,20-24,1964788
+2011,Northeast,Male,25-29,1844576
+2011,Northeast,Male,30-34,1732001
+2011,Northeast,Male,35-39,1661709
+2011,Northeast,Male,40-44,1885077
+2011,Northeast,Male,45-49,2043379
+2011,Northeast,Male,5-9,1691422
+2011,Northeast,Male,50-54,2076348
+2011,Northeast,Male,55-59,1829588
+2011,Northeast,Male,60-64,1574626
+2011,Northeast,Male,65-69,1099798
+2011,Northeast,Male,70-74,785890
+2011,Northeast,Male,75-79,600073
+2011,Northeast,Male,80-84,462753
+2011,Northeast,Male,85+,393486
+2011,South,Female,0-4,3749686
+2011,South,Female,10-14,3809303
+2011,South,Female,15-19,3868859
+2011,South,Female,20-24,4062584
+2011,South,Female,25-29,3939939
+2011,South,Female,30-34,3853262
+2011,South,Female,35-39,3753460
+2011,South,Female,40-44,3971924
+2011,South,Female,45-49,4178539
+2011,South,Female,5-9,3771678
+2011,South,Female,50-54,4213051
+2011,South,Female,55-59,3833036
+2011,South,Female,60-64,3467145
+2011,South,Female,65-69,2607511
+2011,South,Female,70-74,1998584
+2011,South,Female,75-79,1567216
+2011,South,Female,80-84,1232014
+2011,South,Female,85+,1271595
+2011,South,Male,0-4,3906901
+2011,South,Male,10-14,3980120
+2011,South,Male,15-19,4086068
+2011,South,Male,20-24,4192923
+2011,South,Male,25-29,3971562
+2011,South,Male,30-34,3816089
+2011,South,Male,35-39,3671534
+2011,South,Male,40-44,3886582
+2011,South,Male,45-49,4046883
+2011,South,Male,5-9,3926093
+2011,South,Male,50-54,4010635
+2011,South,Male,55-59,3531981
+2011,South,Male,60-64,3143945
+2011,South,Male,65-69,2312616
+2011,South,Male,70-74,1692267
+2011,South,Male,75-79,1218724
+2011,South,Male,80-84,834675
+2011,South,Male,85+,627538
+2011,West,Female,0-4,2422713
+2011,West,Female,10-14,2416929
+2011,West,Female,15-19,2489768
+2011,West,Female,20-24,2588806
+2011,West,Female,25-29,2565872
+2011,West,Female,30-34,2489015
+2011,West,Female,35-39,2359962
+2011,West,Female,40-44,2446477
+2011,West,Female,45-49,2491348
+2011,West,Female,5-9,2407384
+2011,West,Female,50-54,2548057
+2011,West,Female,55-59,2339068
+2011,West,Female,60-64,2054302
+2011,West,Female,65-69,1486028
+2011,West,Female,70-74,1103205
+2011,West,Female,75-79,854169
+2011,West,Female,80-84,692745
+2011,West,Female,85+,775461
+2011,West,Male,0-4,2535583
+2011,West,Male,10-14,2527453
+2011,West,Male,15-19,2641776
+2011,West,Male,20-24,2773588
+2011,West,Male,25-29,2711034
+2011,West,Male,30-34,2573571
+2011,West,Male,35-39,2403278
+2011,West,Male,40-44,2492453
+2011,West,Male,45-49,2495968
+2011,West,Male,5-9,2513761
+2011,West,Male,50-54,2494385
+2011,West,Male,55-59,2221059
+2011,West,Male,60-64,1923584
+2011,West,Male,65-69,1352218
+2011,West,Male,70-74,967637
+2011,West,Male,75-79,701029
+2011,West,Male,80-84,503558
+2011,West,Male,85+,425085
+2012,North Central,Female,0-4,2069784
+2012,North Central,Female,10-14,2193120
+2012,North Central,Female,15-19,2262237
+2012,North Central,Female,20-24,2342008
+2012,North Central,Female,25-29,2166093
+2012,North Central,Female,30-34,2163653
+2012,North Central,Female,35-39,1995910
+2012,North Central,Female,40-44,2181844
+2012,North Central,Female,45-49,2324796
+2012,North Central,Female,5-9,2155662
+2012,North Central,Female,50-54,2536370
+2012,North Central,Female,55-59,2366845
+2012,North Central,Female,60-64,2024878
+2012,North Central,Female,65-69,1560512
+2012,North Central,Female,70-74,1173117
+2012,North Central,Female,75-79,930421
+2012,North Central,Female,80-84,788208
+2012,North Central,Female,85+,938064
+2012,North Central,Male,0-4,2165442
+2012,North Central,Male,10-14,2293161
+2012,North Central,Male,15-19,2384132
+2012,North Central,Male,20-24,2429009
+2012,North Central,Male,25-29,2208994
+2012,North Central,Male,30-34,2183504
+2012,North Central,Male,35-39,2002095
+2012,North Central,Male,40-44,2176725
+2012,North Central,Male,45-49,2291980
+2012,North Central,Male,5-9,2251818
+2012,North Central,Male,50-54,2467323
+2012,North Central,Male,55-59,2277790
+2012,North Central,Male,60-64,1909637
+2012,North Central,Male,65-69,1419246
+2012,North Central,Male,70-74,996115
+2012,North Central,Male,75-79,722143
+2012,North Central,Male,80-84,530806
+2012,North Central,Male,85+,453301
+2012,Northeast,Female,0-4,1567763
+2012,Northeast,Female,10-14,1678109
+2012,Northeast,Female,15-19,1852628
+2012,Northeast,Female,20-24,1915837
+2012,Northeast,Female,25-29,1863071
+2012,Northeast,Female,30-34,1793624
+2012,Northeast,Female,35-39,1690125
+2012,Northeast,Female,40-44,1924452
+2012,Northeast,Female,45-49,2091867
+2012,Northeast,Female,5-9,1615747
+2012,Northeast,Female,50-54,2178355
+2012,Northeast,Female,55-59,2003594
+2012,Northeast,Female,60-64,1719679
+2012,Northeast,Female,65-69,1367504
+2012,Northeast,Female,70-74,1003174
+2012,Northeast,Female,75-79,806630
+2012,Northeast,Female,80-84,707963
+2012,Northeast,Female,85+,862128
+2012,Northeast,Male,0-4,1640145
+2012,Northeast,Male,10-14,1755654
+2012,Northeast,Male,15-19,1929290
+2012,Northeast,Male,20-24,1982786
+2012,Northeast,Male,25-29,1872424
+2012,Northeast,Male,30-34,1765810
+2012,Northeast,Male,35-39,1643277
+2012,Northeast,Male,40-44,1854532
+2012,Northeast,Male,45-49,1997645
+2012,Northeast,Male,5-9,1687257
+2012,Northeast,Male,50-54,2070597
+2012,Northeast,Male,55-59,1876934
+2012,Northeast,Male,60-64,1567920
+2012,Northeast,Male,65-69,1196875
+2012,Northeast,Male,70-74,818341
+2012,Northeast,Male,75-79,604495
+2012,Northeast,Male,80-84,460451
+2012,Northeast,Male,85+,408533
+2012,South,Female,0-4,3733052
+2012,South,Female,10-14,3828843
+2012,South,Female,15-19,3833886
+2012,South,Female,20-24,4144881
+2012,South,Female,25-29,3964080
+2012,South,Female,30-34,3929995
+2012,South,Female,35-39,3734481
+2012,South,Female,40-44,4006595
+2012,South,Female,45-49,4104244
+2012,South,Female,5-9,3811774
+2012,South,Female,50-54,4233713
+2012,South,Female,55-59,3936479
+2012,South,Female,60-64,3463499
+2012,South,Female,65-69,2825033
+2012,South,Female,70-74,2084039
+2012,South,Female,75-79,1592318
+2012,South,Female,80-84,1236067
+2012,South,Female,85+,1306442
+2012,South,Male,0-4,3886417
+2012,South,Male,10-14,3994506
+2012,South,Male,15-19,4045388
+2012,South,Male,20-24,4298705
+2012,South,Male,25-29,4010139
+2012,South,Male,30-34,3896248
+2012,South,Male,35-39,3650790
+2012,South,Male,40-44,3914913
+2012,South,Male,45-49,3976730
+2012,South,Male,5-9,3969567
+2012,South,Male,50-54,4034585
+2012,South,Male,55-59,3632316
+2012,South,Male,60-64,3123109
+2012,South,Male,65-69,2511533
+2012,South,Male,70-74,1769533
+2012,South,Male,75-79,1248176
+2012,South,Male,80-84,849700
+2012,South,Male,85+,659432
+2012,West,Female,0-4,2401126
+2012,West,Female,10-14,2409474
+2012,West,Female,15-19,2459754
+2012,West,Female,20-24,2640507
+2012,West,Female,25-29,2569715
+2012,West,Female,30-34,2540686
+2012,West,Female,35-39,2364570
+2012,West,Female,40-44,2459965
+2012,West,Female,45-49,2443915
+2012,West,Female,5-9,2432249
+2012,West,Female,50-54,2550078
+2012,West,Female,55-59,2395521
+2012,West,Female,60-64,2070061
+2012,West,Female,65-69,1619489
+2012,West,Female,70-74,1154464
+2012,West,Female,75-79,871468
+2012,West,Female,80-84,692917
+2012,West,Female,85+,795441
+2012,West,Male,0-4,2512336
+2012,West,Male,10-14,2516878
+2012,West,Male,15-19,2601899
+2012,West,Male,20-24,2832227
+2012,West,Male,25-29,2729932
+2012,West,Male,30-34,2633031
+2012,West,Male,35-39,2408241
+2012,West,Male,40-44,2502413
+2012,West,Male,45-49,2453508
+2012,West,Male,5-9,2543066
+2012,West,Male,50-54,2500446
+2012,West,Male,55-59,2276196
+2012,West,Male,60-64,1929966
+2012,West,Male,65-69,1479212
+2012,West,Male,70-74,1014028
+2012,West,Male,75-79,718748
+2012,West,Male,80-84,513000
+2012,West,Male,85+,441296
+2013,North Central,Female,0-4,2051099
+2013,North Central,Female,10-14,2183594
+2013,North Central,Female,15-19,2237741
+2013,North Central,Female,20-24,2372045
+2013,North Central,Female,25-29,2160297
+2013,North Central,Female,30-34,2193522
+2013,North Central,Female,35-39,2006463
+2013,North Central,Female,40-44,2152565
+2013,North Central,Female,45-49,2247854
+2013,North Central,Female,5-9,2156800
+2013,North Central,Female,50-54,2510373
+2013,North Central,Female,55-59,2410653
+2013,North Central,Female,60-64,2064320
+2013,North Central,Female,65-69,1621949
+2013,North Central,Female,70-74,1231848
+2013,North Central,Female,75-79,944133
+2013,North Central,Female,80-84,775148
+2013,North Central,Female,85+,947204
+2013,North Central,Male,0-4,2147918
+2013,North Central,Male,10-14,2283403
+2013,North Central,Male,15-19,2352965
+2013,North Central,Male,20-24,2469867
+2013,North Central,Male,25-29,2217616
+2013,North Central,Male,30-34,2212142
+2013,North Central,Male,35-39,2018547
+2013,North Central,Male,40-44,2144783
+2013,North Central,Male,45-49,2222683
+2013,North Central,Male,5-9,2251021
+2013,North Central,Male,50-54,2442569
+2013,North Central,Male,55-59,2319213
+2013,North Central,Male,60-64,1946731
+2013,North Central,Male,65-69,1479917
+2013,North Central,Male,70-74,1051445
+2013,North Central,Male,75-79,739290
+2013,North Central,Male,80-84,526499
+2013,North Central,Male,85+,466162
+2013,Northeast,Female,0-4,1559827
+2013,Northeast,Female,10-14,1665748
+2013,Northeast,Female,15-19,1823222
+2013,Northeast,Female,20-24,1921854
+2013,Northeast,Female,25-29,1881954
+2013,Northeast,Female,30-34,1817492
+2013,Northeast,Female,35-39,1689147
+2013,Northeast,Female,40-44,1876441
+2013,Northeast,Female,45-49,2037388
+2013,Northeast,Female,5-9,1607216
+2013,Northeast,Female,50-54,2168490
+2013,Northeast,Female,55-59,2044318
+2013,Northeast,Female,60-64,1741338
+2013,Northeast,Female,65-69,1416692
+2013,Northeast,Female,70-74,1059103
+2013,Northeast,Female,75-79,816536
+2013,Northeast,Female,80-84,692118
+2013,Northeast,Female,85+,872631
+2013,Northeast,Male,0-4,1631832
+2013,Northeast,Male,10-14,1741545
+2013,Northeast,Male,15-19,1894105
+2013,Northeast,Male,20-24,1991911
+2013,Northeast,Male,25-29,1901632
+2013,Northeast,Male,30-34,1794465
+2013,Northeast,Male,35-39,1647987
+2013,Northeast,Male,40-44,1808133
+2013,Northeast,Male,45-49,1946243
+2013,Northeast,Male,5-9,1678594
+2013,Northeast,Male,50-54,2059697
+2013,Northeast,Male,55-59,1918018
+2013,Northeast,Male,60-64,1590979
+2013,Northeast,Male,65-69,1245142
+2013,Northeast,Male,70-74,869049
+2013,Northeast,Male,75-79,615085
+2013,Northeast,Male,80-84,455955
+2013,Northeast,Male,85+,419919
+2013,South,Female,0-4,3711113
+2013,South,Female,10-14,3845309
+2013,South,Female,15-19,3828199
+2013,South,Female,20-24,4178462
+2013,South,Female,25-29,3998165
+2013,South,Female,30-34,3998345
+2013,South,Female,35-39,3749953
+2013,South,Female,40-44,4009321
+2013,South,Female,45-49,4023953
+2013,South,Female,5-9,3849867
+2013,South,Female,50-54,4254754
+2013,South,Female,55-59,4014707
+2013,South,Female,60-64,3518495
+2013,South,Female,65-69,2947281
+2013,South,Female,70-74,2205365
+2013,South,Female,75-79,1633670
+2013,South,Female,80-84,1237027
+2013,South,Female,85+,1332046
+2013,South,Male,0-4,3867460
+2013,South,Male,10-14,4003353
+2013,South,Male,15-19,4027554
+2013,South,Male,20-24,4361889
+2013,South,Male,25-29,4052692
+2013,South,Male,30-34,3966074
+2013,South,Male,35-39,3669905
+2013,South,Male,40-44,3906391
+2013,South,Male,45-49,3902849
+2013,South,Male,5-9,4007297
+2013,South,Male,50-54,4055130
+2013,South,Male,55-59,3714119
+2013,South,Male,60-64,3156867
+2013,South,Male,65-69,2619074
+2013,South,Male,70-74,1878958
+2013,South,Male,75-79,1290567
+2013,South,Male,80-84,861752
+2013,South,Male,85+,686437
+2013,West,Female,0-4,2385598
+2013,West,Female,10-14,2412063
+2013,West,Female,15-19,2440298
+2013,West,Female,20-24,2659133
+2013,West,Female,25-29,2594705
+2013,West,Female,30-34,2590479
+2013,West,Female,35-39,2386011
+2013,West,Female,40-44,2455319
+2013,West,Female,45-49,2402881
+2013,West,Female,5-9,2451062
+2013,West,Female,50-54,2551552
+2013,West,Female,55-59,2433847
+2013,West,Female,60-64,2119788
+2013,West,Female,65-69,1703679
+2013,West,Female,70-74,1227297
+2013,West,Female,75-79,897311
+2013,West,Female,80-84,693373
+2013,West,Female,85+,812238
+2013,West,Male,0-4,2494368
+2013,West,Male,10-14,2515875
+2013,West,Male,15-19,2573372
+2013,West,Male,20-24,2857073
+2013,West,Male,25-29,2761986
+2013,West,Male,30-34,2692884
+2013,West,Male,35-39,2435280
+2013,West,Male,40-44,2488715
+2013,West,Male,45-49,2419882
+2013,West,Male,5-9,2565466
+2013,West,Male,50-54,2503630
+2013,West,Male,55-59,2316996
+2013,West,Male,60-64,1967414
+2013,West,Male,65-69,1557126
+2013,West,Male,70-74,1078939
+2013,West,Male,75-79,745005
+2013,West,Male,80-84,520175
+2013,West,Male,85+,456310
+2014,North Central,Female,0-4,2046417
+2014,North Central,Female,10-14,2177079
+2014,North Central,Female,15-19,2218755
+2014,North Central,Female,20-24,2382478
+2014,North Central,Female,25-29,2172148
+2014,North Central,Female,30-34,2200776
+2014,North Central,Female,35-39,2032955
+2014,North Central,Female,40-44,2108206
+2014,North Central,Female,45-49,2183692
+2014,North Central,Female,5-9,2140949
+2014,North Central,Female,50-54,2479808
+2014,North Central,Female,55-59,2434833
+2014,North Central,Female,60-64,2112765
+2014,North Central,Female,65-69,1701324
+2014,North Central,Female,70-74,1270055
+2014,North Central,Female,75-79,963691
+2014,North Central,Female,80-84,762881
+2014,North Central,Female,85+,957235
+2014,North Central,Male,0-4,2145239
+2014,North Central,Male,10-14,2276715
+2014,North Central,Male,15-19,2329474
+2014,North Central,Male,20-24,2484908
+2014,North Central,Male,25-29,2243360
+2014,North Central,Male,30-34,2220562
+2014,North Central,Male,35-39,2049118
+2014,North Central,Male,40-44,2098129
+2014,North Central,Male,45-49,2164040
+2014,North Central,Male,5-9,2231886
+2014,North Central,Male,50-54,2415497
+2014,North Central,Male,55-59,2342654
+2014,North Central,Male,60-64,1991968
+2014,North Central,Male,65-69,1554497
+2014,North Central,Male,70-74,1088390
+2014,North Central,Male,75-79,760693
+2014,North Central,Male,80-84,523056
+2014,North Central,Male,85+,478934
+2014,Northeast,Female,0-4,1559267
+2014,Northeast,Female,10-14,1655433
+2014,Northeast,Female,15-19,1797335
+2014,Northeast,Female,20-24,1922362
+2014,Northeast,Female,25-29,1903874
+2014,Northeast,Female,30-34,1828698
+2014,Northeast,Female,35-39,1702800
+2014,Northeast,Female,40-44,1819314
+2014,Northeast,Female,45-49,1981867
+2014,Northeast,Female,5-9,1588331
+2014,Northeast,Female,50-54,2158479
+2014,Northeast,Female,55-59,2072909
+2014,Northeast,Female,60-64,1775927
+2014,Northeast,Female,65-69,1478123
+2014,Northeast,Female,70-74,1098026
+2014,Northeast,Female,75-79,831146
+2014,Northeast,Female,80-84,678741
+2014,Northeast,Female,85+,882723
+2014,Northeast,Male,0-4,1630986
+2014,Northeast,Male,10-14,1728298
+2014,Northeast,Male,15-19,1866117
+2014,Northeast,Male,20-24,1987129
+2014,Northeast,Male,25-29,1935062
+2014,Northeast,Male,30-34,1814185
+2014,Northeast,Male,35-39,1661594
+2014,Northeast,Male,40-44,1754772
+2014,Northeast,Male,45-49,1895254
+2014,Northeast,Male,5-9,1659262
+2014,Northeast,Male,50-54,2048398
+2014,Northeast,Male,55-59,1946022
+2014,Northeast,Male,60-64,1625118
+2014,Northeast,Male,65-69,1302167
+2014,Northeast,Male,70-74,904209
+2014,Northeast,Male,75-79,629372
+2014,Northeast,Male,80-84,452002
+2014,Northeast,Male,85+,430709
+2014,South,Female,0-4,3723365
+2014,South,Female,10-14,3865524
+2014,South,Female,15-19,3836082
+2014,South,Female,20-24,4182829
+2014,South,Female,25-29,4079311
+2014,South,Female,30-34,4046811
+2014,South,Female,35-39,3802225
+2014,South,Female,40-44,3981629
+2014,South,Female,45-49,3961495
+2014,South,Female,5-9,3860189
+2014,South,Female,50-54,4276867
+2014,South,Female,55-59,4075541
+2014,South,Female,60-64,3604684
+2014,South,Female,65-69,3087350
+2014,South,Female,70-74,2306026
+2014,South,Female,75-79,1684569
+2014,South,Female,80-84,1241503
+2014,South,Female,85+,1362968
+2014,South,Male,0-4,3886937
+2014,South,Male,10-14,4019798
+2014,South,Male,15-19,4025048
+2014,South,Male,20-24,4385220
+2014,South,Male,25-29,4140737
+2014,South,Male,30-34,4015362
+2014,South,Male,35-39,3724867
+2014,South,Male,40-44,3870909
+2014,South,Male,45-49,3846658
+2014,South,Male,5-9,4017425
+2014,South,Male,50-54,4076857
+2014,South,Male,55-59,3779990
+2014,South,Male,60-64,3222644
+2014,South,Male,65-69,2737039
+2014,South,Male,70-74,1964067
+2014,South,Male,75-79,1341145
+2014,South,Male,80-84,874841
+2014,South,Male,85+,715525
+2014,West,Female,0-4,2383752
+2014,West,Female,10-14,2420673
+2014,West,Female,15-19,2426102
+2014,West,Female,20-24,2659992
+2014,West,Female,25-29,2649941
+2014,West,Female,30-34,2629843
+2014,West,Female,35-39,2420432
+2014,West,Female,40-44,2433333
+2014,West,Female,45-49,2382740
+2014,West,Female,5-9,2451281
+2014,West,Female,50-54,2549274
+2014,West,Female,55-59,2458355
+2014,West,Female,60-64,2177915
+2014,West,Female,65-69,1794688
+2014,West,Female,70-74,1292657
+2014,West,Female,75-79,929413
+2014,West,Female,80-84,695654
+2014,West,Female,85+,830169
+2014,West,Male,0-4,2496386
+2014,West,Male,10-14,2522130
+2014,West,Male,15-19,2553913
+2014,West,Male,20-24,2869021
+2014,West,Male,25-29,2826211
+2014,West,Male,30-34,2741573
+2014,West,Male,35-39,2477224
+2014,West,Male,40-44,2463869
+2014,West,Male,45-49,2405492
+2014,West,Male,5-9,2565708
+2014,West,Male,50-54,2504514
+2014,West,Male,55-59,2347231
+2014,West,Male,60-64,2014879
+2014,West,Male,65-69,1640206
+2014,West,Male,70-74,1134273
+2014,West,Male,75-79,776079
+2014,West,Male,80-84,526894
+2014,West,Male,85+,473976
+2015,North Central,Female,0-4,2041329
+2015,North Central,Female,10-14,2160070
+2015,North Central,Female,15-19,2212175
+2015,North Central,Female,20-24,2364544
+2015,North Central,Female,25-29,2190290
+2015,North Central,Female,30-34,2192893
+2015,North Central,Female,35-39,2072500
+2015,North Central,Female,40-44,2052423
+2015,North Central,Female,45-49,2154902
+2015,North Central,Female,5-9,2125906
+2015,North Central,Female,50-54,2422353
+2015,North Central,Female,55-59,2451793
+2015,North Central,Female,60-64,2164660
+2015,North Central,Female,65-69,1787686
+2015,North Central,Female,70-74,1298492
+2015,North Central,Female,75-79,975004
+2015,North Central,Female,80-84,755738
+2015,North Central,Female,85+,963095
+2015,North Central,Male,0-4,2140425
+2015,North Central,Male,10-14,2257498
+2015,North Central,Male,15-19,2320809
+2015,North Central,Male,20-24,2470919
+2015,North Central,Male,25-29,2271099
+2015,North Central,Male,30-34,2217340
+2015,North Central,Male,35-39,2091407
+2015,North Central,Male,40-44,2044660
+2015,North Central,Male,45-49,2141280
+2015,North Central,Male,5-9,2217021
+2015,North Central,Male,50-54,2361955
+2015,North Central,Male,55-59,2358675
+2015,North Central,Male,60-64,2041045
+2015,North Central,Male,65-69,1634938
+2015,North Central,Male,70-74,1118986
+2015,North Central,Male,75-79,772908
+2015,North Central,Male,80-84,525155
+2015,North Central,Male,85+,488610
+2015,Northeast,Female,0-4,1555619
+2015,Northeast,Female,10-14,1636196
+2015,Northeast,Female,15-19,1779753
+2015,Northeast,Female,20-24,1901224
+2015,Northeast,Female,25-29,1919999
+2015,Northeast,Female,30-34,1833995
+2015,Northeast,Female,35-39,1724288
+2015,Northeast,Female,40-44,1755837
+2015,Northeast,Female,45-49,1947201
+2015,Northeast,Female,5-9,1575817
+2015,Northeast,Female,50-54,2129158
+2015,Northeast,Female,55-59,2092759
+2015,Northeast,Female,60-64,1817146
+2015,Northeast,Female,65-69,1540680
+2015,Northeast,Female,70-74,1128886
+2015,Northeast,Female,75-79,841634
+2015,Northeast,Female,80-84,669757
+2015,Northeast,Female,85+,889168
+2015,Northeast,Male,0-4,1627536
+2015,Northeast,Male,10-14,1707268
+2015,Northeast,Male,15-19,1845659
+2015,Northeast,Male,20-24,1958089
+2015,Northeast,Male,25-29,1961350
+2015,Northeast,Male,30-34,1826660
+2015,Northeast,Male,35-39,1685645
+2015,Northeast,Male,40-44,1696357
+2015,Northeast,Male,45-49,1863214
+2015,Northeast,Male,5-9,1646136
+2015,Northeast,Male,50-54,2020242
+2015,Northeast,Male,55-59,1966341
+2015,Northeast,Male,60-64,1667374
+2015,Northeast,Male,65-69,1359235
+2015,Northeast,Male,70-74,934085
+2015,Northeast,Male,75-79,640192
+2015,Northeast,Male,80-84,450614
+2015,Northeast,Male,85+,439570
+2015,South,Female,0-4,3749026
+2015,South,Female,10-14,3871319
+2015,South,Female,15-19,3878546
+2015,South,Female,20-24,4137985
+2015,South,Female,25-29,4184137
+2015,South,Female,30-34,4075612
+2015,South,Female,35-39,3890969
+2015,South,Female,40-44,3930556
+2015,South,Female,45-49,3969096
+2015,South,Female,5-9,3871046
+2015,South,Female,50-54,4258988
+2015,South,Female,55-59,4140214
+2015,South,Female,60-64,3706461
+2015,South,Female,65-69,3233548
+2015,South,Female,70-74,2393374
+2015,South,Female,75-79,1729781
+2015,South,Female,80-84,1257802
+2015,South,Female,85+,1391625
+2015,South,Male,0-4,3917496
+2015,South,Male,10-14,4023257
+2015,South,Male,15-19,4061348
+2015,South,Male,20-24,4364948
+2015,South,Male,25-29,4248951
+2015,South,Male,30-34,4049381
+2015,South,Male,35-39,3818809
+2015,South,Male,40-44,3816434
+2015,South,Male,45-49,3856144
+2015,South,Male,5-9,4026353
+2015,South,Male,50-54,4060856
+2015,South,Male,55-59,3850193
+2015,South,Male,60-64,3309105
+2015,South,Male,65-69,2856087
+2015,South,Male,70-74,2040223
+2015,South,Male,75-79,1384668
+2015,South,Male,80-84,895685
+2015,South,Male,85+,747318
+2015,West,Female,0-4,2385342
+2015,West,Female,10-14,2424778
+2015,West,Female,15-19,2428013
+2015,West,Female,20-24,2628320
+2015,West,Female,25-29,2723463
+2015,West,Female,30-34,2656908
+2015,West,Female,35-39,2476488
+2015,West,Female,40-44,2403911
+2015,West,Female,45-49,2402839
+2015,West,Female,5-9,2450470
+2015,West,Female,50-54,2519406
+2015,West,Female,55-59,2488485
+2015,West,Female,60-64,2237618
+2015,West,Female,65-69,1891342
+2015,West,Female,70-74,1354225
+2015,West,Female,75-79,960791
+2015,West,Female,80-84,702682
+2015,West,Female,85+,848633
+2015,West,Male,0-4,2501305
+2015,West,Male,10-14,2523991
+2015,West,Male,15-19,2554717
+2015,West,Male,20-24,2842621
+2015,West,Male,25-29,2909909
+2015,West,Male,30-34,2776211
+2015,West,Male,35-39,2544594
+2015,West,Male,40-44,2432724
+2015,West,Male,45-49,2428576
+2015,West,Male,5-9,2564020
+2015,West,Male,50-54,2479321
+2015,West,Male,55-59,2384481
+2015,West,Male,60-64,2067818
+2015,West,Male,65-69,1725632
+2015,West,Male,70-74,1187769
+2015,West,Male,75-79,805452
+2015,West,Male,80-84,535839
+2015,West,Male,85+,493861
+2016,North Central,Female,0-4,2041065
+2016,North Central,Female,10-14,2150942
+2016,North Central,Female,15-19,2207632
+2016,North Central,Female,20-24,2328985
+2016,North Central,Female,25-29,2224348
+2016,North Central,Female,30-34,2186989
+2016,North Central,Female,35-39,2116777
+2016,North Central,Female,40-44,1988371
+2016,North Central,Female,45-49,2155522
+2016,North Central,Female,5-9,2104240
+2016,North Central,Female,50-54,2339351
+2016,North Central,Female,55-59,2462559
+2016,North Central,Female,60-64,2206132
+2016,North Central,Female,65-69,1885131
+2016,North Central,Female,70-74,1319137
+2016,North Central,Female,75-79,995485
+2016,North Central,Female,80-84,755596
+2016,North Central,Female,85+,968521
+2016,North Central,Male,0-4,2137857
+2016,North Central,Male,10-14,2247884
+2016,North Central,Male,15-19,2313478
+2016,North Central,Male,20-24,2439377
+2016,North Central,Male,25-29,2309887
+2016,North Central,Male,30-34,2219117
+2016,North Central,Male,35-39,2136022
+2016,North Central,Male,40-44,1983636
+2016,North Central,Male,45-49,2142701
+2016,North Central,Male,5-9,2200004
+2016,North Central,Male,50-54,2287046
+2016,North Central,Male,55-59,2366595
+2016,North Central,Male,60-64,2081336
+2016,North Central,Male,65-69,1721981
+2016,North Central,Male,70-74,1143275
+2016,North Central,Male,75-79,791309
+2016,North Central,Male,80-84,531362
+2016,North Central,Male,85+,497890
+2016,Northeast,Female,0-4,1544900
+2016,Northeast,Female,10-14,1620600
+2016,Northeast,Female,15-19,1763607
+2016,Northeast,Female,20-24,1876117
+2016,Northeast,Female,25-29,1929319
+2016,Northeast,Female,30-34,1847602
+2016,Northeast,Female,35-39,1746539
+2016,Northeast,Female,40-44,1691898
+2016,Northeast,Female,45-49,1923311
+2016,Northeast,Female,5-9,1567872
+2016,Northeast,Female,50-54,2080999
+2016,Northeast,Female,55-59,2103092
+2016,Northeast,Female,60-64,1854092
+2016,Northeast,Female,65-69,1603727
+2016,Northeast,Female,70-74,1155741
+2016,Northeast,Female,75-79,858263
+2016,Northeast,Female,80-84,666264
+2016,Northeast,Female,85+,896103
+2016,Northeast,Male,0-4,1616901
+2016,Northeast,Male,10-14,1691520
+2016,Northeast,Male,15-19,1828572
+2016,Northeast,Male,20-24,1925269
+2016,Northeast,Male,25-29,1979790
+2016,Northeast,Male,30-34,1851078
+2016,Northeast,Male,35-39,1712743
+2016,Northeast,Male,40-44,1638625
+2016,Northeast,Male,45-49,1840838
+2016,Northeast,Male,5-9,1638847
+2016,Northeast,Male,50-54,1974197
+2016,Northeast,Male,55-59,1976435
+2016,Northeast,Male,60-64,1703234
+2016,Northeast,Male,65-69,1417286
+2016,Northeast,Male,70-74,960517
+2016,Northeast,Male,75-79,655037
+2016,Northeast,Male,80-84,453021
+2016,Northeast,Male,85+,448374
+2016,South,Female,0-4,3770927
+2016,South,Female,10-14,3891776
+2016,South,Female,15-19,3924044
+2016,South,Female,20-24,4075997
+2016,South,Female,25-29,4294660
+2016,South,Female,30-34,4108565
+2016,South,Female,35-39,3991757
+2016,South,Female,40-44,3854208
+2016,South,Female,45-49,4032754
+2016,South,Female,5-9,3876523
+2016,South,Female,50-54,4198295
+2016,South,Female,55-59,4198616
+2016,South,Female,60-64,3800295
+2016,South,Female,65-69,3393825
+2016,South,Female,70-74,2464675
+2016,South,Female,75-79,1790748
+2016,South,Female,80-84,1279896
+2016,South,Female,85+,1420047
+2016,South,Male,0-4,3936575
+2016,South,Male,10-14,4045073
+2016,South,Male,15-19,4100033
+2016,South,Male,20-24,4308724
+2016,South,Male,25-29,4362461
+2016,South,Male,30-34,4095509
+2016,South,Male,35-39,3918651
+2016,South,Male,40-44,3741884
+2016,South,Male,45-49,3910702
+2016,South,Male,5-9,4031896
+2016,South,Male,50-54,4008931
+2016,South,Male,55-59,3909220
+2016,South,Male,60-64,3394587
+2016,South,Male,65-69,2979918
+2016,South,Male,70-74,2103630
+2016,South,Male,75-79,1437930
+2016,South,Male,80-84,921079
+2016,South,Male,85+,777349
+2016,West,Female,0-4,2378640
+2016,West,Female,10-14,2435274
+2016,West,Female,15-19,2434517
+2016,West,Female,20-24,2587671
+2016,West,Female,25-29,2809207
+2016,West,Female,30-34,2685974
+2016,West,Female,35-39,2541460
+2016,West,Female,40-44,2376181
+2016,West,Female,45-49,2440373
+2016,West,Female,5-9,2451518
+2016,West,Female,50-54,2469564
+2016,West,Female,55-59,2512003
+2016,West,Female,60-64,2291781
+2016,West,Female,65-69,1990441
+2016,West,Female,70-74,1406796
+2016,West,Female,75-79,997534
+2016,West,Female,80-84,713429
+2016,West,Female,85+,862726
+2016,West,Male,0-4,2494894
+2016,West,Male,10-14,2538252
+2016,West,Male,15-19,2557387
+2016,West,Male,20-24,2802467
+2016,West,Male,25-29,3003421
+2016,West,Male,30-34,2824078
+2016,West,Male,35-39,2615450
+2016,West,Male,40-44,2405016
+2016,West,Male,45-49,2462991
+2016,West,Male,5-9,2563332
+2016,West,Male,50-54,2439454
+2016,West,Male,55-59,2411842
+2016,West,Male,60-64,2117980
+2016,West,Male,65-69,1807344
+2016,West,Male,70-74,1235883
+2016,West,Male,75-79,836817
+2016,West,Male,80-84,547453
+2016,West,Male,85+,510531
+2017,North Central,Female,0-4,2037198
+2017,North Central,Female,10-14,2155592
+2017,North Central,Female,15-19,2195932
+2017,North Central,Female,20-24,2291998
+2017,North Central,Female,25-29,2269025
+2017,North Central,Female,30-34,2173690
+2017,North Central,Female,35-39,2151419
+2017,North Central,Female,40-44,1969064
+2017,North Central,Female,45-49,2138867
+2017,North Central,Female,5-9,2083787
+2017,North Central,Female,50-54,2262734
+2017,North Central,Female,55-59,2445621
+2017,North Central,Female,60-64,2254083
+2017,North Central,Female,65-69,1891799
+2017,North Central,Female,70-74,1423420
+2017,North Central,Female,75-79,1029562
+2017,North Central,Female,80-84,757320
+2017,North Central,Female,85+,967705
+2017,North Central,Male,0-4,2132849
+2017,North Central,Male,10-14,2252488
+2017,North Central,Male,15-19,2301026
+2017,North Central,Male,20-24,2397325
+2017,North Central,Male,25-29,2359734
+2017,North Central,Male,30-34,2213959
+2017,North Central,Male,35-39,2170891
+2017,North Central,Male,40-44,1967479
+2017,North Central,Male,45-49,2126351
+2017,North Central,Male,5-9,2181695
+2017,North Central,Male,50-54,2216518
+2017,North Central,Male,55-59,2348842
+2017,North Central,Male,60-64,2124129
+2017,North Central,Male,65-69,1729840
+2017,North Central,Male,70-74,1239974
+2017,North Central,Male,75-79,822866
+2017,North Central,Male,80-84,538379
+2017,North Central,Male,85+,503620
+2017,Northeast,Female,0-4,1535773
+2017,Northeast,Female,10-14,1614666
+2017,Northeast,Female,15-19,1745687
+2017,Northeast,Female,20-24,1851640
+2017,Northeast,Female,25-29,1938067
+2017,Northeast,Female,30-34,1857985
+2017,Northeast,Female,35-39,1768547
+2017,Northeast,Female,40-44,1665176
+2017,Northeast,Female,45-49,1884817
+2017,Northeast,Female,5-9,1557707
+2017,Northeast,Female,50-54,2031758
+2017,Northeast,Female,55-59,2091956
+2017,Northeast,Female,60-64,1896853
+2017,Northeast,Female,65-69,1593807
+2017,Northeast,Female,70-74,1245933
+2017,Northeast,Female,75-79,888784
+2017,Northeast,Female,80-84,666584
+2017,Northeast,Female,85+,896393
+2017,Northeast,Male,0-4,1608206
+2017,Northeast,Male,10-14,1684983
+2017,Northeast,Male,15-19,1808407
+2017,Northeast,Male,20-24,1891358
+2017,Northeast,Male,25-29,1993968
+2017,Northeast,Male,30-34,1869447
+2017,Northeast,Male,35-39,1738405
+2017,Northeast,Male,40-44,1613865
+2017,Northeast,Male,45-49,1806718
+2017,Northeast,Male,5-9,1629545
+2017,Northeast,Male,50-54,1925350
+2017,Northeast,Male,55-59,1966247
+2017,Northeast,Male,60-64,1743678
+2017,Northeast,Male,65-69,1409905
+2017,Northeast,Male,70-74,1044470
+2017,Northeast,Male,75-79,682283
+2017,Northeast,Male,80-84,456752
+2017,Northeast,Male,85+,453520
+2017,South,Female,0-4,3778249
+2017,South,Female,10-14,3935454
+2017,South,Female,15-19,3945485
+2017,South,Female,20-24,4035498
+2017,South,Female,25-29,4371249
+2017,South,Female,30-34,4131075
+2017,South,Female,35-39,4069286
+2017,South,Female,40-44,3839455
+2017,South,Female,45-49,4070669
+2017,South,Female,5-9,3862319
+2017,South,Female,50-54,4127672
+2017,South,Female,55-59,4223946
+2017,South,Female,60-64,3903212
+2017,South,Female,65-69,3393395
+2017,South,Female,70-74,2678597
+2017,South,Female,75-79,1870214
+2017,South,Female,80-84,1302530
+2017,South,Female,85+,1443275
+2017,South,Male,0-4,3944697
+2017,South,Male,10-14,4094038
+2017,South,Male,15-19,4117984
+2017,South,Male,20-24,4257341
+2017,South,Male,25-29,4453362
+2017,South,Male,30-34,4130054
+2017,South,Male,35-39,3998530
+2017,South,Male,40-44,3723246
+2017,South,Male,45-49,3942294
+2017,South,Male,5-9,4016272
+2017,South,Male,50-54,3945416
+2017,South,Male,55-59,3936163
+2017,South,Male,60-64,3491021
+2017,South,Male,65-69,2958461
+2017,South,Male,70-74,2293133
+2017,South,Male,75-79,1506983
+2017,South,Male,80-84,946334
+2017,South,Male,85+,805280
+2017,West,Female,0-4,2368822
+2017,West,Female,10-14,2461021
+2017,West,Female,15-19,2429846
+2017,West,Female,20-24,2557398
+2017,West,Female,25-29,2869392
+2017,West,Female,30-34,2701493
+2017,West,Female,35-39,2599519
+2017,West,Female,40-44,2383626
+2017,West,Female,45-49,2454887
+2017,West,Female,5-9,2433928
+2017,West,Female,50-54,2423291
+2017,West,Female,55-59,2513892
+2017,West,Female,60-64,2345129
+2017,West,Female,65-69,2005147
+2017,West,Female,70-74,1533372
+2017,West,Female,75-79,1044408
+2017,West,Female,80-84,728819
+2017,West,Female,85+,873100
+2017,West,Male,0-4,2485178
+2017,West,Male,10-14,2569552
+2017,West,Male,15-19,2550230
+2017,West,Male,20-24,2759763
+2017,West,Male,25-29,3074139
+2017,West,Male,30-34,2856773
+2017,West,Male,35-39,2683708
+2017,West,Male,40-44,2414368
+2017,West,Male,45-49,2475604
+2017,West,Male,5-9,2544093
+2017,West,Male,50-54,2399394
+2017,West,Male,55-59,2419649
+2017,West,Male,60-64,2170348
+2017,West,Male,65-69,1810877
+2017,West,Male,70-74,1352649
+2017,West,Male,75-79,877071
+2017,West,Male,80-84,562563
+2017,West,Male,85+,524280
+2018,North Central,Female,0-4,2022506
+2018,North Central,Female,10-14,2156187
+2018,North Central,Female,15-19,2184374
+2018,North Central,Female,20-24,2265784
+2018,North Central,Female,25-29,2290479
+2018,North Central,Female,30-34,2167073
+2018,North Central,Female,35-39,2179157
+2018,North Central,Female,40-44,1978410
+2018,North Central,Female,45-49,2108838
+2018,North Central,Female,5-9,2066670
+2018,North Central,Female,50-54,2185791
+2018,North Central,Female,55-59,2419278
+2018,North Central,Female,60-64,2294815
+2018,North Central,Female,65-69,1927468
+2018,North Central,Female,70-74,1479685
+2018,North Central,Female,75-79,1083251
+2018,North Central,Female,80-84,770865
+2018,North Central,Female,85+,967512
+2018,North Central,Male,0-4,2119397
+2018,North Central,Male,10-14,2250823
+2018,North Central,Male,15-19,2288669
+2018,North Central,Male,20-24,2362999
+2018,North Central,Male,25-29,2390071
+2018,North Central,Male,30-34,2216841
+2018,North Central,Male,35-39,2196341
+2018,North Central,Male,40-44,1982679
+2018,North Central,Male,45-49,2092728
+2018,North Central,Male,5-9,2165793
+2018,North Central,Male,50-54,2147582
+2018,North Central,Male,55-59,2324344
+2018,North Central,Male,60-64,2160754
+2018,North Central,Male,65-69,1762433
+2018,North Central,Male,70-74,1294245
+2018,North Central,Male,75-79,870407
+2018,North Central,Male,80-84,552917
+2018,North Central,Male,85+,509462
+2018,Northeast,Female,0-4,1523530
+2018,Northeast,Female,10-14,1604875
+2018,Northeast,Female,15-19,1731436
+2018,Northeast,Female,20-24,1822443
+2018,Northeast,Female,25-29,1938786
+2018,Northeast,Female,30-34,1872511
+2018,Northeast,Female,35-39,1787145
+2018,Northeast,Female,40-44,1660531
+2018,Northeast,Female,45-49,1835282
+2018,Northeast,Female,5-9,1548713
+2018,Northeast,Female,50-54,1974811
+2018,Northeast,Female,55-59,2077383
+2018,Northeast,Female,60-64,1931659
+2018,Northeast,Female,65-69,1611540
+2018,Northeast,Female,70-74,1289662
+2018,Northeast,Female,75-79,937639
+2018,Northeast,Female,80-84,676336
+2018,Northeast,Female,85+,894464
+2018,Northeast,Male,0-4,1596693
+2018,Northeast,Male,10-14,1675260
+2018,Northeast,Male,15-19,1792346
+2018,Northeast,Male,20-24,1855086
+2018,Northeast,Male,25-29,1998854
+2018,Northeast,Male,30-34,1891884
+2018,Northeast,Male,35-39,1761592
+2018,Northeast,Male,40-44,1613569
+2018,Northeast,Male,45-49,1758848
+2018,Northeast,Male,5-9,1619701
+2018,Northeast,Male,50-54,1871813
+2018,Northeast,Male,55-59,1951419
+2018,Northeast,Male,60-64,1777358
+2018,Northeast,Male,65-69,1428206
+2018,Northeast,Male,70-74,1085434
+2018,Northeast,Male,75-79,724656
+2018,Northeast,Male,80-84,466162
+2018,Northeast,Male,85+,458993
+2018,South,Female,0-4,3769790
+2018,South,Female,10-14,3976035
+2018,South,Female,15-19,3959077
+2018,South,Female,20-24,4015785
+2018,South,Female,25-29,4397816
+2018,South,Female,30-34,4161210
+2018,South,Female,35-39,4141031
+2018,South,Female,40-44,3857380
+2018,South,Female,45-49,4076015
+2018,South,Female,5-9,3842212
+2018,South,Female,50-54,4053243
+2018,South,Female,55-59,4249296
+2018,South,Female,60-64,3982475
+2018,South,Female,65-69,3452699
+2018,South,Female,70-74,2800031
+2018,South,Female,75-79,1984132
+2018,South,Female,80-84,1340326
+2018,South,Female,85+,1463638
+2018,South,Male,0-4,3934492
+2018,South,Male,10-14,4136685
+2018,South,Male,15-19,4124788
+2018,South,Male,20-24,4219626
+2018,South,Male,25-29,4498529
+2018,South,Male,30-34,4166659
+2018,South,Male,35-39,4068269
+2018,South,Male,40-44,3743222
+2018,South,Male,45-49,3936134
+2018,South,Male,5-9,4000773
+2018,South,Male,50-54,3878132
+2018,South,Male,55-59,3962146
+2018,South,Male,60-64,3572648
+2018,South,Male,65-69,2991001
+2018,South,Male,70-74,2396617
+2018,South,Male,75-79,1606105
+2018,South,Male,80-84,982534
+2018,South,Male,85+,828882
+2018,West,Female,0-4,2340882
+2018,West,Female,10-14,2477368
+2018,West,Female,15-19,2433811
+2018,West,Female,20-24,2537909
+2018,West,Female,25-29,2891372
+2018,West,Female,30-34,2728021
+2018,West,Female,35-39,2651413
+2018,West,Female,40-44,2403964
+2018,West,Female,45-49,2448336
+2018,West,Female,5-9,2418066
+2018,West,Female,50-54,2380817
+2018,West,Female,55-59,2512926
+2018,West,Female,60-64,2378806
+2018,West,Female,65-69,2050305
+2018,West,Female,70-74,1612431
+2018,West,Female,75-79,1111435
+2018,West,Female,80-84,750692
+2018,West,Female,85+,884133
+2018,West,Male,0-4,2455672
+2018,West,Male,10-14,2591396
+2018,West,Male,15-19,2550160
+2018,West,Male,20-24,2728454
+2018,West,Male,25-29,3105054
+2018,West,Male,30-34,2894950
+2018,West,Male,35-39,2747074
+2018,West,Male,40-44,2441697
+2018,West,Male,45-49,2462344
+2018,West,Male,5-9,2526357
+2018,West,Male,50-54,2366992
+2018,West,Male,55-59,2420890
+2018,West,Male,60-64,2208052
+2018,West,Male,65-69,1843567
+2018,West,Male,70-74,1423859
+2018,West,Male,75-79,934450
+2018,West,Male,80-84,583949
+2018,West,Male,85+,537216
+2019,North Central,Female,0-4,2002382
+2019,North Central,Female,10-14,2141268
+2019,North Central,Female,15-19,2177369
+2019,North Central,Female,20-24,2243813
+2019,North Central,Female,25-29,2294871
+2019,North Central,Female,30-34,2177862
+2019,North Central,Female,35-39,2187601
+2019,North Central,Female,40-44,2005409
+2019,North Central,Female,45-49,2064891
+2019,North Central,Female,5-9,2061959
+2019,North Central,Female,50-54,2124127
+2019,North Central,Female,55-59,2389303
+2019,North Central,Female,60-64,2317142
+2019,North Central,Female,65-69,1973555
+2019,North Central,Female,70-74,1554493
+2019,North Central,Female,75-79,1118647
+2019,North Central,Female,80-84,788295
+2019,North Central,Female,85+,964317
+2019,North Central,Male,0-4,2097475
+2019,North Central,Male,10-14,2232995
+2019,North Central,Male,15-19,2281963
+2019,North Central,Male,20-24,2336562
+2019,North Central,Male,25-29,2400354
+2019,North Central,Male,30-34,2237458
+2019,North Central,Male,35-39,2204084
+2019,North Central,Male,40-44,2013194
+2019,North Central,Male,45-49,2046783
+2019,North Central,Male,5-9,2163854
+2019,North Central,Male,50-54,2091133
+2019,North Central,Male,55-59,2298890
+2019,North Central,Male,60-64,2183289
+2019,North Central,Male,65-69,1803687
+2019,North Central,Male,70-74,1362301
+2019,North Central,Male,75-79,902805
+2019,North Central,Male,80-84,570086
+2019,North Central,Male,85+,514787
+2019,Northeast,Female,0-4,1508531
+2019,Northeast,Female,10-14,1583356
+2019,Northeast,Female,15-19,1718143
+2019,Northeast,Female,20-24,1794831
+2019,Northeast,Female,25-29,1929884
+2019,Northeast,Female,30-34,1891074
+2019,Northeast,Female,35-39,1794110
+2019,Northeast,Female,40-44,1669442
+2019,Northeast,Female,45-49,1776472
+2019,Northeast,Female,5-9,1545340
+2019,Northeast,Female,50-54,1917578
+2019,Northeast,Female,55-59,2063565
+2019,Northeast,Female,60-64,1954029
+2019,Northeast,Female,65-69,1641118
+2019,Northeast,Female,70-74,1344173
+2019,Northeast,Female,75-79,969699
+2019,Northeast,Female,80-84,688319
+2019,Northeast,Female,85+,889464
+2019,Northeast,Male,0-4,1580878
+2019,Northeast,Male,10-14,1653906
+2019,Northeast,Male,15-19,1776629
+2019,Northeast,Male,20-24,1823647
+2019,Northeast,Male,25-29,1987830
+2019,Northeast,Male,30-34,1921005
+2019,Northeast,Male,35-39,1777037
+2019,Northeast,Male,40-44,1623495
+2019,Northeast,Male,45-49,1704101
+2019,Northeast,Male,5-9,1616209
+2019,Northeast,Male,50-54,1820277
+2019,Northeast,Male,55-59,1936764
+2019,Northeast,Male,60-64,1798837
+2019,Northeast,Male,65-69,1456868
+2019,Northeast,Male,70-74,1133959
+2019,Northeast,Male,75-79,752593
+2019,Northeast,Male,80-84,477044
+2019,Northeast,Male,85+,462596
+2019,South,Female,0-4,3745928
+2019,South,Female,10-14,3983628
+2019,South,Female,15-19,3972572
+2019,South,Female,20-24,4010458
+2019,South,Female,25-29,4389441
+2019,South,Female,30-34,4232006
+2019,South,Female,35-39,4184976
+2019,South,Female,40-44,3905854
+2019,South,Female,45-49,4048026
+2019,South,Female,5-9,3852353
+2019,South,Female,50-54,3991435
+2019,South,Female,55-59,4274804
+2019,South,Female,60-64,4044550
+2019,South,Female,65-69,3537341
+2019,South,Female,70-74,2934636
+2019,South,Female,75-79,2076428
+2019,South,Female,80-84,1384181
+2019,South,Female,85+,1481449
+2019,South,Male,0-4,3908547
+2019,South,Male,10-14,4144538
+2019,South,Male,15-19,4133515
+2019,South,Male,20-24,4204110
+2019,South,Male,25-29,4507475
+2019,South,Male,30-34,4243402
+2019,South,Male,35-39,4111033
+2019,South,Male,40-44,3792234
+2019,South,Male,45-49,3899502
+2019,South,Male,5-9,4018026
+2019,South,Male,50-54,3824078
+2019,South,Male,55-59,3988506
+2019,South,Male,60-64,3640729
+2019,South,Male,65-69,3052995
+2019,South,Male,70-74,2505894
+2019,South,Male,75-79,1681113
+2019,South,Male,80-84,1024228
+2019,South,Male,85+,850457
+2019,West,Female,0-4,2310635
+2019,West,Female,10-14,2471755
+2019,West,Female,15-19,2440879
+2019,West,Female,20-24,2519086
+2019,West,Female,25-29,2890250
+2019,West,Female,30-34,2775753
+2019,West,Female,35-39,2685893
+2019,West,Female,40-44,2433779
+2019,West,Female,45-49,2423007
+2019,West,Female,5-9,2413481
+2019,West,Female,50-54,2357400
+2019,West,Female,55-59,2507230
+2019,West,Female,60-64,2398695
+2019,West,Female,65-69,2103214
+2019,West,Female,70-74,1695324
+2019,West,Female,75-79,1169392
+2019,West,Female,80-84,776688
+2019,West,Female,85+,893240
+2019,West,Male,0-4,2422307
+2019,West,Male,10-14,2586822
+2019,West,Male,15-19,2553500
+2019,West,Male,20-24,2700433
+2019,West,Male,25-29,3108911
+2019,West,Male,30-34,2952745
+2019,West,Male,35-39,2792787
+2019,West,Male,40-44,2478216
+2019,West,Male,45-49,2434969
+2019,West,Male,5-9,2524673
+2019,West,Male,50-54,2351123
+2019,West,Male,55-59,2418329
+2019,West,Male,60-64,2233875
+2019,West,Male,65-69,1886223
+2019,West,Male,70-74,1497652
+2019,West,Male,75-79,981988
+2019,West,Male,80-84,608366
+2019,West,Male,85+,548648
+2020,North Central,Female,0-4,1984733
+2020,North Central,Female,10-14,2230117
+2020,North Central,Female,15-19,2224491
+2020,North Central,Female,20-24,2232441
+2020,North Central,Female,25-29,2251730
+2020,North Central,Female,30-34,2212700
+2020,North Central,Female,35-39,2213766
+2020,North Central,Female,40-44,2071483
+2020,North Central,Female,45-49,2028654
+2020,North Central,Female,5-9,2080198
+2020,North Central,Female,50-54,2115051
+2020,North Central,Female,55-59,2355237
+2020,North Central,Female,60-64,2330078
+2020,North Central,Female,65-69,2017536
+2020,North Central,Female,70-74,1613688
+2020,North Central,Female,75-79,1100389
+2020,North Central,Female,80-84,758208
+2020,North Central,Female,85+,877880
+2020,North Central,Male,0-4,2078198
+2020,North Central,Male,10-14,2341288
+2020,North Central,Male,15-19,2339979
+2020,North Central,Male,20-24,2316802
+2020,North Central,Male,25-29,2330306
+2020,North Central,Male,30-34,2271755
+2020,North Central,Male,35-39,2267014
+2020,North Central,Male,40-44,2114468
+2020,North Central,Male,45-49,2058104
+2020,North Central,Male,5-9,2186595
+2020,North Central,Male,50-54,2137946
+2020,North Central,Male,55-59,2323255
+2020,North Central,Male,60-64,2253113
+2020,North Central,Male,65-69,1884460
+2020,North Central,Male,70-74,1440316
+2020,North Central,Male,75-79,905983
+2020,North Central,Male,80-84,554765
+2020,North Central,Male,85+,467067
+2020,Northeast,Female,0-4,1528266
+2020,Northeast,Female,10-14,1677305
+2020,Northeast,Female,15-19,1762200
+2020,Northeast,Female,20-24,1797081
+2020,Northeast,Female,25-29,1927727
+2020,Northeast,Female,30-34,1962966
+2020,Northeast,Female,35-39,1866086
+2020,Northeast,Female,40-44,1746743
+2020,Northeast,Female,45-49,1767998
+2020,Northeast,Female,5-9,1588225
+2020,Northeast,Female,50-54,1938599
+2020,Northeast,Female,55-59,2097920
+2020,Northeast,Female,60-64,2010658
+2020,Northeast,Female,65-69,1709750
+2020,Northeast,Female,70-74,1410723
+2020,Northeast,Female,75-79,977653
+2020,Northeast,Female,80-84,671462
+2020,Northeast,Female,85+,807003
+2020,Northeast,Male,0-4,1600892
+2020,Northeast,Male,10-14,1763620
+2020,Northeast,Male,15-19,1830162
+2020,Northeast,Male,20-24,1811569
+2020,Northeast,Male,25-29,1951211
+2020,Northeast,Male,30-34,1992385
+2020,Northeast,Male,35-39,1879331
+2020,Northeast,Male,40-44,1726676
+2020,Northeast,Male,45-49,1734018
+2020,Northeast,Male,5-9,1664627
+2020,Northeast,Male,50-54,1885911
+2020,Northeast,Male,55-59,2014711
+2020,Northeast,Male,60-64,1900711
+2020,Northeast,Male,65-69,1553895
+2020,Northeast,Male,70-74,1211951
+2020,Northeast,Male,75-79,771542
+2020,Northeast,Male,80-84,470269
+2020,Northeast,Male,85+,418631
+2020,South,Female,0-4,3687012
+2020,South,Female,10-14,4136059
+2020,South,Female,15-19,4054798
+2020,South,Female,20-24,4008327
+2020,South,Female,25-29,4254104
+2020,South,Female,30-34,4308299
+2020,South,Female,35-39,4219908
+2020,South,Female,40-44,3998089
+2020,South,Female,45-49,3979974
+2020,South,Female,5-9,3871339
+2020,South,Female,50-54,3988809
+2020,South,Female,55-59,4247357
+2020,South,Female,60-64,4058404
+2020,South,Female,65-69,3584287
+2020,South,Female,70-74,2997162
+2020,South,Female,75-79,2054652
+2020,South,Female,80-84,1341781
+2020,South,Female,85+,1372782
+2020,South,Male,0-4,3846914
+2020,South,Male,10-14,4327087
+2020,South,Male,15-19,4232054
+2020,South,Male,20-24,4162441
+2020,South,Male,25-29,4329164
+2020,South,Male,30-34,4309656
+2020,South,Male,35-39,4214622
+2020,South,Male,40-44,3948005
+2020,South,Male,45-49,3915281
+2020,South,Male,5-9,4045107
+2020,South,Male,50-54,3919335
+2020,South,Male,55-59,4063218
+2020,South,Male,60-64,3762397
+2020,South,Male,65-69,3161405
+2020,South,Male,70-74,2591916
+2020,South,Male,75-79,1684986
+2020,South,Male,80-84,1003779
+2020,South,Male,85+,784771
+2020,West,Female,0-4,2229727
+2020,West,Female,10-14,2541734
+2020,West,Female,15-19,2491858
+2020,West,Female,20-24,2487109
+2020,West,Female,25-29,2789269
+2020,West,Female,30-34,2819202
+2020,West,Female,35-39,2706625
+2020,West,Female,40-44,2485237
+2020,West,Female,45-49,2383035
+2020,West,Female,5-9,2393904
+2020,West,Female,50-54,2366744
+2020,West,Female,55-59,2472414
+2020,West,Female,60-64,2401533
+2020,West,Female,65-69,2129898
+2020,West,Female,70-74,1745082
+2020,West,Female,75-79,1169512
+2020,West,Female,80-84,759068
+2020,West,Female,85+,826920
+2020,West,Male,0-4,2336133
+2020,West,Male,10-14,2677126
+2020,West,Male,15-19,2606543
+2020,West,Male,20-24,2657855
+2020,West,Male,25-29,2967988
+2020,West,Male,30-34,2998046
+2020,West,Male,35-39,2865468
+2020,West,Male,40-44,2579914
+2020,West,Male,45-49,2450627
+2020,West,Male,5-9,2515141
+2020,West,Male,50-54,2425990
+2020,West,Male,55-59,2452651
+2020,West,Male,60-64,2307639
+2020,West,Male,65-69,1953065
+2020,West,Male,70-74,1564147
+2020,West,Male,75-79,996610
+2020,West,Male,80-84,601605
+2020,West,Male,85+,505962
