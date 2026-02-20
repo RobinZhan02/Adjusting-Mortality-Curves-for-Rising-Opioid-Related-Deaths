@@ -15,8 +15,11 @@ library(StMoMo)
 # Load Data
 
 ```{r load-data}
-# Deaths from WONDER (monthly, by region/sex/age group)
+# Opioid-related deaths from WONDER (monthly, by region/sex/age group)
 wonder <- read.csv("../Data/missing_data/Inferred-WONDER-Census Region-Sex-5Yr.csv")
+
+# All-cause deaths from WONDER (monthly, by region/sex/age group)
+allcause <- read.csv("../Data/wonder_opioid/all-cause-region-yr-sex.csv")
 
 # Population by region, age, sex
 pop <- read.csv("../Data/covariate/population_by_region_age_sex.csv")
@@ -70,8 +73,58 @@ wonder_monthly <- wonder %>%
   ) %>%
   select(Region, Sex, Age, Age.Group.Code, Year, Month, Deaths)
 
-# ---- Aggregate to yearly ----
+# ---- Clean all-cause deaths (keep monthly) ----
+allcause_monthly <- allcause %>%
+  mutate(
+    Region = case_when(
+      Census.Region == "Census Region 1: Northeast" ~ "Northeast",
+      Census.Region == "Census Region 2: Midwest"   ~ "Midwest",
+      Census.Region == "Census Region 3: South"     ~ "South",
+      Census.Region == "Census Region 4: West"      ~ "West"
+    ),
+    Deaths = suppressWarnings(as.numeric(Deaths)),
+    Month  = as.integer(sub(".*/", "", Month.Code)),
+    Year   = as.integer(Year)
+  ) %>%
+  filter(
+    Year %in% target_years,
+    Five.Year.Age.Groups.Code %in% age_groups,
+    Sex.Code %in% c("M", "F")
+  ) %>%
+  mutate(
+    Age = age_map[Five.Year.Age.Groups.Code],
+    Sex = ifelse(Sex.Code == "M", "Male", "Female")
+  ) %>%
+  select(Region, Sex, Age, Age.Group.Code = Five.Year.Age.Groups.Code,
+         Year, Month, Deaths)
+
+# ---- Compute non-opioid deaths (monthly) ----
+nonopioid_monthly <- allcause_monthly %>%
+  rename(AllCause_Deaths = Deaths) %>%
+  left_join(
+    wonder_monthly %>% rename(Opioid_Deaths = Deaths),
+    by = c("Region", "Sex", "Age", "Age.Group.Code", "Year", "Month")
+  ) %>%
+  mutate(
+    Opioid_Deaths = replace_na(Opioid_Deaths, 0),
+    Deaths = AllCause_Deaths - Opioid_Deaths
+  ) %>%
+  select(Region, Sex, Age, Age.Group.Code, Year, Month, Deaths)
+
+cat(sprintf("Non-opioid monthly: %d rows, min deaths = %d\n",
+            nrow(nonopioid_monthly), min(nonopioid_monthly$Deaths, na.rm = TRUE)))
+
+# ---- Aggregate opioid to yearly ----
 wonder_yearly <- wonder_monthly %>%
+  group_by(Region, Sex, Age, Age.Group.Code, Year) %>%
+  summarise(
+    Months_Observed = sum(!is.na(Deaths)),
+    Deaths = sum(Deaths, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# ---- Aggregate non-opioid to yearly ----
+nonopioid_yearly <- nonopioid_monthly %>%
   group_by(Region, Sex, Age, Age.Group.Code, Year) %>%
   summarise(
     Months_Observed = sum(!is.na(Deaths)),
@@ -155,33 +208,38 @@ cat("Covariate columns:", paste(names(cov_clean), collapse = ", "), "\n")
 Yearly and monthly versions for verification.
 
 ```{r build-yearly}
-flat_yearly <- wonder_yearly %>%
-  left_join(
-    pop_clean %>% select(Region, Sex, Age, Year, Population),
-    by = c("Region", "Sex", "Age", "Year")
-  ) %>%
-  left_join(regional_pop, by = c("Region", "Year")) %>%
-  mutate(Death_Rate = Deaths / Population) %>%
-  select(Region, Sex, Age_Group = Age.Group.Code, Age, Year,
-         Deaths, Months_Observed, Population, Total_Population,
-         Death_Rate)
+# Helper to build flat data frames
+build_flat_yearly <- function(deaths_df, pop_df, reg_pop) {
+  deaths_df %>%
+    left_join(pop_df %>% select(Region, Sex, Age, Year, Population),
+              by = c("Region", "Sex", "Age", "Year")) %>%
+    left_join(reg_pop, by = c("Region", "Year")) %>%
+    mutate(Death_Rate = Deaths / Population) %>%
+    select(Region, Sex, Age_Group = Age.Group.Code, Age, Year,
+           Deaths, Months_Observed, Population, Total_Population, Death_Rate)
+}
 
-cat(sprintf("Yearly: %d rows x %d cols\n",
-            nrow(flat_yearly), ncol(flat_yearly)))
-```
+build_flat_monthly <- function(deaths_df, pop_df, reg_pop) {
+  deaths_df %>%
+    left_join(pop_df %>% select(Region, Sex, Age, Year, Population),
+              by = c("Region", "Sex", "Age", "Year")) %>%
+    left_join(reg_pop, by = c("Region", "Year")) %>%
+    select(Region, Sex, Age_Group = Age.Group.Code, Age, Year, Month,
+           Deaths, Population, Total_Population)
+}
 
-```{r build-monthly}
-flat_monthly <- wonder_monthly %>%
-  left_join(
-    pop_clean %>% select(Region, Sex, Age, Year, Population),
-    by = c("Region", "Sex", "Age", "Year")
-  ) %>%
-  left_join(regional_pop, by = c("Region", "Year")) %>%
-  select(Region, Sex, Age_Group = Age.Group.Code, Age, Year, Month,
-         Deaths, Population, Total_Population)
+# Opioid
+flat_yearly <- build_flat_yearly(wonder_yearly, pop_clean, regional_pop)
+flat_monthly <- build_flat_monthly(wonder_monthly, pop_clean, regional_pop)
 
-cat(sprintf("Monthly: %d rows x %d cols\n",
-            nrow(flat_monthly), ncol(flat_monthly)))
+# Non-opioid
+flat_yearly_nonopioid <- build_flat_yearly(nonopioid_yearly, pop_clean, regional_pop)
+flat_monthly_nonopioid <- build_flat_monthly(nonopioid_monthly, pop_clean, regional_pop)
+
+cat(sprintf("Opioid     — Yearly: %d rows, Monthly: %d rows\n",
+            nrow(flat_yearly), nrow(flat_monthly)))
+cat(sprintf("Non-opioid — Yearly: %d rows, Monthly: %d rows\n",
+            nrow(flat_yearly_nonopioid), nrow(flat_monthly_nonopioid)))
 ```
 
 # Build StMoMo Objects — Yearly
@@ -214,67 +272,80 @@ make_matrices_yearly <- function(deaths_df, pop_df, region, sex) {
   list(Dxt = Dxt, Ext = Ext)
 }
 
+# Opioid
 hmd_matrices_yr <- list()
 for (reg in regions) {
   for (sex in sexes) {
     key <- paste(reg, sex, sep = "_")
     hmd_matrices_yr[[key]] <- make_matrices_yearly(
       wonder_yearly, pop_clean, reg, sex)
-    cat(sprintf("  Yearly %s: [%d ages x %d years]\n", key,
-                nrow(hmd_matrices_yr[[key]]$Dxt),
-                ncol(hmd_matrices_yr[[key]]$Dxt)))
   }
 }
+
+# Non-opioid
+hmd_matrices_yr_no <- list()
+for (reg in regions) {
+  for (sex in sexes) {
+    key <- paste(reg, sex, sep = "_")
+    hmd_matrices_yr_no[[key]] <- make_matrices_yearly(
+      nonopioid_yearly, pop_clean, reg, sex)
+  }
+}
+
+cat("Yearly matrices built (opioid + non-opioid)\n")
 ```
 
 ```{r yearly-demogdata}
-hmd_region_yr <- list()
-
-for (reg in regions) {
-  mat_m <- hmd_matrices_yr[[paste(reg, "Male",   sep = "_")]]
-  mat_f <- hmd_matrices_yr[[paste(reg, "Female", sep = "_")]]
-
-  hmd_region_yr[[reg]] <- demogdata(
-    data  = mat_m$Dxt / mat_m$Ext,
-    pop   = mat_m$Ext,
-    ages  = age_starts,
-    years = target_years,
-    type  = "mortality",
-    label = reg,
-    name  = "male"
-  )
-  hmd_region_yr[[reg]]$rate$female <- mat_f$Dxt / mat_f$Ext
-  hmd_region_yr[[reg]]$pop$female  <- mat_f$Ext
+build_demogdata_yearly <- function(matrices, age_starts, target_years, label_suffix = "") {
+  result <- list()
+  for (reg in regions) {
+    mat_m <- matrices[[paste(reg, "Male",   sep = "_")]]
+    mat_f <- matrices[[paste(reg, "Female", sep = "_")]]
+    lbl <- if (label_suffix == "") reg else paste(reg, label_suffix)
+    result[[reg]] <- demogdata(
+      data  = mat_m$Dxt / mat_m$Ext,
+      pop   = mat_m$Ext,
+      ages  = age_starts,
+      years = target_years,
+      type  = "mortality",
+      label = lbl,
+      name  = "male"
+    )
+    result[[reg]]$rate$female <- mat_f$Dxt / mat_f$Ext
+    result[[reg]]$pop$female  <- mat_f$Ext
+  }
+  result
 }
+
+hmd_region_yr    <- build_demogdata_yearly(hmd_matrices_yr,    age_starts, target_years)
+hmd_region_yr_no <- build_demogdata_yearly(hmd_matrices_yr_no, age_starts, target_years, "non-opioid")
 ```
 
 ```{r yearly-stmomodata}
-# Without covariates
-stmomo_yr <- list()
-for (reg in regions) {
-  for (series in c("male", "female")) {
-    key <- paste(reg, series, sep = "_")
-    stmomo_yr[[key]] <- StMoMoData(
-      hmd_region_yr[[reg]], series = series, type = "central")
+build_stmomo_yearly <- function(demog_list, cov_df = NULL) {
+  stmomo_list <- list()
+  for (reg in regions) {
+    for (series in c("male", "female")) {
+      key <- paste(reg, series, sep = "_")
+      stmomo_list[[key]] <- StMoMoData(demog_list[[reg]], series = series, type = "central")
+      if (!is.null(cov_df)) {
+        stmomo_list[[key]]$covariates <- cov_df %>%
+          filter(Region == reg) %>% arrange(Year) %>% select(-Region, -Year)
+      }
+    }
   }
+  stmomo_list
 }
 
-# With covariates
-stmomo_yr_cov <- list()
-for (reg in regions) {
-  cov_reg <- cov_clean %>%
-    filter(Region == reg) %>%
-    arrange(Year) %>%
-    select(-Region, -Year)
-  for (series in c("male", "female")) {
-    key <- paste(reg, series, sep = "_")
-    stmomo_yr_cov[[key]] <- stmomo_yr[[key]]
-    stmomo_yr_cov[[key]]$covariates <- cov_reg
-  }
-}
+# Opioid
+stmomo_yr     <- build_stmomo_yearly(hmd_region_yr)
+stmomo_yr_cov <- build_stmomo_yearly(hmd_region_yr, cov_clean)
 
-cat("Yearly StMoMoData created for:",
-    paste(names(stmomo_yr), collapse = ", "), "\n")
+# Non-opioid
+stmomo_yr_no     <- build_stmomo_yearly(hmd_region_yr_no)
+stmomo_yr_no_cov <- build_stmomo_yearly(hmd_region_yr_no, cov_clean)
+
+cat("Yearly StMoMoData created (opioid + non-opioid)\n")
 ```
 
 # Build StMoMo Objects — Monthly
@@ -319,79 +390,93 @@ make_matrices_monthly <- function(deaths_df, pop_df, region, sex) {
   list(Dxt = Dxt, Ext = Ext)
 }
 
+# Opioid
 hmd_matrices_mo <- list()
 for (reg in regions) {
   for (sex in sexes) {
     key <- paste(reg, sex, sep = "_")
     hmd_matrices_mo[[key]] <- make_matrices_monthly(
       wonder_monthly, pop_clean, reg, sex)
-    cat(sprintf("  Monthly %s: [%d ages x %d months]\n", key,
-                nrow(hmd_matrices_mo[[key]]$Dxt),
-                ncol(hmd_matrices_mo[[key]]$Dxt)))
   }
 }
+
+# Non-opioid
+hmd_matrices_mo_no <- list()
+for (reg in regions) {
+  for (sex in sexes) {
+    key <- paste(reg, sex, sep = "_")
+    hmd_matrices_mo_no[[key]] <- make_matrices_monthly(
+      nonopioid_monthly, pop_clean, reg, sex)
+  }
+}
+
+cat("Monthly matrices built (opioid + non-opioid)\n")
 ```
 
 ```{r monthly-demogdata}
-hmd_region_mo <- list()
-
-for (reg in regions) {
-  mat_m <- hmd_matrices_mo[[paste(reg, "Male",   sep = "_")]]
-  mat_f <- hmd_matrices_mo[[paste(reg, "Female", sep = "_")]]
-
-  hmd_region_mo[[reg]] <- demogdata(
-    data  = mat_m$Dxt / mat_m$Ext,
-    pop   = mat_m$Ext,
-    ages  = age_starts,
-    years = monthly_times,
-    type  = "mortality",
-    label = reg,
-    name  = "male"
-  )
-  hmd_region_mo[[reg]]$rate$female <- mat_f$Dxt / mat_f$Ext
-  hmd_region_mo[[reg]]$pop$female  <- mat_f$Ext
+build_demogdata_monthly <- function(matrices, age_starts, monthly_times, label_suffix = "") {
+  result <- list()
+  for (reg in regions) {
+    mat_m <- matrices[[paste(reg, "Male",   sep = "_")]]
+    mat_f <- matrices[[paste(reg, "Female", sep = "_")]]
+    lbl <- if (label_suffix == "") reg else paste(reg, label_suffix)
+    result[[reg]] <- demogdata(
+      data  = mat_m$Dxt / mat_m$Ext,
+      pop   = mat_m$Ext,
+      ages  = age_starts,
+      years = monthly_times,
+      type  = "mortality",
+      label = lbl,
+      name  = "male"
+    )
+    result[[reg]]$rate$female <- mat_f$Dxt / mat_f$Ext
+    result[[reg]]$pop$female  <- mat_f$Ext
+  }
+  result
 }
+
+hmd_region_mo    <- build_demogdata_monthly(hmd_matrices_mo,    age_starts, monthly_times)
+hmd_region_mo_no <- build_demogdata_monthly(hmd_matrices_mo_no, age_starts, monthly_times, "non-opioid")
 ```
 
 ```{r monthly-stmomodata}
-# Without covariates
-stmomo_mo <- list()
-for (reg in regions) {
-  for (series in c("male", "female")) {
-    key <- paste(reg, series, sep = "_")
-    stmomo_mo[[key]] <- StMoMoData(
-      hmd_region_mo[[reg]], series = series, type = "central")
+build_stmomo_monthly <- function(demog_list, cov_df = NULL) {
+  stmomo_list <- list()
+  for (reg in regions) {
+    for (series in c("male", "female")) {
+      key <- paste(reg, series, sep = "_")
+      stmomo_list[[key]] <- StMoMoData(demog_list[[reg]], series = series, type = "central")
+      if (!is.null(cov_df)) {
+        cov_reg_mo <- cov_df %>%
+          filter(Region == reg) %>% arrange(Year) %>%
+          slice(rep(seq_len(n()), each = 12)) %>%
+          select(-Region, -Year)
+        stmomo_list[[key]]$covariates <- cov_reg_mo
+      }
+    }
   }
+  stmomo_list
 }
 
-# With covariates (annual covariates repeated for each month)
-cov_monthly <- cov_clean %>%
-  slice(rep(seq_len(n()), each = 12)) %>%
-  select(-Region, -Year)
+# Opioid
+stmomo_mo     <- build_stmomo_monthly(hmd_region_mo)
+stmomo_mo_cov <- build_stmomo_monthly(hmd_region_mo, cov_clean)
 
-stmomo_mo_cov <- list()
-for (reg in regions) {
-  cov_reg_mo <- cov_clean %>%
-    filter(Region == reg) %>%
-    arrange(Year) %>%
-    slice(rep(seq_len(n()), each = 12)) %>%
-    select(-Region, -Year)
-  for (series in c("male", "female")) {
-    key <- paste(reg, series, sep = "_")
-    stmomo_mo_cov[[key]] <- stmomo_mo[[key]]
-    stmomo_mo_cov[[key]]$covariates <- cov_reg_mo
-  }
-}
+# Non-opioid
+stmomo_mo_no     <- build_stmomo_monthly(hmd_region_mo_no)
+stmomo_mo_no_cov <- build_stmomo_monthly(hmd_region_mo_no, cov_clean)
 
-cat("Monthly StMoMoData created for:",
-    paste(names(stmomo_mo), collapse = ", "), "\n")
+cat("Monthly StMoMoData created (opioid + non-opioid)\n")
 ```
 
 # Verification
 
 ```{r summary-table}
-flat_yearly %>%
-  group_by(Region, Sex) %>%
+bind_rows(
+  flat_yearly %>% mutate(Type = "Opioid"),
+  flat_yearly_nonopioid %>% mutate(Type = "Non-opioid")
+) %>%
+  group_by(Type, Region, Sex) %>%
   summarise(
     Total_Deaths = sum(Deaths),
     Mean_Rate    = mean(Death_Rate),
@@ -404,11 +489,14 @@ flat_yearly %>%
 ```
 
 ```{r plot-verify, fig.width=10, fig.height=8}
-flat_yearly %>%
+bind_rows(
+  flat_yearly %>% mutate(Type = "Opioid"),
+  flat_yearly_nonopioid %>% mutate(Type = "Non-opioid")
+) %>%
   ggplot(aes(x = Year, y = log(Death_Rate),
              color = Age_Group, linetype = Sex)) +
   geom_line() +
-  facet_wrap(~Region, ncol = 2) +
+  facet_grid(Type ~ Region) +
   labs(
     title = "Log Mortality Rate by Region, Age Group, and Sex (2005-2019)",
     y     = "Log(Death Rate)",
@@ -423,29 +511,51 @@ flat_yearly %>%
 ```{r save}
 out <- "../Data/wonder_opioid"
 
+# --- Opioid ---
 # Yearly
 saveRDS(stmomo_yr, file.path(out, "hmd_yearly_no_cov.rds"))
 saveRDS(stmomo_yr_cov, file.path(out, "hmd_yearly_with_cov.rds"))
 saveRDS(hmd_region_yr, file.path(out, "demogdata_yearly.rds"))
 saveRDS(flat_yearly, file.path(out, "flat_yearly.rds"))
-
 # Monthly
 saveRDS(stmomo_mo, file.path(out, "hmd_monthly_no_cov.rds"))
 saveRDS(stmomo_mo_cov, file.path(out, "hmd_monthly_with_cov.rds"))
 saveRDS(hmd_region_mo, file.path(out, "demogdata_monthly.rds"))
 saveRDS(flat_monthly, file.path(out, "flat_monthly.rds"))
 
+# --- Non-opioid ---
+# Yearly
+saveRDS(stmomo_yr_no, file.path(out, "nonopioid_hmd_yearly_no_cov.rds"))
+saveRDS(stmomo_yr_no_cov, file.path(out, "nonopioid_hmd_yearly_with_cov.rds"))
+saveRDS(hmd_region_yr_no, file.path(out, "nonopioid_demogdata_yearly.rds"))
+saveRDS(flat_yearly_nonopioid, file.path(out, "nonopioid_flat_yearly.rds"))
+# Monthly
+saveRDS(stmomo_mo_no, file.path(out, "nonopioid_hmd_monthly_no_cov.rds"))
+saveRDS(stmomo_mo_no_cov, file.path(out, "nonopioid_hmd_monthly_with_cov.rds"))
+saveRDS(hmd_region_mo_no, file.path(out, "nonopioid_demogdata_monthly.rds"))
+saveRDS(flat_monthly_nonopioid, file.path(out, "nonopioid_flat_monthly.rds"))
+
 cat("Saved:\n")
-cat("  Yearly:\n")
+cat("  Opioid — Yearly:\n")
 cat("    hmd_yearly_no_cov.rds   - StMoMoData [8 ages x 15 years]\n")
 cat("    hmd_yearly_with_cov.rds - StMoMoData + covariates\n")
 cat("    demogdata_yearly.rds    - demogdata objects\n")
 cat("    flat_yearly.rds         - flat data frame\n")
-cat("  Monthly:\n")
+cat("  Opioid — Monthly:\n")
 cat("    hmd_monthly_no_cov.rds   - StMoMoData [8 ages x 180 months]\n")
 cat("    hmd_monthly_with_cov.rds - StMoMoData + covariates\n")
 cat("    demogdata_monthly.rds    - demogdata objects\n")
 cat("    flat_monthly.rds         - flat data frame\n")
+cat("  Non-opioid — Yearly:\n")
+cat("    nonopioid_hmd_yearly_no_cov.rds   - StMoMoData [8 ages x 15 years]\n")
+cat("    nonopioid_hmd_yearly_with_cov.rds - StMoMoData + covariates\n")
+cat("    nonopioid_demogdata_yearly.rds    - demogdata objects\n")
+cat("    nonopioid_flat_yearly.rds         - flat data frame\n")
+cat("  Non-opioid — Monthly:\n")
+cat("    nonopioid_hmd_monthly_no_cov.rds   - StMoMoData [8 ages x 180 months]\n")
+cat("    nonopioid_hmd_monthly_with_cov.rds - StMoMoData + covariates\n")
+cat("    nonopioid_demogdata_monthly.rds    - demogdata objects\n")
+cat("    nonopioid_flat_monthly.rds         - flat data frame\n")
 cat("\nCovariate columns:\n")
 print(names(stmomo_yr_cov[["Northeast_male"]]$covariates))
 ```
