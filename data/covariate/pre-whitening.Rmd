@@ -5,6 +5,7 @@ output: html_document
 
 
 ```{r}
+## -----------------------------------------------------------------------------
 rm(list=ls());gc()
 library(dplyr)
 library(tidyr)
@@ -15,9 +16,9 @@ library(forecast)
 
 covariate_combine_region <- read_csv("covariate_combine_region.csv")
 covariate_combine_division <- read_csv("covariate_combine_division.csv")
-```
 
-```{r}
+
+## -----------------------------------------------------------------------------
 # --- Opioid deaths by region ---
 opioid_region <- read_csv("../wonder_opioid/Census-Region.csv") %>%
   filter(!is.na(Year)) %>%
@@ -39,18 +40,18 @@ opioid_division <- read_csv("../wonder_opioid/Census-Division.csv") %>%
   ) %>%
   filter(Year >= 2005, Year <= 2019) %>%
   select(Year, Census_Division, opioid_deaths)
-```
 
-```{r}
+
+## -----------------------------------------------------------------------------
 # --- Merge ---
 region_panel <- covariate_combine_region %>%
   left_join(opioid_region, by = c("Year", "Census_Region"))
 
 division_panel <- covariate_combine_division %>%
   left_join(opioid_division, by = c("Year", "Census_Division"))
-```
 
-```{r}
+
+## -----------------------------------------------------------------------------
 # Pre-whitening (Pierce, 1977): fit ARIMA to opioid deaths
 # (no drift to avoid scale contamination), then apply the
 # SAME filter to covariates. socio_score kept as-is (not
@@ -85,9 +86,9 @@ division_pw <- division_panel %>%
 
 division_pw |> select(-opioid_deaths) |> write_csv("covariate_combine_division_pre_whitening.csv")
 region_pw |> select(-opioid_deaths) |> write_csv("covariate_combine_region_pre_whitening.csv")
-```
 
-```{r}
+
+## -----------------------------------------------------------------------------
 make_corr_long <- function(df, group_var, vars) {
   df %>%
     group_by(.data[[group_var]]) %>%
@@ -132,9 +133,9 @@ plot_corr_heatmap(corr_region_long, "Pre-whitened correlations by Census Region"
 
 corr_division_long <- make_corr_long(division_pw, "Census_Division", vars_pw)
 plot_corr_heatmap(corr_division_long, "Pre-whitened correlations by Census Division")
-```
 
-```{r}
+
+## -----------------------------------------------------------------------------
 # ---- Raw (un-pre-whitened) heatmaps ----
 vars_raw <- c("rate_health_care_coverage",
               "rate_alochol_consum", "socio_score")
@@ -144,6 +145,7 @@ plot_corr_heatmap(corr_region_raw, "Raw correlations by Census Region")
 
 corr_division_raw <- make_corr_long(division_pw, "Census_Division", vars_raw)
 plot_corr_heatmap(corr_division_raw, "Raw correlations by Census Division")
+
 ```
 
 

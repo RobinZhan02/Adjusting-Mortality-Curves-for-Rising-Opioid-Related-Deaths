@@ -175,28 +175,3 @@ print(p_reg_5yr)
 # ggsave("suppressed_percent_15_54_timeseries.png", p, width = 12, height = 10, dpi = 300)
 
 ```
-# Covariates
-## Socialeconomic factor
-Unemployment Rate
-  Data Source: Bureau Of Labor Statistics
-  https://www.bls.gov/developers/home.htm
-
-GDP/GDP per person (need to calculate)/Personal Income and Employment by Major Component
-  Data Source: Bureau of Economic Analysis
-  https://apps.bea.gov/API/signup/?_gl=1*1q35mzt*_ga*MzM1NDQ2MDYzLjE3Njg1ODgyNTg.*_ga_J4698JNNFT*czE3Njg1ODgyNTgkbzEkZzAkdDE3Njg1ODgyNTgkajYwJGwwJGgw
-  
-Poverty Rate
-  Data Source: Not sure yet
-  
-## Health Care Assess
-uninsured / coverage
-  Data Source: Not sure yet
-  
-behavioral risk factors
-  Data Source: CDC Behavior Risk Factor Surveillance System
-  https://www.cdc.gov/brfss/annual_data/annual_data.htm?utm_source=chatgpt.com
-  
-## Weather/Policy
-Highest/lowest temperature? Not sure yet
-
-opioid-related policy indicators
