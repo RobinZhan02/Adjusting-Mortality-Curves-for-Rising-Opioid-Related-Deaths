@@ -1,0 +1,144 @@
+---
+title: "Format All-Cause Deaths (Single-Year Age, Region, Year) to StMoMo"
+author: "PSTAT 296A"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, message=FALSE, warning=FALSE}
+rm(list = ls()); gc()
+library(tidyverse)
+library(demography)
+library(StMoMo)
+```
+
+```{r load-and-clean}
+raw <- read.csv("../Data/wonder_opioid/all_cause_of_death_region_year_single_age.csv",
+                stringsAsFactors = FALSE)
+
+# Drop footer rows (Notes column is non-empty for metadata)
+df <- raw %>%
+  filter(Notes == "") %>%
+  mutate(
+    Region = case_when(
+      Census.Region == "Census Region 1: Northeast" ~ "Northeast",
+      Census.Region == "Census Region 2: Midwest"   ~ "Midwest",
+      Census.Region == "Census Region 3: South"     ~ "South",
+      Census.Region == "Census Region 4: West"      ~ "West"
+    ),
+    Age  = as.integer(Single.Year.Ages.Code),
+    Year = as.integer(Year),
+    Deaths     = suppressWarnings(as.numeric(Deaths)),
+    Population = suppressWarnings(as.numeric(Population))
+  ) %>%
+  # Drop ages where population is not available (85+)
+  filter(!is.na(Population), !is.na(Deaths), !is.na(Age)) %>%
+  select(Region, Year, Age, Deaths, Population)
+
+cat(sprintf("Rows: %d | Regions: %s\n", nrow(df),
+            paste(sort(unique(df$Region)), collapse = ", ")))
+cat(sprintf("Years: %d-%d | Ages: %d-%d\n",
+            min(df$Year), max(df$Year), min(df$Age), max(df$Age)))
+```
+
+```{r build-matrices}
+regions <- sort(unique(df$Region))
+ages    <- sort(unique(df$Age))
+years   <- sort(unique(df$Year))
+
+make_matrices <- function(data, region) {
+  reg_df <- data %>% filter(Region == region)
+
+  Dxt <- reg_df %>%
+    select(Age, Year, Deaths) %>%
+    pivot_wider(names_from = Year, values_from = Deaths) %>%
+    arrange(Age) %>%
+    column_to_rownames("Age") %>%
+    as.matrix()
+
+  Ext <- reg_df %>%
+    select(Age, Year, Population) %>%
+    pivot_wider(names_from = Year, values_from = Population) %>%
+    arrange(Age) %>%
+    column_to_rownames("Age") %>%
+    as.matrix()
+
+  stopifnot(all(dim(Dxt) == dim(Ext)))
+  list(Dxt = Dxt, Ext = Ext)
+}
+
+matrices <- setNames(lapply(regions, function(r) make_matrices(df, r)), regions)
+
+cat(sprintf("Matrix dimensions per region: %d ages x %d years\n",
+            length(ages), length(years)))
+```
+
+```{r build-demogdata}
+demog_list <- list()
+for (reg in regions) {
+  mat <- matrices[[reg]]
+  demog_list[[reg]] <- demogdata(
+    data  = mat$Dxt / mat$Ext,
+    pop   = mat$Ext,
+    ages  = ages,
+    years = years,
+    type  = "mortality",
+    label = reg,
+    name  = "total"
+  )
+}
+
+cat("demogdata objects created for:", paste(regions, collapse = ", "), "\n")
+```
+
+```{r build-stmomodata}
+stmomo_list <- list()
+for (reg in regions) {
+  stmomo_list[[reg]] <- StMoMoData(demog_list[[reg]], series = "total", type = "central")
+}
+
+cat("StMoMoData objects created\n")
+cat(sprintf("  Ages: %d-%d | Years: %d-%d\n", min(ages), max(ages),
+            min(years), max(years)))
+```
+
+```{r summary-table}
+df %>%
+  group_by(Region) %>%
+  summarise(
+    Total_Deaths = sum(Deaths),
+    Mean_Rate    = mean(Deaths / Population),
+    Min_Age      = min(Age),
+    Max_Age      = max(Age),
+    N_Years      = n_distinct(Year),
+    .groups = "drop"
+  ) %>%
+  knitr::kable(digits = 6,
+               caption = "Summary by Region (All-Cause, Single-Year Ages)")
+```
+
+```{r plot-verify, fig.width=10, fig.height=6}
+df %>%
+  mutate(Death_Rate = Deaths / Population) %>%
+  ggplot(aes(x = Age, y = log(Death_Rate), color = factor(Year))) +
+  geom_line(alpha = 0.5) +
+  facet_wrap(~ Region, ncol = 2) +
+  labs(
+    title = "Log All-Cause Mortality Rate by Age, Region, and Year",
+    y     = "Log(Death Rate)",
+    color = "Year"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+```{r save}
+out <- "../Data/wonder_opioid"
+
+saveRDS(stmomo_list,  file.path(out, "allcause_stmomo_yearly.rds"))
+
+
+
+cat("Saved to", out, ":\n")
+
+```
