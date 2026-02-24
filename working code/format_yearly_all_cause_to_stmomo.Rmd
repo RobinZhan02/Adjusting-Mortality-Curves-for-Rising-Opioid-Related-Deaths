@@ -35,6 +35,8 @@ df <- raw %>%
   filter(!is.na(Population), !is.na(Deaths), !is.na(Age)) %>%
   select(Region, Year, Age, Deaths, Population)
 
+
+
 cat(sprintf("Rows: %d | Regions: %s\n", nrow(df),
             paste(sort(unique(df$Region)), collapse = ", ")))
 cat(sprintf("Years: %d-%d | Ages: %d-%d\n",
@@ -205,6 +207,61 @@ cat(sprintf("  Ages: %d-%d | Time points: %d (%.1f - %.1f)\n",
             min(monthly_times), max(monthly_times)))
 ```
 
+```{r monthly-alt-times}
+# Version 1: Sequential index 1, 2, ..., N
+monthly_index <- seq_along(monthly_times)
+
+# Version 2: Absolute month number (Year * 12 + Month)
+monthly_absmonth <- sort(unique(df_monthly$Year * 12 + df_monthly$Month))
+
+cat(sprintf("Sequential index: %d - %d\n", min(monthly_index), max(monthly_index)))
+cat(sprintf("Absolute month:  %d - %d\n", min(monthly_absmonth), max(monthly_absmonth)))
+```
+
+```{r monthly-stmomodata-index}
+demog_list_monthly_idx <- list()
+stmomo_list_monthly_idx <- list()
+for (reg in regions) {
+  mat <- matrices_monthly[[reg]]
+  Dxt <- mat$Dxt; Ext <- mat$Ext
+  colnames(Dxt) <- colnames(Ext) <- monthly_index
+  demog_list_monthly_idx[[reg]] <- demogdata(
+    data = Dxt / Ext, pop = Ext,
+    ages = ages, years = monthly_index,
+    type = "mortality", label = reg, name = "total"
+  )
+  stmomo_list_monthly_idx[[reg]] <- StMoMoData(
+    demog_list_monthly_idx[[reg]], series = "total", type = "central"
+  )
+}
+
+cat("Sequential-index StMoMoData created\n")
+cat(sprintf("  Ages: %d-%d | Index: %d - %d\n",
+            min(ages), max(ages), min(monthly_index), max(monthly_index)))
+```
+
+```{r monthly-stmomodata-absmonth}
+demog_list_monthly_abs <- list()
+stmomo_list_monthly_abs <- list()
+for (reg in regions) {
+  mat <- matrices_monthly[[reg]]
+  Dxt <- mat$Dxt; Ext <- mat$Ext
+  colnames(Dxt) <- colnames(Ext) <- monthly_absmonth
+  demog_list_monthly_abs[[reg]] <- demogdata(
+    data = Dxt / Ext, pop = Ext,
+    ages = ages, years = monthly_absmonth,
+    type = "mortality", label = reg, name = "total"
+  )
+  stmomo_list_monthly_abs[[reg]] <- StMoMoData(
+    demog_list_monthly_abs[[reg]], series = "total", type = "central"
+  )
+}
+
+cat("Absolute-month StMoMoData created\n")
+cat(sprintf("  Ages: %d-%d | Months: %d - %d\n",
+            min(ages), max(ages), min(monthly_absmonth), max(monthly_absmonth)))
+```
+
 ```{r summary-table}
 df %>%
   group_by(Region) %>%
@@ -238,13 +295,18 @@ df %>%
 ```{r save}
 out <- "../Data/wonder_opioid"
 
-saveRDS(stmomo_list,         file.path(out, "allcause_stmomo_yearly.rds"))
-saveRDS(stmomo_list_monthly, file.path(out, "allcause_stmomo_monthly.rds"))
+saveRDS(stmomo_list,              file.path(out, "allcause_stmomo_yearly.rds"))
+saveRDS(stmomo_list_monthly,     file.path(out, "allcause_stmomo_monthly.rds"))
+saveRDS(stmomo_list_monthly_idx, file.path(out, "allcause_stmomo_monthly_index.rds"))
+saveRDS(stmomo_list_monthly_abs, file.path(out, "allcause_stmomo_monthly_absmonth.rds"))
 
 cat("Saved to", out, ":\n")
-cat(sprintf("  allcause_stmomo_yearly.rds  - %d ages x %d years x %d regions\n",
+cat(sprintf("  allcause_stmomo_yearly.rds           - %d ages x %d years x %d regions\n",
             length(ages), length(years), length(regions)))
-cat(sprintf("  allcause_stmomo_monthly.rds - %d ages x %d months x %d regions\n",
+cat(sprintf("  allcause_stmomo_monthly.rds          - %d ages x %d months x %d regions (decimal year)\n",
             length(ages), length(monthly_times), length(regions)))
-cat("  all_cause_of_death_region_month_single_age.csv - combined monthly source\n")
+cat(sprintf("  allcause_stmomo_monthly_index.rds    - %d ages x %d months x %d regions (index 1..N)\n",
+            length(ages), length(monthly_index), length(regions)))
+cat(sprintf("  allcause_stmomo_monthly_absmonth.rds - %d ages x %d months x %d regions (absolute month)\n",
+            length(ages), length(monthly_absmonth), length(regions)))
 ```
