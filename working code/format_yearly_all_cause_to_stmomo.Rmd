@@ -102,6 +102,109 @@ cat(sprintf("  Ages: %d-%d | Years: %d-%d\n", min(ages), max(ages),
             min(years), max(years)))
 ```
 
+```{r load-monthly}
+monthly_raw <- read.csv(
+  "../Data/wonder_opioid/all_cause_of_death_region_month_single_age.csv",
+  stringsAsFactors = FALSE
+)
+
+df_monthly <- monthly_raw %>%
+  filter(Notes == "") %>%
+  mutate(
+    Region = case_when(
+      Census.Region == "Census Region 1: Northeast" ~ "Northeast",
+      Census.Region == "Census Region 2: Midwest"   ~ "Midwest",
+      Census.Region == "Census Region 3: South"     ~ "South",
+      Census.Region == "Census Region 4: West"      ~ "West"
+    ),
+    Age    = suppressWarnings(as.integer(Single.Year.Ages.Code)),
+    Year   = as.integer(Year),
+    Month  = as.integer(sub(".*/", "", Month.Code)),
+    Deaths = suppressWarnings(as.numeric(Deaths))
+  ) %>%
+  filter(!is.na(Age), !is.na(Deaths), Age %in% ages) %>%
+  select(Region, Year, Month, Age, Deaths)
+
+cat(sprintf("Monthly rows: %d | Regions: %s\n", nrow(df_monthly),
+            paste(sort(unique(df_monthly$Region)), collapse = ", ")))
+cat(sprintf("Years: %d-%d | Months: %d-%d | Ages: %d-%d\n",
+            min(df_monthly$Year), max(df_monthly$Year),
+            min(df_monthly$Month), max(df_monthly$Month),
+            min(df_monthly$Age), max(df_monthly$Age)))
+```
+
+```{r monthly-matrices}
+monthly_times <- sort(unique(df_monthly$Year + (df_monthly$Month - 1) / 12))
+
+make_matrices_monthly <- function(deaths_df, pop_df, region) {
+  reg_deaths <- deaths_df %>%
+    filter(Region == region) %>%
+    mutate(Time = Year + (Month - 1) / 12)
+
+  Dxt <- reg_deaths %>%
+    select(Age, Time, Deaths) %>%
+    pivot_wider(names_from = Time, values_from = Deaths) %>%
+    arrange(Age) %>%
+    column_to_rownames("Age") %>%
+    as.matrix()
+
+  # Monthly exposure = yearly population / 12
+  Ext_yr <- pop_df %>%
+    filter(Region == region) %>%
+    select(Age, Year, Population) %>%
+    pivot_wider(names_from = Year, values_from = Population) %>%
+    arrange(Age) %>%
+    column_to_rownames("Age") %>%
+    as.matrix()
+
+  Ext <- Ext_yr[, rep(seq_len(ncol(Ext_yr)), each = 12)] / 12
+  colnames(Ext) <- colnames(Dxt)
+
+  stopifnot(all(dim(Dxt) == dim(Ext)))
+  list(Dxt = Dxt, Ext = Ext)
+}
+
+matrices_monthly <- setNames(
+  lapply(regions, function(r) make_matrices_monthly(df_monthly, df, r)),
+  regions
+)
+
+cat(sprintf("Monthly matrix dimensions per region: %d ages x %d months\n",
+            length(ages), length(monthly_times)))
+```
+
+```{r monthly-demogdata}
+demog_list_monthly <- list()
+for (reg in regions) {
+  mat <- matrices_monthly[[reg]]
+  demog_list_monthly[[reg]] <- demogdata(
+    data  = mat$Dxt / mat$Ext,
+    pop   = mat$Ext,
+    ages  = ages,
+    years = monthly_times,
+    type  = "mortality",
+    label = reg,
+    name  = "total"
+  )
+}
+
+cat("Monthly demogdata objects created for:", paste(regions, collapse = ", "), "\n")
+```
+
+```{r monthly-stmomodata}
+stmomo_list_monthly <- list()
+for (reg in regions) {
+  stmomo_list_monthly[[reg]] <- StMoMoData(
+    demog_list_monthly[[reg]], series = "total", type = "central"
+  )
+}
+
+cat("Monthly StMoMoData objects created\n")
+cat(sprintf("  Ages: %d-%d | Time points: %d (%.1f - %.1f)\n",
+            min(ages), max(ages), length(monthly_times),
+            min(monthly_times), max(monthly_times)))
+```
+
 ```{r summary-table}
 df %>%
   group_by(Region) %>%
@@ -135,10 +238,13 @@ df %>%
 ```{r save}
 out <- "../Data/wonder_opioid"
 
-saveRDS(stmomo_list,  file.path(out, "allcause_stmomo_yearly.rds"))
-
-
+saveRDS(stmomo_list,         file.path(out, "allcause_stmomo_yearly.rds"))
+saveRDS(stmomo_list_monthly, file.path(out, "allcause_stmomo_monthly.rds"))
 
 cat("Saved to", out, ":\n")
-
+cat(sprintf("  allcause_stmomo_yearly.rds  - %d ages x %d years x %d regions\n",
+            length(ages), length(years), length(regions)))
+cat(sprintf("  allcause_stmomo_monthly.rds - %d ages x %d months x %d regions\n",
+            length(ages), length(monthly_times), length(regions)))
+cat("  all_cause_of_death_region_month_single_age.csv - combined monthly source\n")
 ```
