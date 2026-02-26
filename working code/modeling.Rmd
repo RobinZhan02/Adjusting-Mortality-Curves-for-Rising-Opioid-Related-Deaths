@@ -99,6 +99,18 @@ grid_fine <- expand_grid(
 ## M_{x,t}
 grid_fine$y_hat <- (predict(fit, newdata = grid_fine))
 
+
+# rows = age, cols = year
+mat_u <- grid_fine %>%
+  select(age, year, y_hat) %>%
+  tidyr::pivot_wider(names_from = year, values_from = y_hat) %>%
+  arrange(age)
+
+u_xt <- as.matrix(mat_u %>% select(-age))
+rownames(u_xt) <- mat_u$age
+colnames(u_xt) <- as.character(sort(yrs_keep))
+
+
 plot_ly() %>% 
   add_trace(
     data = grid_fine,
@@ -119,6 +131,11 @@ plot_ly() %>%
   margin = list(b = 30, r = 60, t = 0)
 )
 ```
+```{r}
+# matrix on spreadsheet
+View(u_xt)
+```
+
 
 ```{r, fig.width=12, fig.height=9}
 zmat <- grid_fine %>% 
