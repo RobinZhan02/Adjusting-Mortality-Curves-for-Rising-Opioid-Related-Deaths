@@ -14,21 +14,21 @@ library(plotly)
 ```
 
 ```{r, warning=FALSE}
-df_raw <- read_csv("../data/wonder_opioid/Five-Year-Age-Group.csv", show_col_types = FALSE, na = c("", "NA", "Not Applicable", "Suppressed")) |>
-  clean_names() |>
+df_raw <- read_csv("../data/wonder_opioid/Five-Year-Age-Group.csv", show_col_types = FALSE, na = c("", "NA", "Not Applicable", "Suppressed")) %>% 
+  clean_names() %>% 
   filter(!is.na(year))  
 
 #names(df_raw)
 #glimpse(df_raw)
 
-df_year <- df_raw |>
+df_year <- df_raw %>% 
   mutate(
     year = as.integer(year),
     age_groups = five_year_age_groups
   )
 
 # Convert age_groups to numeric age midpoint
-df_year <- df_year |>
+df_year <- df_year %>% 
   mutate(
     age_lo = case_when(
       age_groups == "< 1 year" ~ 0,
@@ -41,14 +41,14 @@ df_year <- df_year |>
     ),
     age = (age_lo + age_hi) / 2,
     mortality = deaths / population
-  ) |>
+  ) %>% 
   drop_na(age, deaths)
 
 # Filter ages 20-60
-df1 <- df_year |>
+df1 <- df_year %>% 
   filter(age >= 20, age <= 60)
 
-df1 <- df1 |>
+df1 <- df1 %>% 
   mutate(log_rate = log(mortality))
 
 fit <- gam(
@@ -73,7 +73,7 @@ grid <- expand_grid(
 grid$u_hat <- predict(fit, newdata = grid)
 grid$y_hat <- exp(grid$u_hat)
 
-grid |>
+grid %>% 
   ggplot(aes(x = age, y = y_hat, group = year)) +
   geom_line(alpha = 0.3) +
   labs(x = "Age", y = "Smoothed log mortality rate")
@@ -81,13 +81,13 @@ grid |>
 
 ```{r}
 #yrs_keep <- sort(unique(grid$year))
-#yrs_keep <- yrs_keep[seq(1, length(yrs_keep), length.out = 10)] |> round()
+#yrs_keep <- yrs_keep[seq(1, length(yrs_keep), length.out = 10)] %>%  round()
 
-yrs_keep <- seq(2000, 2025, by = 1)
+yrs_keep <- seq(2003, 2023, by = 1)
 
-pdat <- grid |> filter(year %in% yrs_keep)
+pdat <- grid %>%  filter(year %in% yrs_keep)
 
-age_fine <- seq(25, 60, by = 1)
+age_fine <- seq(25, 65, by = 1)
 
 #age_fine <- seq(min(pdat$age), max(pdat$age), by = 1)
 
@@ -99,13 +99,13 @@ grid_fine <- expand_grid(
 ## M_{x,t}
 grid_fine$y_hat <- (predict(fit, newdata = grid_fine))
 
-plot_ly() |>
+plot_ly() %>% 
   add_trace(
     data = grid_fine,
     x = ~age, y = ~year, z = ~y_hat,
     type = "scatter3d", mode = "lines",
     split = ~year, line = list(width = 5), opacity = 0.85
-) |>
+) %>% 
   layout(
   title = list(text = "Opioid Mortality Distribution", x = 0.5, y = 0.95),
   scene = list(
@@ -121,14 +121,14 @@ plot_ly() |>
 ```
 
 ```{r, fig.width=12, fig.height=9}
-zmat <- grid_fine |>
-  select(year, age, y_hat) |>
-  pivot_wider(names_from = age, values_from = y_hat) |>
+zmat <- grid_fine %>% 
+  select(year, age, y_hat) %>% 
+  pivot_wider(names_from = age, values_from = y_hat) %>% 
   arrange(year)
 
 x_time  <- zmat$year
 y_age <- as.numeric(colnames(zmat)[-1])
-z      <- as.matrix(zmat |> select(-year))
+z      <- as.matrix(zmat %>%  select(-year))
 
 draw_surface <- function(theta = theta, phi = phi, expand = 1) {
 
