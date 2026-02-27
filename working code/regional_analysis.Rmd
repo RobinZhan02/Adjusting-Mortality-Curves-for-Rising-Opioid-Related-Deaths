@@ -1,0 +1,1015 @@
+---
+title: "regional_analysis"
+output: html_document
+---
+
+```{r message=FALSE}
+# import packages
+library(gnm)
+library(forecast)
+library(StMoMo)
+library(demography)
+library(ggplot2)
+library(tidyverse)
+library(reshape2) # For data transformation
+library(gridExtra)
+library(parallel)
+```
+
+```{r}
+# load dataset
+region_data <- readRDS("../data/wonder_opioid/allcause_stmomo_monthly.rds")
+
+# assign regional data
+Midwest_data <- region_data[["Midwest"]]
+Northeast_data <- region_data[["Northeast"]]
+South_data <- region_data[["South"]]
+West_data <- region_data[["West"]]
+```
+
+# CI for kt
+```{r}
+# Construct (per-year) Gaussian CI for kappa_t using RW-with-drift increments
+# Returns a data frame: year, kappa, lower, upper
+kappa_ci_df <- function(LCfit, alpha = 0.05, show_plot = TRUE) {
+  # Extract kappa and years
+  kappa <- as.numeric(LCfit$kt)
+  years <- LCfit$years
+  
+  stopifnot(length(years) == length(kappa))
+  if (length(kappa) < 2) stop("Need at least 2 years of kappa_t to estimate increments.")
+  if (anyNA(kappa)) stop("kappa_t contains NA; please remove/impute before constructing CI.")
+  
+  # Increments (RW with drift): y_t = kappa_t - kappa_{t-1}
+  y <- diff(kappa)
+  
+  # Drift estimate (not directly used in the per-year CI band below, but kept for completeness)
+  theta_hat <- mean(y)
+  
+  # Innovations: omega_t = y_t - theta_hat
+  omega_hat <- y - theta_hat
+  
+  # Innovation variance (MLE)
+  sigma2_w_hat <- mean(omega_hat^2)
+  sigma_w_hat  <- sqrt(sigma2_w_hat)
+  
+  # Gaussian CI (same width each year under this simple assumption)
+  z <- qnorm(1 - alpha / 2)
+  kappa_lower <- kappa - z * sigma_w_hat
+  kappa_upper <- kappa + z * sigma_w_hat
+  
+  kt_df <- data.frame(
+    year  = years,
+    kappa = kappa,
+    lower = kappa_lower,
+    upper = kappa_upper
+  )
+  
+  # plot
+  p <- ggplot(kt_df, aes(x = year, y = kappa)) +
+          geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+          geom_line() +
+          labs(
+            x = "Year",
+            y = "kappa_t",
+            title = paste0("GAPC Gaussian RW-based ",
+               round((1 - alpha) * 100),
+               "% CI for kappa_t (per year)")
+          ) +
+          theme_minimal()
+  if (isTRUE(show_plot)) print(p) 
+  
+  return(kt_df)
+}
+```
+
+# CI for CBD
+```{r}
+# Construct (per-time) Gaussian CI for CBD kappa1_t and kappa2_t
+# using RW-with-drift increments (same style as your kappa_ci_df).
+#
+# Inputs:
+#   CBDfit    : fitted StMoMo cbd object (must contain $kt and $years)
+#   alpha     : significance level (default 0.05 -> 95% CI)
+#   show_plot : TRUE/FALSE; if TRUE, plot kappa1 and kappa2 with CI bands
+#
+# Outputs:
+#   list(kt_df1 = ..., kt_df2 = ...)  (both data.frames with year,kappa,lower,upper)
+
+kappa_ci_df_CBD <- function(CBDfit, alpha = 0.05, show_plot = TRUE) {
+
+  # --- Extract kappa1, kappa2 and years ---
+  if (is.null(CBDfit$kt)) stop("CBDfit$kt is missing.")
+  if (is.null(CBDfit$years)) stop("CBDfit$years is missing.")
+
+  kappa1 <- as.numeric(CBDfit$kt[1, ])
+  kappa2 <- as.numeric(CBDfit$kt[2, ])
+  years  <- CBDfit$years
+
+  stopifnot(length(years) == length(kappa1), length(years) == length(kappa2))
+  if (length(years) < 2) stop("Need at least 2 time points to estimate increments.")
+  if (anyNA(kappa1) || anyNA(kappa2)) stop("kappa contains NA; please remove/impute before constructing CI.")
+
+  # --- RW-with-drift increments ---
+  y1 <- diff(kappa1)
+  y2 <- diff(kappa2)
+
+  theta_hat1 <- mean(y1)
+  theta_hat2 <- mean(y2)
+
+  omega_hat1 <- y1 - theta_hat1
+  omega_hat2 <- y2 - theta_hat2
+
+  # Innovation variance (MLE)
+  sigma_w_hat1 <- sqrt(mean(omega_hat1^2))
+  sigma_w_hat2 <- sqrt(mean(omega_hat2^2))
+
+  # --- Gaussian CI (same-width band under this simple assumption) ---
+  z <- qnorm(1 - alpha / 2)
+
+  kappa_lower1 <- kappa1 - z * sigma_w_hat1
+  kappa_upper1 <- kappa1 + z * sigma_w_hat1
+
+  kappa_lower2 <- kappa2 - z * sigma_w_hat2
+  kappa_upper2 <- kappa2 + z * sigma_w_hat2
+
+  kt_df1 <- data.frame(
+    year  = years,
+    kappa = kappa1,
+    lower = kappa_lower1,
+    upper = kappa_upper1
+  )
+
+  kt_df2 <- data.frame(
+    year  = years,
+    kappa = kappa2,
+    lower = kappa_lower2,
+    upper = kappa_upper2
+  )
+
+  # --- Optional plots (base R, similar to what you did before) ---
+  if (isTRUE(show_plot)) {
+    old_par <- par(no.readonly = TRUE)
+    on.exit(par(old_par), add = TRUE)
+
+    par(mfrow = c(2, 1), mar = c(5, 6, 3, 1))
+
+    # kappa1
+    plot(kt_df1$year, kt_df1$kappa, type = "l", lwd = 2, col = "black",
+         ylim = c(min(kt_df1$lower), max(kt_df1$upper)),
+         main = expression(kappa[t]^{(1)} ~ "with 95% CI"),
+         xlab = "Year", ylab = expression(kappa[t]^{(1)}),
+         cex.main = 2, cex.lab = 2, cex.axis = 1.3)
+    lines(kt_df1$year, kt_df1$lower, col = "gray40", lty = 2, lwd = 2)
+    lines(kt_df1$year, kt_df1$upper, col = "gray40", lty = 2, lwd = 2)
+    legend("topright",
+           legend = c("kappa1(t)", "95% CI"),
+           col = c("black", "gray40"),
+           lty = c(1, 2),
+           lwd = 2, bty = "n")
+
+    # kappa2
+    plot(kt_df2$year, kt_df2$kappa, type = "l", lwd = 2, col = "black",
+         ylim = c(min(kt_df2$lower), max(kt_df2$upper)),
+         main = expression(kappa[t]^{(2)} ~ "with 95% CI"),
+         xlab = "Year", ylab = expression(kappa[t]^{(2)}),
+         cex.main = 2, cex.lab = 2, cex.axis = 1.3)
+    lines(kt_df2$year, kt_df2$lower, col = "gray40", lty = 2, lwd = 2)
+    lines(kt_df2$year, kt_df2$upper, col = "gray40", lty = 2, lwd = 2)
+    legend("topright",
+           legend = c("kappa2(t)", "95% CI"),
+           col = c("black", "gray40"),
+           lty = c(1, 2),
+           lwd = 2, bty = "n")
+
+    par(mfrow = c(1, 1))
+  }
+
+  return(list(kt_df1 = kt_df1, kt_df2 = kt_df2))
+}
+```
+
+# Parameter Plot for LC
+```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=10}
+# Plot LC ax, bx, kt with (per-year) kappa CI lines
+# - Input: LCfit
+# - Output: graphs (side effect)
+# - Internally calls kappa_ci_df(LCfit, show_plot = FALSE) to get kt_df
+plot_lc_components_ci <- function(LCfit){
+  # get CI df without plotting
+  kt_df <- kappa_ci_df(LCfit, show_plot = FALSE)
+  
+  # robust year vector for kt plot (your original code uses colnames(LCfit$kt))
+  kt_years <- as.numeric(colnames(LCfit$kt))
+  if (anyNA(kt_years)) {
+    # fallback if colnames are missing/non-numeric
+    kt_years <- LCfit$years
+  }
+  
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar), add = TRUE)
+  
+  par(mfrow = c(3, 1), mar = c(5, 6, 3, 1))
+  
+  # ax
+  plot(25:65, LCfit$ax, type = "l", lwd = 2, col = "black",
+       main = expression(a[x] ~ "vs." ~ x),
+       xlab = "Age", ylab = expression(a[x]),
+       cex.main = 2, cex.lab = 2, cex.axis = 1.3)
+  axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis = 1.3)
+  
+  # bx
+  plot(25:65, LCfit$bx, type = "l", lwd = 2, col = "black",
+       main = expression(beta[x]^{(1)} ~ "vs." ~ x),
+       xlab = "Age", ylab = expression(beta[x]^{(1)}),
+       cex.main = 2, cex.lab = 2, cex.axis = 1.3)
+  axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis = 1.3)
+  
+  # kt with CI
+  plot(kt_years, LCfit$kt[1, ], type = "l", lwd = 2, col = "black",
+       main = expression(kappa[t]^{(1)} ~ "vs." ~ t),
+       ylim = c(min(kt_df$lower), max(kt_df$upper)),
+       xlab = "Year", ylab = expression(kappa[t]^{(1)}),
+       cex.main = 2, cex.lab = 2, cex.axis = 1.3)
+  
+  lines(kt_df$year, kt_df$lower, col = "gray40", lty = 2, lwd = 2)
+  lines(kt_df$year, kt_df$upper, col = "gray40", lty = 2, lwd = 2)
+  
+  legend("topright",
+         legend = c("kappa(t)", "95% CI"),
+         col = c("black", "gray40"),
+         lty = c(1, 2),
+         lwd = 2,
+         bty = "n")
+  
+  invisible(NULL)
+}
+```
+
+# Parameter Plot for RH
+```{r}
+# Plot RHnp fit components + kappa CI band (base R)
+# - Input: RHnp_fit (a fitted StMoMo RHnp object)
+# - Uses:  kappa_ci_df(LCfit, alpha=0.05, show_plot=FALSE) that you already defined
+# - Output: produces the plots (returns invisibly a list with kt_df + layout info)
+
+plot_RHnp_with_kappa_CI <- function(RHnp_fit, alpha = 0.05) {
+  # --- get kappa CI df (no ggplot shown) ---
+  kt_df <- kappa_ci_df(RHnp_fit, alpha = alpha, show_plot = FALSE)
+
+  # --- layout (same as your code) ---
+  layout_mat <- matrix(c(1, 0,
+                         2, 3,
+                         4, 5),
+                       nrow = 3, byrow = TRUE)
+
+  # keep old par settings so we can restore
+  old_par <- par(no.readonly = TRUE)
+  on.exit({
+    layout(1)
+    par(old_par)
+  }, add = TRUE)
+
+  layout(layout_mat)
+  par(mar = c(5, 6, 3, 1))
+
+  ages <- RHnp_fit$ages/12
+
+  # 1) ax
+  plot(ages, RHnp_fit$ax, type = "l", lwd = 2, col = "black",
+       main = expression(a[x] ~ "vs." ~ x),
+       xlab = "Age", ylab = expression(a[x]), cex.main = 2,
+       cex.lab = 2, cex.axis = 1.3)
+  axis(1, at = seq(min(ages), max(ages), by = 5), 
+       labels = seq(min(ages), max(ages), by = 5), cex.axis = 1.3)
+
+  # 2) bx (beta^(1)_x)
+  plot(ages, RHnp_fit$bx, type = "l", lwd = 2, col = "black",
+       main = expression(beta[x]^{(1)} ~ "vs." ~ x),
+       xlab = "Age", ylab = expression(beta[x]^{(1)}), cex.main = 2,
+       cex.lab = 2, cex.axis = 1.3)
+  axis(1, at = seq(min(ages), max(ages), by = 5), 
+       labels = seq(min(ages), max(ages), by = 5), cex.axis = 1.3)
+
+  # 3) kt (kappa^(1)_t) with CI
+  t_years <- as.numeric(colnames(RHnp_fit$kt))/12
+  kappa1  <- as.numeric(RHnp_fit$kt[1, ])
+
+  plot(t_years, kappa1, type = "l", lwd = 2, col = "black",
+       main = expression(kappa[t]^{(1)} ~ "vs." ~ t),
+       ylim = c(min(kt_df$lower), max(kt_df$upper)),
+       xlab = "Year", ylab = expression(kappa[t]^{(1)}), cex.main = 2,
+       cex.lab = 2, cex.axis = 1.3)
+
+  lines(t_years, kt_df$lower, col = "gray40", lty = 2, lwd = 2)
+  lines(t_years, kt_df$upper, col = "gray40", lty = 2, lwd = 2)
+
+  legend("topright",
+         legend = c("kappa(t)", "95% CI"),
+         col = c("black", "gray40"),
+         lty = c(1, 3),
+         lwd = 2,
+         bty = "n")
+
+  # 4) b0x (beta^(2)_x in RH notation in your code)
+  plot(ages, RHnp_fit$b0x, type = "l", lwd = 2, col = "black",
+       main = expression(beta[x]^{(2)} ~ "vs." ~ x),
+       xlab = "Age", ylab = expression(beta[x]^{(2)}), cex.main = 2,
+       cex.lab = 2, cex.axis = 1.3)
+  axis(1, at = seq(min(ages), max(ages), by = 5), 
+       labels = seq(min(ages), max(ages), by = 5), cex.axis = 1.3)
+
+  # 5) gc (gamma_{t-x} vs cohort)
+  cohorts <- as.numeric(names(RHnp_fit$gc))/12
+  plot(cohorts, RHnp_fit$gc, type = "l", lwd = 2, col = "black",
+       main = expression(gamma[t-x] ~ "vs." ~ t-x),
+       xlab = "Cohort", ylab = expression(gamma[t-x]), cex.main = 2,
+       cex.lab = 2, cex.axis = 1.3)
+
+  invisible(list(kt_df = kt_df))
+}
+```
+
+# Parameter Plot for CBD
+```{r}
+# Plot CBD kappa^(1) and kappa^(2) with CI (ggplot), with x-breaks built from data range
+# - x_break_by controls the spacing of breaks (e.g., 5, 10, 20)
+plot_CBD_kappa_CI_gg <- function(CBDfit, alpha = 0.05,
+                                 x_break_by = 5,
+                                 base_size = 12) {
+  CBDfit$years <- CBDfit$years/12
+  out <- kappa_ci_df_CBD(CBDfit, alpha = alpha, show_plot = FALSE)
+  kt_df1 <- out$kt_df1
+  kt_df2 <- out$kt_df2
+
+  # Build breaks from data range
+  year_min <- floor(min(c(kt_df1$year, kt_df2$year), na.rm = TRUE))
+  year_max <- ceiling(max(c(kt_df1$year, kt_df2$year), na.rm = TRUE))
+  x_breaks <- seq(year_min, year_max, by = x_break_by)
+
+  p1 <- ggplot(kt_df1, aes(x = year, y = kappa)) +
+    geom_line(color = "black", linewidth = 0.6) +
+    geom_line(aes(y = lower), color = "gray40", linewidth = 0.6, linetype = "33") +
+    geom_line(aes(y = upper), color = "gray40", linewidth = 0.6, linetype = "33") +
+    labs(
+      x = "year",
+      y = expression(kappa[t]^{(1)}),
+      title = expression(kappa[t]^{(1)} ~ "vs. t")
+    ) +
+    scale_x_continuous(breaks = x_breaks) +
+    theme_classic(base_size = base_size) +
+    theme(
+      plot.title   = element_text(hjust = 0.5, size = 14),
+      axis.title.x = element_text(size = 14),
+      axis.title.y = element_text(size = 12),
+      axis.text    = element_text(size = 10)
+    )
+
+  p2 <- ggplot(kt_df2, aes(x = year, y = kappa)) +
+    geom_line(color = "black", linewidth = 0.6) +
+    geom_line(aes(y = lower), color = "gray40", linewidth = 0.6, linetype = "33") +
+    geom_line(aes(y = upper), color = "gray40", linewidth = 0.6, linetype = "33") +
+    labs(
+      x = "year",
+      y = expression(kappa[t]^{(2)}),
+      title = expression(kappa[t]^{(2)} ~ "vs. t")
+    ) +
+    scale_x_continuous(breaks = x_breaks) +
+    theme_classic(base_size = base_size) +
+    theme(
+      plot.title   = element_text(hjust = 0.5, size = 14),
+      axis.title.x = element_text(size = 14),
+      axis.title.y = element_text(size = 12),
+      axis.text    = element_text(size = 10)
+    )
+
+  gridExtra::grid.arrange(p1, p2, ncol = 1)
+
+  invisible(list(p1 = p1, p2 = p2, kt_df1 = kt_df1, kt_df2 = kt_df2, x_breaks = x_breaks))
+}
+```
+
+# LC
+```{r}
+# LC
+LC <- lc(link = "log", const = "sum")
+LCfit_Midwest <- fit(LC, data = Midwest_data, ages.fit = 25:65)
+LCfit_Northeast <- fit(LC, data = Northeast_data, ages.fit = 25:65)
+LCfit_South <- fit(LC, data = South_data, ages.fit = 25:65)
+LCfit_West <- fit(LC, data = West_data, ages.fit = 25:65)
+```
+
+## Plot LCfit
+```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=10}
+plot_lc_components_ci(LCfit_Midwest)
+plot_lc_components_ci(LCfit_Northeast)
+plot_lc_components_ci(LCfit_South)
+plot_lc_components_ci(LCfit_West)
+```
+
+# RH
+```{r}
+fit_RH_rr <- function(mort_data){
+  max_try <- 10
+  mort_data2 <- mort_data
+  mort_data2$years <- mort_data$years *12
+  mort_data2$ages <- mort_data$ages*12
+  # --- track best successful attempt ---
+  best_logLik <- -Inf
+  best_fitRH <- NULL
+  
+  RHnp_mod <- rh(link = "log", cohortAgeFun = "NP")
+
+  for (j in seq_len(max_try)) {
+    # 1) Try fitting RH 
+    fitRH_j <- tryCatch(
+      fit(RHnp_mod, data = mort_data2,
+          ages.fit = (25:65)*12, control = list(maxit = 200)),
+      error = function(e) NULL
+    )
+  
+    # 2) if fit error -> move on
+    if (is.null(fitRH_j) || isTRUE(fitRH_j$fail)) next
+    
+    ll_j <- fitRH_j$loglik
+    if (ll_j > best_logLik) {
+    best_logLik <- ll_j
+    best_fitRH <- fitRH_j
+    }
+    
+    return(best_fitRH) 
+  }
+}
+```
+
+```{r}
+  mort_data2 <- Midwest_data
+  mort_data2$years <- Midwest_data$years *12
+  mort_data2$ages <- Midwest_data$ages*12
+```
+
+```{r}
+fit_RH_rr2 <- function(mort_data){
+  max_try <- 10
+  mort_data2 <- Midwest_data
+  mort_data2$years <- mort_data$years *12
+  mort_data2$ages <- mort_data$ages*12
+  # --- track best successful attempt ---
+  best_logLik <- -Inf
+  best_fitRH <- NULL
+  
+  RHnp_mod <- rh(link = "log", cohortAgeFun = "NP")
+
+  for (j in seq_len(max_try)) {
+    # 1) Try fitting RH 
+    fitRH_j <- tryCatch(
+      fit(RHnp_mod, data = mort_data2,
+          ages.fit = (25:65)*12, years.fit = mort_data2$years[1:48],control = list(maxit = 200)),
+      error = function(e) NULL
+    )
+  
+    # 2) if fit error -> move on
+    if (is.null(fitRH_j) || isTRUE(fitRH_j$fail)) next
+    
+    ll_j <- fitRH_j$loglik
+    if (ll_j > best_logLik) {
+    best_logLik <- ll_j
+    best_fitRH <- fitRH_j
+    }
+    
+    return(best_fitRH) 
+  }
+}
+```
+
+```{r}
+fit_RH_rr2(Midwest_data)
+```
+
+```{r}
+library(parallel)
+
+data_list <- list(
+  Midwest   = Midwest_data,
+  Northeast = Northeast_data,
+  South     = South_data,
+  West      = West_data
+)
+
+cl <- makeCluster(4)
+
+# Only StMoMo is needed — that's all your function uses
+clusterExport(cl, varlist = c("fit_RH_rr"))
+clusterEvalQ(cl, library(StMoMo))
+
+results <- parLapply(cl, data_list, fit_RH_rr)
+
+stopCluster(cl)
+
+# Extract results
+RH_Midwest   <- results$Midwest
+RH_Northeast <- results$Northeast
+RH_South     <- results$South
+RH_West      <- results$West
+```
+## Plot RHfit 
+```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=13}
+plot_RHnp_with_kappa_CI(RH_Midwest)
+
+plot_RHnp_with_kappa_CI(RH_Northeast)
+
+plot_RHnp_with_kappa_CI(RH_South)
+
+plot_RHnp_with_kappa_CI(RH_West)
+```
+
+# CBD
+```{r}
+fit_CBD <- function(mort_data){
+  N <- 1e6
+  mort_data2 <- mort_data
+  mort_data2$Dxt <- round(mort_data$Dxt * N)
+  mort_data2$Ext <- round(mort_data$Ext * N)
+  mort_data2$years <- mort_data$years*12
+  CBD <- cbd(link = "logit")
+  CBDfit <- fit(CBD, data =  central2initial(mort_data2), ages.fit = (25:65))
+  return(CBDfit)
+}
+```
+
+```{r}
+CBDfit_Midwest <- fit_CBD(Midwest_data)
+
+CBDfit_Northeast <- fit_CBD(Northeast_data)
+
+CBDfit_South <- fit_CBD(South_data)
+
+CBDfit_West <- fit_CBD(West_data)
+```
+
+## Plot CBD
+```{r}
+plot_CBD_kappa_CI_gg(CBDfit_Midwest)
+```
+
+# Forecast 
+```{r}
+get_fc_rates_vec <- function(fc, ages) {
+  r <- fc$rates
+  if (is.null(dim(r))) {
+    v <- r
+  } else {
+    v <- r[, 1]
+  }
+  v <- as.numeric(v)
+  names(v) <- rownames(as.matrix(fc$rates)) %||% names(fc$rates) # optional, but safer
+
+  # best: just reorder by ages using names when available
+  if (!is.null(names(fc$rates)) || !is.null(rownames(as.matrix(fc$rates)))) {
+    nm <- if (!is.null(names(fc$rates))) names(fc$rates) else rownames(as.matrix(fc$rates))
+    names(v) <- nm
+    v <- v[as.character(ages)]
+  }
+  v
+}
+```
+
+## LC
+### one month ahead
+```{r}
+## LC
+
+lc_roll_1mo_forecast <- function(mort_data, start_year=2003, end_year=2021) {
+  # fixed settings (same as your yearly code)
+  ages_fit <- 25:65
+  LC <- lc(link = "log", const = "sum")
+  mort_data$ages <- ages_fit
+  mort_data$Dxt <- mort_data$Dxt[ages_fit,]
+  mort_data$Ext <- mort_data$Ext[ages_fit,]
+  
+  # evaluation months
+  time_num <- mort_data$years
+  eval_idx <- which(time_num >= start_year & time_num < end_year)
+  # for 1-step ahead forecast, origin is previous month (index-based, robust)
+  origin_idx <- eval_idx - 1
+  
+  eval_time   <- time_num[eval_idx]
+  origin_time <- time_num[origin_idx]
+  
+  # forecast rate, output matrices
+  mx_hat_lc_rw <- matrix(NA_real_, nrow = length(ages_fit), ncol = length(eval_idx),
+                       dimnames = list(as.character(ages_fit), as.character(eval_time)))
+  
+  mx_hat_lc_ar <- matrix(NA_real_, nrow = length(ages_fit), ncol = length(eval_idx),
+                       dimnames = list(as.character(ages_fit), as.character(eval_time)))
+
+  for (i in seq_along(eval_idx)) {
+    T <- origin_time[i]
+    # fit LC with design experience year
+    fitLC_f <- fit(LC, data = mort_data, ages.fit = ages_fit, years.fit = time_num[1:origin_idx[i]])
+    # check convergence
+    print(paste("Year:", T, fitLC_f$conv))
+    # one step ahead forecast
+    fcLC_rw <- forecast(fitLC_f, h=1, level=95)
+    fcLC_ar <- forecast(fitLC_f, h=1, kt.method = "iarima", kt.order = c(1,0,0), level=95)
+  
+    # extract forecast rate
+    mx_hat_lc_rw[, as.character(eval_time[i])] <- get_fc_rates_vec(fcLC_rw, ages_fit)
+    mx_hat_lc_ar[, as.character(eval_time[i])] <- get_fc_rates_vec(fcLC_ar, ages_fit)
+  }
+  return(list(
+  mx_hat_lc_rw = mx_hat_lc_rw,
+  mx_hat_lc_ar = mx_hat_lc_ar,
+  eval_time = eval_time,
+  origin_time = origin_time
+  ))
+}
+```
+
+```{r}
+library(parallel)
+
+data_list <- list(
+  Midwest   = Midwest_data,
+  Northeast = Northeast_data,
+  South     = South_data,
+  West      = West_data
+)
+
+cl <- makeCluster(4)
+
+# Export your two custom functions
+clusterExport(cl, varlist = c("lc_roll_1mo_forecast", "get_fc_rates_vec"))
+
+# Load StMoMo on each worker
+clusterEvalQ(cl, library(StMoMo))
+
+# Run all four at the same time
+results <- parLapply(cl, data_list, lc_roll_1mo_forecast)
+
+stopCluster(cl)
+
+# Extract results
+LCfor_Midwest   <- results$Midwest
+LCfor_Northeast <- results$Northeast
+LCfor_South     <- results$South
+LCfor_West      <- results$West
+```
+
+### Store result as rds
+```{r}
+# save independently
+saveRDS(LCfor_Midwest,   file = "LC_monthly_Midwest.rds")
+saveRDS(LCfor_Northeast, file = "LC_monthly_Northeast.rds")
+saveRDS(LCfor_South,     file = "LC_monthly_South.rds")
+saveRDS(LCfor_West,      file = "LC_monthly_West.rds")
+```
+
+### Load Result
+```{r}
+LCfor_Midwest   <- readRDS("LC_monthly_Midwest.rds")
+LCfor_Northeast <- readRDS("LC_monthly_Northeast.rds")
+LCfor_South     <- readRDS("LC_monthly_South.rds")
+LCfor_West      <- readRDS("LC_monthly_West.rds")
+```
+
+## CBD
+### One month ahead
+```{r}
+## CBD
+CBD_roll_1mo_forecast <- function(mort_data, start_year=2003, end_year=2021) {
+  # fixed settings (same as your yearly code)
+  ages_fit <- 25:65
+  CBD <- cbd(link = "logit")
+  N <- 1e6
+  mort_data$Dxt <- round(mort_data$Dxt * N)
+  mort_data$Ext <- round(mort_data$Ext * N)
+  mort_data$years <- mort_data$years*12
+  mort_data$ages <- ages_fit
+  mort_data$Dxt <- mort_data$Dxt[ages_fit,]
+  mort_data$Ext <- mort_data$Ext[ages_fit,]
+  
+  # evaluation months
+  time_num <- mort_data$years
+  eval_idx <- which(time_num >= start_year*12 & time_num < end_year*12)
+  # for 1-step ahead forecast, origin is previous month (index-based, robust)
+  origin_idx <- eval_idx - 1
+  
+  eval_time   <- time_num[eval_idx]
+  origin_time <- time_num[origin_idx]
+  
+  # forecast rate, output matrices
+  qx_hat_CBD <- matrix(NA_real_, nrow = length(ages_fit), ncol = length(eval_idx),
+                     dimnames = list(as.character(ages_fit), as.character(eval_time/12)))
+
+  for (i in seq_along(eval_idx)) {
+    T <- origin_time[i]
+    # fit LC with design experience year
+    fitCBD_f <- fit(CBD, data = central2initial(mort_data), ages.fit = ages_fit, years.fit = time_num[1:origin_idx[i]])
+    # check convergence
+    print(paste("Year:", T/12, fitCBD_f$conv))
+    # one step ahead forecast
+    fcCBD <- forecast(fitCBD_f, h=1, level=95)
+  
+    # extract forecast rate
+    qx_hat_CBD[, as.character(eval_time[i]/12)] <- get_fc_rates_vec(fcCBD, ages_fit)
+  }
+  return(list(
+  qx_hat_CBD = qx_hat_CBD,
+  eval_time = eval_time/12,
+  origin_time = origin_time/12
+  ))
+}
+```
+
+```{r}
+library(parallel)
+
+data_list <- list(
+  Midwest   = Midwest_data,
+  Northeast = Northeast_data,
+  South     = South_data,
+  West      = West_data
+)
+
+cl <- makeCluster(4)
+
+# Export your two custom functions
+clusterExport(cl, varlist = c("CBD_roll_1mo_forecast", "get_fc_rates_vec"))
+
+# Load StMoMo on each worker
+clusterEvalQ(cl, library(StMoMo))
+
+# Run all four at the same time
+results <- parLapply(cl, data_list, CBD_roll_1mo_forecast)
+
+stopCluster(cl)
+
+# Extract results
+CBDfor_Midwest   <- results$Midwest
+CBDfor_Northeast <- results$Northeast
+CBDfor_South     <- results$South
+CBDfor_West      <- results$West
+```
+
+### Store result as rds
+```{r}
+# save independently
+saveRDS(CBDfor_Midwest,   file = "CBD_monthly_Midwest.rds")
+saveRDS(CBDfor_Northeast, file = "CBD_monthly_Northeast.rds")
+saveRDS(CBDfor_South,     file = "CBD_monthly_South.rds")
+saveRDS(CBDfor_West,      file = "CBD_monthly_West.rds")
+```
+
+### Load Result 
+```{r}
+CBDfor_Midwest   <- readRDS("CBD_monthly_Midwest.rds")
+CBDfor_Northeast <- readRDS("CBD_monthly_Northeast.rds")
+CBDfor_South     <- readRDS("CBD_monthly_South.rds")
+CBDfor_West      <- readRDS("CBD_monthly_West.rds")
+```
+
+## RH
+```{r}
+rh_roll_1mo_forecast <- function(mort_data, start_year = 2003, end_year = 2021) {
+  
+  # ---- fixed settings ----
+  ages_fit <- 25:65
+  max_try  <- 10
+  
+  # scale to monthly units (same as fit_RH_rr)
+  mort_data$years <- mort_data$years * 12
+  mort_data$ages  <- mort_data$ages  * 12
+  
+  # update row names (ages) and column names (years) of Dxt and Ext
+  rownames(mort_data$Dxt) <- as.character(mort_data$ages)
+  colnames(mort_data$Dxt) <- as.character(mort_data$years)
+  rownames(mort_data$Ext) <- as.character(mort_data$ages)
+  colnames(mort_data$Ext) <- as.character(mort_data$years)
+
+  # now subset to ages of interest
+  ages_fit_mo <- ages_fit * 12
+  mort_data$Dxt <- mort_data$Dxt[as.character(ages_fit_mo), ]
+  mort_data$Ext <- mort_data$Ext[as.character(ages_fit_mo), ]
+  # change the mort_data$ages
+  mort_data$ages <- ages_fit*12
+  
+  # RH model definition
+  RHnp_mod <- rh(link = "log", cohortAgeFun = "NP")
+  
+  # ---- evaluation months ----
+  time_num   <- mort_data$years   # in monthly units now
+  eval_idx   <- which(time_num >= start_year * 12 & time_num < end_year * 12)
+  origin_idx <- eval_idx - 1
+  
+  eval_time   <- time_num[eval_idx]
+  origin_time <- time_num[origin_idx]
+  
+  # yearly versions for output naming only
+  eval_time_yr   <- eval_time   / 12
+  origin_time_yr <- origin_time / 12
+  
+  # ---- initialize storage lists ----
+  sum_list      <- vector("list", length(origin_time))
+  names(sum_list) <- as.character(origin_time_yr)
+  
+  sum_list_best <- vector("list", length(origin_time))
+  names(sum_list_best) <- as.character(origin_time_yr)
+  
+  # ---- output matrix ----
+  mx_hat_rh_ar <- matrix(NA_real_,
+                         nrow = length(ages_fit),
+                         ncol = length(eval_idx),
+                         dimnames = list(as.character(ages_fit),
+                                         as.character(eval_time_yr)))
+  
+  # ---- rolling forecast loop ----
+  for (i in seq_along(eval_idx)) {
+    
+    T_mo <- origin_time[i]       # origin in monthly units (for StMoMo)
+    T_yr <- origin_time_yr[i]    # origin in yearly units (for naming)
+    set.seed(296 + T_mo) 
+    
+    cat("\n--- Origin Year:", T_yr, "| Forecast Year:", eval_time_yr[i], "---\n")
+    
+    # data up to origin
+    years_fit_mo <- time_num[1:origin_idx[i]]
+    
+    # yearly versions for naming
+    years_fit_yr <- years_fit_mo / 12
+    
+    # cohorts for this origin (monthly units for computation, yearly for naming)
+    cohorts_fit_mo <- (min(years_fit_mo) - max(ages_fit_mo)):(max(years_fit_mo) - min(ages_fit_mo))
+    cohorts_fit_yr <- cohorts_fit_mo / 12
+    
+    # ---- column names in yearly units ----
+    cn_i <- c(
+      "conv", "fc_ok",
+      paste0("ax_",    ages_fit),        # yearly ages 25:65
+      paste0("bx1_",   ages_fit),
+      paste0("bx2_",   ages_fit),
+      paste0("kt_",    years_fit_yr),    # yearly kt
+      paste0("gc_",    cohorts_fit_yr),  # yearly gc
+      paste0("mx_fc_", ages_fit)         # yearly ages
+    )
+    
+    # ---- initialize summary matrices for this origin ----
+    sum_mat <- matrix(NA_real_,
+                      nrow = max_try,
+                      ncol = length(cn_i),
+                      dimnames = list(paste0("iter_", 1:max_try), cn_i))
+    
+    sum_mat_best <- matrix(NA_real_,
+                           nrow = 1,
+                           ncol = length(cn_i),
+                           dimnames = list("iter_1", cn_i))
+    
+    # ---- random restart ----
+    best_loglik <- -Inf
+    best_fc     <- NULL
+    
+    for (j in seq_len(max_try)) {
+      # 1) try fitting
+      fitRH_j <- tryCatch(
+        fit(RHnp_mod,
+            data      = mort_data,
+            ages.fit  = ages_fit_mo,
+            years.fit = years_fit_mo,
+            control   = list(maxit = 200)),
+        error = function(e) NULL
+      )
+      
+      # 2) skip if failed
+      if (is.null(fitRH_j) || isTRUE(fitRH_j$fail)) {
+        sum_mat[j, "conv"]  <- 0
+        sum_mat[j, "fc_ok"] <- 0
+        next
+      }
+      
+      # 3) fill parameters (index using monthly, name using yearly)
+      # ax
+      sum_mat[j, paste0("ax_", ages_fit)] <-
+        as.numeric(fitRH_j$ax[as.character(ages_fit_mo)])
+      
+      # bx
+      bx1 <- fitRH_j$bx
+      bx2 <- fitRH_j$b0x
+      sum_mat[j, paste0("bx1_", ages_fit)] <-
+        as.numeric(bx1[as.character(ages_fit_mo), 1])
+      sum_mat[j, paste0("bx2_", ages_fit)] <-
+        as.numeric(bx2[as.character(ages_fit_mo)])
+      
+      # kt (convert column names from monthly to yearly)
+      ky_mo <- as.integer(colnames(fitRH_j$kt))
+      ky_yr <- ky_mo / 12
+      sum_mat[j, paste0("kt_", ky_yr)] <- as.numeric(fitRH_j$kt[1, ])
+      
+      # gc (convert names from monthly to yearly)
+      gc       <- fitRH_j$gc
+      gc_names_yr <- as.integer(names(gc)) / 12
+      sum_mat[j, paste0("gc_", gc_names_yr)] <- as.numeric(gc)
+      
+      # 4) check convergence
+      conv_j <- isTRUE(fitRH_j$conv)
+      sum_mat[j, "conv"] <- as.numeric(conv_j)
+      if (!conv_j) {
+        sum_mat[j, "fc_ok"] <- 0
+        next
+      }
+      
+      # 5) try forecasting
+      fcRH_j <- tryCatch(
+        forecast(fitRH_j, h = 1, kt.method = "mrwd", gc.order = c(1, 1, 0)),
+        error = function(e) NULL
+      )
+      
+      if (is.null(fcRH_j)) {
+        sum_mat[j, "fc_ok"] <- 0
+        next
+      }
+      
+      # 6) record forecast status and rates (index monthly, name yearly)
+      sum_mat[j, "fc_ok"] <- 1
+      sum_mat[j, paste0("mx_fc_", ages_fit)] <-
+        as.numeric(fcRH_j$rates[as.character(ages_fit_mo)])
+      
+      # 7) update best
+      ll_j <- fitRH_j$loglik
+      if (ll_j > best_loglik & !is.null(fcRH_j)) {
+        best_loglik  <- ll_j
+        best_fc      <- fcRH_j
+        sum_mat_best[1, ] <- sum_mat[j, ]
+        
+        # store forecast rates with yearly column name
+        mx_hat_rh_ar[, as.character(eval_time_yr[i])] <-
+          get_fc_rates_vec(best_fc, ages_fit)
+      }
+    }
+    
+    # store summary matrices using yearly origin as key
+    sum_list[[as.character(T_yr)]]      <- sum_mat
+    sum_list_best[[as.character(T_yr)]] <- sum_mat_best
+  }
+  
+  # ---- return ----
+  return(list(
+    mx_hat_rh_ar  = mx_hat_rh_ar,
+    eval_time     = eval_time_yr,
+    origin_time   = origin_time_yr,
+    sum_list      = sum_list,
+    sum_list_best = sum_list_best
+  ))
+}
+```
+
+```{r}
+rh_roll_1mo_forecast(Midwest_data)
+```
+
+```{r}
+library(parallel)
+
+# ---- four datasets in a named list ----
+data_list <- list(
+  Midwest   = Midwest_data,
+  Northeast = Northeast_data,
+  South     = South_data,
+  West      = West_data
+)
+
+# ---- set up cluster ----
+cl <- makeCluster(4)
+
+# ---- export everything workers need ----
+clusterExport(cl, varlist = c(
+  "rh_roll_1mo_forecast",  # main function
+  "get_fc_rates_vec"       # helper function called inside
+))
+
+# ---- load StMoMo on each worker ----
+clusterEvalQ(cl, library(StMoMo))
+
+# ---- run in parallel ----
+results <- parLapply(cl, data_list, rh_roll_1mo_forecast)
+
+stopCluster(cl)
+
+# ---- extract results ----
+RH_Midwest   <- results$Midwest
+RH_Northeast <- results$Northeast
+RH_South     <- results$South
+RH_West      <- results$West
+```
+
+```{r}
+RH_Midwest
+```
+
+```{r}
+# save separately
+saveRDS(results$Midwest,   file = "rh_monthly_Midwest.rds")
+saveRDS(results$Northeast, file = "rh_monthly_Northeast.rds")
+saveRDS(results$South,     file = "rh_monthly_South.rds")
+saveRDS(results$West,      file = "rh_monthly_West.rds")
+```
+

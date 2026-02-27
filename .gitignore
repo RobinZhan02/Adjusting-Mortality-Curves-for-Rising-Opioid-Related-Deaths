@@ -3,6 +3,10 @@
 .RData
 .Ruserdata
 
-
 # macOS
 .DS_Store
+**/.DS_Store
+
+# R app history
+.Rapp.history
+**/.Rapp.history
