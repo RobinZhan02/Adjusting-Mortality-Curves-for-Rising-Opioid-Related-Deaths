@@ -1,0 +1,1741 @@
+---
+title: "hmd_analysis"
+author: '"PSTAT 296A"'
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r message=FALSE}
+# import packages
+library(gnm)
+library(forecast)
+library(StMoMo)
+library(demography)
+library(ggplot2)
+library(tidyverse)
+library(reshape2) # For data transformation
+library(gridExtra)
+```
+
+```{r}
+# load data
+US_data <- hmd.mx(country="USA", username="amandahuang@ucsb.edu", password="Ilovepstat296!")
+```
+
+# Exploratory Analysis
+
+## Age Profile Over Time
+
+```{r}
+# extract age and year vector
+Ages <- US_data$age
+Years <- US_data$year
+
+# extract mortality rate matrices
+Rates_Male <- US_data$rate$male
+Rates_Female <- US_data$rate$female
+Rates_Total <- US_data$rate$total
+
+```
+
+```{r fig.show='hold', out.width = "50%"}
+# --- Plot 1: Total Mortality
+plot(US_data, series="total", ylim = c(-10, 0), xlim = c(0,110), main = "USA: Total Mortality Rate")
+# Add vertical dotted lines at age 20 and 60
+abline(v = 25, col = "black", lty = 2, lwd = 1.5)   # age 25
+abline(v = 65, col = "black", lty = 2, lwd = 1.5)   # age 65
+legend("bottomright", legend=unique(Years),
+  col=rainbow(length(Years)*1.25), ncol=8, pch=19,
+  title="Year", cex=0.44)
+
+# --- Plot 2: Male Mortality
+plot(US_data, series="male",  ylim = c(-10, 0), main = "USA: Male Mortality Rate")
+# Add vertical dotted lines at age 20 and 60
+abline(v = 25, col = "black", lty = 2, lwd = 1.5)   # age 25
+abline(v = 65, col = "black", lty = 2, lwd = 1.5)   # age 65
+legend("bottomright", legend=unique(Years),
+  col=rainbow(length(Years)*1.25), ncol=8, pch=19, 
+  title="Year", cex=0.44)
+
+# --- Plot 3: Female Mortality
+plot(US_data, series = "female", ylim = c(-10, 0), main = "USA: Female Mortality Rate")
+# Add vertical dotted lines at age 20 and 60
+abline(v = 25, col = "black", lty = 2, lwd = 1.5)   # age 25
+abline(v = 65, col = "black", lty = 2, lwd = 1.5)   # age 65
+legend("bottomright", legend=unique(Years),
+  col=rainbow(length(Years)*1.25), ncol=8, pch=19,
+  title="Year", cex=0.44)
+
+# --- Plot 4: Mean Mortality Profit
+# Cal mean log-death rate across all year for each age
+# strat sex
+Alpha_Male <- mean(US_data, series = names(US_data$rate)[2], transform = TRUE, 
+                   na.rm = TRUE)$y
+Alpha_Female <- mean(US_data, series = names(US_data$rate)[1], transform = TRUE, 
+                     na.rm = TRUE)$y
+Alpha_Total <- mean(US_data, series = names(US_data$rate)[3], transform = TRUE, 
+                    na.rm = TRUE)$y
+
+alpha_df <- data.frame(Ages, Male = Alpha_Male, Female = Alpha_Female, 
+                       Total = Alpha_Total)
+# alpha_df
+
+# modify dataset for plotting
+alpha_long <- alpha_df %>%
+  pivot_longer(
+    cols = c(Male, Female, Total),       # columns to pivot
+    names_to = "Gender",                 # new variable name
+    values_to = "Mean_LogRate"                # value column name
+  )
+# alpha_long
+
+# plot mean log-death rate
+ggplot(alpha_long, aes(x = Ages, y = Mean_LogRate, color = Gender)) +
+  geom_line(linewidth = 1.2) +
+  labs(
+    title = "Figure 4. Mean Log-Mortality Rate by Age and Gender (a_x Profile)",
+    x = "Age (x)",
+    y = "Mean Log(Mortality Rate)"
+  ) +
+  theme_minimal()
+```
+
+These plots display the age specific log-mortality rate for every years from 1933 to 2023. Each line represents a single year, with the colors used to denote the year (e.g., the warm colors for early years, cool colors for recent years.)\
+\textbf{Mortality Curve Shape:} All log-mortality curves show a J-shape: high mortality in infancy, started declining to a lowest point around age 10 in young childhood, then increased dramatically from age 15 to 20, followed by a continuous, near-exponential rise with age. In early years, some fluctuations at the older ages, reflecting data variability, probably due to lack of sample.\
+\textbf{Mortality Improvement:} The mortality curve vertically shift downward over time, representing mortality improvement overtime. Also, the rate of change by age group is not uniform. Therefore, cohort effect was observed. \textbf{Gender Comparision:} The Female lines tend to be lower than the Male lines. From age 15 to 20, males mortality curve has a clear accident hump while it is less pronounced for female mortality. The accident hump is often due to lack of driving experience of young males and have higher crash rate. The effect is gender specific, tied to male mortality. Also, at the elder ages, male mortality have more variation than female mortality.\
+\textbf{REMARK:} This study limit age interval from 25 to 65 because this age interval is where the opioid adjustment most likely take place combined with the analysis of missing data of opioid death. Also, limiting age group can the large variation at the from infancy age to young adulthood and elder ages, which can improve the modeling accuracy.
+
+```{r}
+# Define color 
+col_all <- rainbow(length(Years)*1.25)  # default colors
+recent_years <- 2016:2023                 # years to make black
+col_all[Years %in% recent_years] <- "black"
+
+# --- Total Mortality, 2016-2023
+plot(US_data, series="total", ylim = c(-10, 0), xlim = c(0,110))
+lines(US_data, series="total", ylim = c(-10, 0), year = 2016:2023, col = "black")
+# Add vertical dotted lines at age 20 and 60
+abline(v = 25, col = "black", lty = 2, lwd = 1.5)   # age 25
+abline(v = 65, col = "black", lty = 2, lwd = 1.5)   # age 65
+legend("bottomright", legend=unique(Years), col=col_all, ncol=8, pch=19,
+  title="Year", cex=0.45)
+
+```
+
+From years 2016-2023, log death rate for age 20-45 shift up compared to previous years. This increase can be due to many event, including opioid death.
+
+## Change in Mortality Over Time
+
+```{r fig.show='hold', out.width = "50%"}
+# change in mortality over years, age specific
+plot(US_data, series = "total", plot.type = "time", xlab = "Year")
+
+# Age group
+plot(US_data, series = "total", plot.type = "time", xlab = "Year", age = 0:25,
+     main = "USA: total death rates (1933-2023) Age: 0-24")
+plot(US_data, series = "total", plot.type = "time", xlab = "Year", age = 26:40, 
+     main = "USA: total death rates (1933-2023) Age: 26-40")
+plot(US_data, series = "total", plot.type = "time", xlab = "Year", age = 41:75, 
+     main = "USA: total death rates (1933-2023) Age: 41-75")
+plot(US_data, series = "total", plot.type = "time", xlab = "Year", age = 76:100, 
+     main = "USA: total death rates (1933-2023) Age: 76-100")
+plot(US_data, series = "total", plot.type = "time", xlab = "Year", age = 101:110, 
+     main = "USA: total death rates (1933-2023) Age: 101-110")
+
+```
+
+This graph displays the evolution of age-specific mortality over time, where each line represent an age group and shows how its log death rate has changed across year. And the warm color (red, orange) is younger ages and cool color (blue/ purple) represent older ages.
+
+The overall pattern reveals a steady decrease in death rate across nearly all ages but with different gradient, indicating continuous mortality improvement over years. This downward movement reveal cohort effect. At year 2020 and after, death mortality increase across all ages but with different rate due to COVID.
+
+From age 26-40, mortality rate has more fluctuation. Mortality rate show a notable decline from 1930s to 1970s, reaching a minimum around 1980. However, the mortality curve increase from 1980 to 1990 and more pronounced after 2010. This may correspond to behavioral or socioeconomic factors, like substance abuse.
+
+From age 41-100, mortality rate shows a steady downward trend over time. From ages 101-110, the curves display considerable volatility probably due to limited data availability and sample size variation. The lack of a clear trend indicates that statistical uncertainty dominates at these extreme ages.
+
+```{r}
+# difference of log-mortality between gender
+diff_data <- Rates_Male - Rates_Female
+
+# plot delta(log-mort)
+matplot(Years, t(diff_data), type = "l",
+        col = adjustcolor(rainbow(nrow(diff_data)), alpha.f = 0.4),
+        lwd = 0.8,
+        ylab = "Male - Female (log mortality difference)",
+        xlab = "Year",
+        main = "Gender Difference in Log Mortality Rates (1933-2023)")
+abline(h = 0, col = "black", lty = 2)  # reference line
+
+```
+
+This graph shows the difference between male and female log mortality rate across all ages over time, where each line represents a age. The curves above zero indicate higher male mortality while below zero indicate higher female mortality.
+
+Most of the curves locate above zero, meaning male mortality rates have consistently been higher than female mortality rate across almost all age groups and time periods. But during the early age, such as infant time and child time, the mortality curves fluctuate around zero, indicating no gender advantage on mortality rate during that time.
+
+After 1970s, the gender gap appears wider and reach its maximum from 1980 to 2000. Previously, we discover that total mortality for age 26-40 increase from 1980 to 2000. Combined with the increase of gender gap from 1980 to 2000, we suspect that for age group 26-40, from 1980 to 2000, the males mortality increase or decrease at a lower rate than females while females mortality rate decrease or at a higher rate.
+
+```{r}
+# Define gradient colors for each gender
+male_colors   <- colorRampPalette(c("darkblue", "skyblue"))(length(26:40))
+female_colors <- colorRampPalette(c("darkred", "pink"))(length(26:40))
+
+plot(US_data, series = "male", plot.type = "time", age = 26:40, 
+    col = male_colors, xlab = "Year", ylim = c(-8,-4.9), 
+     main = "USA: male vs female death rates age: 26-40")
+lines(US_data, series = "female", plot.type = "time", age = 26:40, 
+      col = female_colors)
+legend("topright",
+       legend = c("Male (blue gradient)", "Female (red gradient)"),
+       col = c("blue", "red"), lwd = 2, bty = "n")
+```
+
+The blue gradient represents males, while the red gradient represents females. Between 1980 and 1990, male death rate increase while females rate is stable and continue to decrease. Therefore, for age group 26-40, increase of mortality from 1980 to 1990 is gender specific to male.
+
+In addition, for age group 26-40, the increase of mortality after 2010 cross whole population, regardless of gender, which could be potentially caused by drug overdose and opioid.
+
+# Mortality Modeling
+
+## Lee-Carter
+
+```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=10}
+# Convert to StMoMoData
+mort <- StMoMoData(US_data, type = "central", series = "total")
+
+LC <- lc(link = "log", const = "sum")
+LCfit <- fit(LC, data = mort, ages.fit = 25:65)
+
+```
+
+### CI for kappa
+```{r}
+# Construct (per-year) Gaussian CI for Lee–Carter kappa_t using RW-with-drift increments
+# Returns a data frame: year, kappa, lower, upper
+kappa_ci_df <- function(LCfit, alpha = 0.05, show_plot = TRUE) {
+  # Extract kappa and years
+  kappa <- as.numeric(LCfit$kt)
+  years <- LCfit$years
+  
+  stopifnot(length(years) == length(kappa))
+  if (length(kappa) < 2) stop("Need at least 2 years of kappa_t to estimate increments.")
+  if (anyNA(kappa)) stop("kappa_t contains NA; please remove/impute before constructing CI.")
+  
+  # Increments (RW with drift): y_t = kappa_t - kappa_{t-1}
+  y <- diff(kappa)
+  
+  # Drift estimate (not directly used in the per-year CI band below, but kept for completeness)
+  theta_hat <- mean(y)
+  
+  # Innovations: omega_t = y_t - theta_hat
+  omega_hat <- y - theta_hat
+  
+  # Innovation variance (MLE)
+  sigma2_w_hat <- mean(omega_hat^2)
+  sigma_w_hat  <- sqrt(sigma2_w_hat)
+  
+  # Gaussian CI (same width each year under this simple assumption)
+  z <- qnorm(1 - alpha / 2)
+  kappa_lower <- kappa - z * sigma_w_hat
+  kappa_upper <- kappa + z * sigma_w_hat
+  
+  kt_df <- data.frame(
+    year  = years,
+    kappa = kappa,
+    lower = kappa_lower,
+    upper = kappa_upper
+  )
+  
+  # plot
+  p <- ggplot(kt_df, aes(x = year, y = kappa)) +
+          geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+          geom_line() +
+          labs(
+            x = "Year",
+            y = "kappa_t",
+            title = paste0("GAPC Gaussian RW-based ",
+               round((1 - alpha) * 100),
+               "% CI for kappa_t (per year)")
+          ) +
+          theme_minimal()
+  if (isTRUE(show_plot)) print(p) 
+  
+  return(kt_df)
+}
+
+kt_df <- kappa_ci_df(LCfit, alpha = 0.05)
+```
+
+### Parameter Plot
+
+```{r}
+# Plot LC ax, bx, kt with (per-year) kappa CI lines
+# - Input: LCfit
+# - Output: graphs (side effect)
+# - Internally calls kappa_ci_df(LCfit, show_plot = FALSE) to get kt_df
+plot_lc_components_with_kappa_ci <- function(LCfit) {
+  # get CI df without plotting
+  kt_df <- kappa_ci_df(LCfit, show_plot = FALSE)
+  
+  # robust year vector for kt plot (your original code uses colnames(LCfit$kt))
+  kt_years <- as.numeric(colnames(LCfit$kt))
+  if (anyNA(kt_years)) {
+    # fallback if colnames are missing/non-numeric
+    kt_years <- LCfit$years
+  }
+  
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar), add = TRUE)
+  
+  par(mfrow = c(3, 1), mar = c(5, 6, 3, 1))
+  
+  # ax
+  plot(25:65, LCfit$ax, type = "l", lwd = 2, col = "black",
+       main = expression(a[x] ~ "vs." ~ x),
+       xlab = "Age", ylab = expression(a[x]),
+       cex.main = 2, cex.lab = 2, cex.axis = 1.3)
+  axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis = 1.3)
+  
+  # bx
+  plot(25:65, LCfit$bx, type = "l", lwd = 2, col = "black",
+       main = expression(beta[x]^{(1)} ~ "vs." ~ x),
+       xlab = "Age", ylab = expression(beta[x]^{(1)}),
+       cex.main = 2, cex.lab = 2, cex.axis = 1.3)
+  axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis = 1.3)
+  
+  # kt with CI
+  plot(kt_years, LCfit$kt[1, ], type = "l", lwd = 2, col = "black",
+       main = expression(kappa[t]^{(1)} ~ "vs." ~ t),
+       ylim = c(min(kt_df$lower), max(kt_df$upper)),
+       xlab = "Year", ylab = expression(kappa[t]^{(1)}),
+       cex.main = 2, cex.lab = 2, cex.axis = 1.3)
+  
+  lines(kt_df$year, kt_df$lower, col = "gray40", lty = 2, lwd = 2)
+  lines(kt_df$year, kt_df$upper, col = "gray40", lty = 2, lwd = 2)
+  
+  legend("topright",
+         legend = c("kappa(t)", "95% CI"),
+         col = c("black", "gray40"),
+         lty = c(1, 2),
+         lwd = 2,
+         bty = "n")
+  
+  invisible(NULL)
+}`
+```
+
+```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=10}
+plot_lc_components_with_kappa_ci(LCfit)
+```
+
+1)  Age Effect $a_x$
+
+-   $a_x$ is monotone increasing smoothly and almost linearly across age 25 to 60, reflecting steadily rising baseline mortality with age on the log scale. And there is a noticeable jump at the last age around 65. Since the sample size around age 65 is relatively large and we need to group data above 65, this jump might be due to a boundary/grouping effect.
+
+2)  Age Sensitivity to period index $\beta_x^{(1)}$
+
+-   $b_x$ declines with age across 25-65, where higher values at younger adult ages and lower values at older adult ages. Also, a sudden drop at the last age around 65.
+-   This means improvements or deterioration in the period index $\kappa_t$, produce larger proportional changes in mortality at younger ages and smaller proportional changes at older adult ages.\
+-   This make sense because period-wide shocks like medical advances, epidemics, and economic conditions, have stronger impact on young and middle-age adult than at the older age.
+
+3)  Period mortality index $\kappa_t$
+
+-   $\kappa_t$ shows a strong downward trend over the long-run, implying substantial long-term mortality improvement for age 25-65. However, the decline is not constant or linear; instead, it occurs in distinct phases. The index falls sharply from approximately 1933–1955, representing the period of greatest mortality improvement. From 1955–1970, $\kappa_t$ remains relatively flat, indicating a temporary slowdown in improvements. After 1970, the decline resumes, reflecting a renewed period of improvement driven by medical advances. For recent years, around 2020 has a short-term mortality uptick, which is corresponding to COVID shock.
+-   Because $\beta_x^{1}$ greater than $0$ for all ages here, a decrease in $\kappa_t$ corresponds to improvement in mortality across all ages.
+-   A strong decline in 1930s to 1950s could be potentially due to post-war improvements in income and living standards, roll-out of public health measures, and improvements in maternal.
+-   From 1980-2000, the United States experience a notable stagnation in adult mortality improvement. Heat disease mortality had been falling rapidly since the 1970s due to improved treatment and prevention but the rate of improvement slowed before accelerating again in 1990s which cardiac surgery improved and better hypertension and cholesterol control was introduced. Others factors include high prevalence of smoking among adults, rising obesity, HIV/AIDS epidemic which rose sharply from around 1983 to 1995.
+
+### Goodness of Fit
+
+```{r}
+# Check goodness of fit: Lee-Carter
+Dxt <- mort$Dxt     # death counts
+Ext <- mort$Ext     # exposures
+mxt_obs <- Dxt / Ext
+
+# LC paramerter
+ax <- as.numeric(LCfit$ax)        # alpha_x (vector over ages)
+bx <- as.numeric(LCfit$bx[,1])    # beta_x
+kt <- as.numeric(LCfit$kt[1,])    # kappa_t 
+
+eta_xt <- outer(bx, kt, "*")
+eta_xt <- sweep(eta_xt, 1, ax, "+")
+# LC fitted mortality
+mxt_fit <- exp(eta_xt)
+
+# Extract ages to plot
+ages_to_plot <- c(25, 30, 40, 50, 60, 65)
+age_index <- match(ages_to_plot, mort$ages)
+years <- mort$years
+
+plot_list <- list()
+
+for (i in seq_along(age_index)) {
+  age <- ages_to_plot[i]
+  idx <- age_index[i]
+  
+  df <- data.frame(
+    year = years,
+    observed = mxt_obs[idx, ],
+    fitted   = mxt_fit[idx-25, ]
+  )
+  
+  df_melt <- melt(df, id.vars = "year")
+  
+  p <- ggplot(df_melt, aes(x = year, y = value, color = variable)) +
+    geom_line(size = 0.9) +
+    scale_y_log10() + 
+    labs(title = paste("Age", age, ": Observed vs Fitted LC Mortality"),
+         y = "mortality (log scale)", x = "year",
+         color = "") +
+    theme_minimal()
+  
+  plot_list[[i]] <- p
+}
+
+grid.arrange(
+  plot_list[[1]], plot_list[[2]], plot_list[[3]],
+  plot_list[[4]], plot_list[[5]], plot_list[[6]],
+  nrow = 2, ncol = 3
+)
+```
+
+## RH(constant)
+```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=13, cache = TRUE}
+# Renshaw and Haberman (Lee-Carter with cohorts)
+# a_x + B_xk_t + gamma_t-x
+# cohortAgeFun = "1", B_x^(0) = 1
+mort_rh1 <- StMoMoData(US_data, type = "central", series = "total")
+RH <- rh(link = "log", cohortAgeFun = "1")
+RHfit <- fit(RH, data = mort_rh1, ages.fit = 25:65)
+RHfit
+resRH <- residuals(RHfit)        # deviance residuals
+
+# parameters
+plot(RHfit)                      # ax, bx, kt, gc
+```
+
+1)  Age Effect $a_x$ and Age Sensitivity to period index $\beta_x^{(1)}$
+
+-   Baseline mortality $a_x$ and age sensitivity $\beta_x^{(1)}$ show a similar pattern as Lee-Carter model, where $a_x$ increases monotonically with age from 25 to 65 and $\beta_x^{(1)}$ declines with ages.
+
+2)  Period mortality index $\kappa_t$
+
+-   The period index also show a long-term downward trend consistent with declining mortality over time like Lee-Carter Model. However, the downward trend becomes smoother in RH compared to Lee-Carter because part of the temporal variation is now attributed to cohort effects.
+
+3)  Cohort Effect $\gamma_{t-x}$
+
+-   The cohort term shows a clear increasing trend by year of birth, where earlier cohorts born in the late 1800s to early 1900s have lower mortality, while more recent cohorts show higher mortality.
+
+## RH (NP)
+
+```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=13}
+# Renshaw and Haberman (Lee-Carter with cohorts)
+# a_x + B_xk_t + B_0 gamma_t-x
+# cohortAgeFun = "NP", B_x^(0) = NP
+mort_rh2 <- StMoMoData(US_data, type = "central", series = "total")
+RHnp_mod <- rh(link = "log", cohortAgeFun = "NP")
+RHnp_fit <- fit(RHnp_mod, data = mort_rh2, ages.fit = 25:65)
+```
+### Parameter Plot
+```{r}
+# Plot RHnp fit components + kappa CI band (base R)
+# - Input: RHnp_fit (a fitted StMoMo RHnp object)
+# - Uses:  kappa_ci_df(LCfit, alpha=0.05, show_plot=FALSE) that you already defined
+# - Output: produces the plots (returns invisibly a list with kt_df + layout info)
+
+plot_RHnp_with_kappa_CI <- function(RHnp_fit, alpha = 0.05) {
+  # --- get kappa CI df (no ggplot shown) ---
+  kt_df <- kappa_ci_df(RHnp_fit, alpha = alpha, show_plot = FALSE)
+
+  # --- layout (same as your code) ---
+  layout_mat <- matrix(c(1, 0,
+                         2, 3,
+                         4, 5),
+                       nrow = 3, byrow = TRUE)
+
+  # keep old par settings so we can restore
+  old_par <- par(no.readonly = TRUE)
+  on.exit({
+    layout(1)
+    par(old_par)
+  }, add = TRUE)
+
+  layout(layout_mat)
+  par(mar = c(5, 6, 3, 1))
+
+  ages <- RHnp_fit$ages
+
+  # 1) ax
+  plot(ages, RHnp_fit$ax, type = "l", lwd = 2, col = "black",
+       main = expression(a[x] ~ "vs." ~ x),
+       xlab = "Age", ylab = expression(a[x]), cex.main = 2,
+       cex.lab = 2, cex.axis = 1.3)
+  axis(1, at = seq(min(ages), max(ages), by = 5), 
+       labels = seq(min(ages), max(ages), by = 5), cex.axis = 1.3)
+
+  # 2) bx (beta^(1)_x)
+  plot(ages, RHnp_fit$bx, type = "l", lwd = 2, col = "black",
+       main = expression(beta[x]^{(1)} ~ "vs." ~ x),
+       xlab = "Age", ylab = expression(beta[x]^{(1)}), cex.main = 2,
+       cex.lab = 2, cex.axis = 1.3)
+  axis(1, at = seq(min(ages), max(ages), by = 5), 
+       labels = seq(min(ages), max(ages), by = 5), cex.axis = 1.3)
+
+  # 3) kt (kappa^(1)_t) with CI
+  t_years <- as.numeric(colnames(RHnp_fit$kt))
+  kappa1  <- as.numeric(RHnp_fit$kt[1, ])
+
+  plot(t_years, kappa1, type = "l", lwd = 2, col = "black",
+       main = expression(kappa[t]^{(1)} ~ "vs." ~ t),
+       ylim = c(min(kt_df$lower), max(kt_df$upper)),
+       xlab = "Year", ylab = expression(kappa[t]^{(1)}), cex.main = 2,
+       cex.lab = 2, cex.axis = 1.3)
+
+  lines(t_years, kt_df$lower, col = "gray40", lty = 2, lwd = 2)
+  lines(t_years, kt_df$upper, col = "gray40", lty = 2, lwd = 2)
+
+  legend("topright",
+         legend = c("kappa(t)", "95% CI"),
+         col = c("black", "gray40"),
+         lty = c(1, 3),
+         lwd = 2,
+         bty = "n")
+
+  # 4) b0x (beta^(2)_x in RH notation in your code)
+  plot(ages, RHnp_fit$b0x, type = "l", lwd = 2, col = "black",
+       main = expression(beta[x]^{(2)} ~ "vs." ~ x),
+       xlab = "Age", ylab = expression(beta[x]^{(2)}), cex.main = 2,
+       cex.lab = 2, cex.axis = 1.3)
+  axis(1, at = seq(min(ages), max(ages), by = 5), 
+       labels = seq(min(ages), max(ages), by = 5), cex.axis = 1.3)
+
+  # 5) gc (gamma_{t-x} vs cohort)
+  cohorts <- as.numeric(names(RHnp_fit$gc))
+  plot(cohorts, RHnp_fit$gc, type = "l", lwd = 2, col = "black",
+       main = expression(gamma[t-x] ~ "vs." ~ t-x),
+       xlab = "Cohort", ylab = expression(gamma[t-x]), cex.main = 2,
+       cex.lab = 2, cex.axis = 1.3)
+
+  invisible(list(kt_df = kt_df))
+}
+```
+
+```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=13}
+plot_RHnp_with_kappa_CI(RHnp_fit)
+```
+
+### Goodness of Fit
+
+```{r}
+# Ages and years actually used in the RH model
+ages_fit  <- RHnp_fit$ages
+years_fit <- RHnp_fit$years
+
+# Extract deaths & exposures for those ages
+Dxt_fit <- mort$Dxt[match(ages_fit, mort$ages), ]
+Ext_fit <- mort$Ext[match(ages_fit, mort$ages), ]
+
+# Observed mortality (central death rates)
+mxt_obs_RH <- Dxt_fit / Ext_fit
+
+# Fitted mortality from the RH model
+mxt_fit_RH <- fitted(RHnp_fit, type = "rates")   # matrix age x year
+
+ages_to_plot <- c(25, 30, 40, 50, 60, 65)       # all must be in ages_fit
+age_index    <- match(ages_to_plot, ages_fit)
+
+plot_list_RH <- vector("list", length(ages_to_plot))
+
+for (i in seq_along(age_index)) {
+  age <- ages_to_plot[i]
+  idx <- age_index[i]
+
+  df <- data.frame(
+    year     = years_fit,
+    observed = mxt_obs_RH[idx, ],
+    fitted   = mxt_fit_RH[idx, ]
+  )
+
+  df_melt <- melt(df, id.vars = "year")
+
+  p <- ggplot(df_melt, aes(x = year, y = value, color = variable)) +
+    geom_line(size = 0.9) +
+    scale_y_log10() +
+    labs(title = paste("Age", age, ": Observed vs Fitted RH Mortality"),
+         y = "mortality (log scale)", x = "year",
+         color = "") +
+    theme_minimal()
+
+  plot_list_RH[[i]] <- p
+}
+
+grid.arrange(
+  plot_list_RH[[1]], plot_list_RH[[2]], plot_list_RH[[3]],
+  plot_list_RH[[4]], plot_list_RH[[5]], plot_list_RH[[6]],
+  nrow = 2, ncol = 3
+)
+```
+
+1)  Age Effect $a_x$
+
+-   Baseline mortality $a_x$ remain a smooth monotonic increase across age 25-65 and a sharp increase around age 65, consistent with Lee-Carter model and the RH model with constant cohort loading.
+
+2)  Age Sensitivity to period index $\beta_x^{(1)}$
+
+-   In contrast to Lee–Carter and RH with constant cohort loading (both of which show a steady decline in $\beta_x^{(1)}$, the non-parametric RH model shows a different pattern: sensitivity decreases up to approximately age 60 and then increases again for the older ages in the range.
+-   This suggests that mortality improvements over time are not uniformly strongest at younger ages, and that ages near 60 experience a renewed sensitivity to period mortality trends.
+
+3)  Cohort Effect $\gamma_{t-x}$
+
+-   The cohort index displays a substantially different pattern from the constant-loading RH model. Rather than a monotonic increase, the cohort effect declines for cohorts born between \~1880 and \~1940, and then increases sharply for later birth cohorts.
+-   This reveals that the generational mortality disadvantage affecting recent cohorts is age-specific, not uniform across the adult age span.
+
+4)  Cohort Age Loading $\beta_x^{(0)}(x)$
+
+-   Unlike the constant-loading RH model where is $\beta_x^{(0)}$ flat, the non-parametric model shows clear variation across age. This indicates that cohort effects do not impact all ages equally—certain ages are more strongly influenced by generational effects than others.
+
+## CBD Model
+
+```{r, cache = TRUE}
+mort_CBD <- StMoMoData(US_data, type = "initial", series = "total")
+N <- 1e6
+mort_CBD$Dxt <- round(mort_CBD$Dxt * N)
+mort_CBD$Ext <- round(mort_CBD$Ext * N)
+
+# Fit CBD
+# Binomial Distribution
+CBD <- cbd(link = "logit")
+CBDfit <- fit(CBD, data = (mort_CBD), ages.fit = 25:65)
+```
+
+### CI for CBD
+```{r}
+# Construct (per-time) Gaussian CI for CBD kappa1_t and kappa2_t
+# using RW-with-drift increments (same style as your kappa_ci_df).
+#
+# Inputs:
+#   CBDfit    : fitted StMoMo cbd object (must contain $kt and $years)
+#   alpha     : significance level (default 0.05 -> 95% CI)
+#   show_plot : TRUE/FALSE; if TRUE, plot kappa1 and kappa2 with CI bands
+#
+# Outputs:
+#   list(kt_df1 = ..., kt_df2 = ...)  (both data.frames with year,kappa,lower,upper)
+
+kappa_ci_df_CBD <- function(CBDfit, alpha = 0.05, show_plot = TRUE) {
+
+  # --- Extract kappa1, kappa2 and years ---
+  if (is.null(CBDfit$kt)) stop("CBDfit$kt is missing.")
+  if (is.null(CBDfit$years)) stop("CBDfit$years is missing.")
+
+  kappa1 <- as.numeric(CBDfit$kt[1, ])
+  kappa2 <- as.numeric(CBDfit$kt[2, ])
+  years  <- CBDfit$years
+
+  stopifnot(length(years) == length(kappa1), length(years) == length(kappa2))
+  if (length(years) < 2) stop("Need at least 2 time points to estimate increments.")
+  if (anyNA(kappa1) || anyNA(kappa2)) stop("kappa contains NA; please remove/impute before constructing CI.")
+
+  # --- RW-with-drift increments ---
+  y1 <- diff(kappa1)
+  y2 <- diff(kappa2)
+
+  theta_hat1 <- mean(y1)
+  theta_hat2 <- mean(y2)
+
+  omega_hat1 <- y1 - theta_hat1
+  omega_hat2 <- y2 - theta_hat2
+
+  # Innovation variance (MLE)
+  sigma_w_hat1 <- sqrt(mean(omega_hat1^2))
+  sigma_w_hat2 <- sqrt(mean(omega_hat2^2))
+
+  # --- Gaussian CI (same-width band under this simple assumption) ---
+  z <- qnorm(1 - alpha / 2)
+
+  kappa_lower1 <- kappa1 - z * sigma_w_hat1
+  kappa_upper1 <- kappa1 + z * sigma_w_hat1
+
+  kappa_lower2 <- kappa2 - z * sigma_w_hat2
+  kappa_upper2 <- kappa2 + z * sigma_w_hat2
+
+  kt_df1 <- data.frame(
+    year  = years,
+    kappa = kappa1,
+    lower = kappa_lower1,
+    upper = kappa_upper1
+  )
+
+  kt_df2 <- data.frame(
+    year  = years,
+    kappa = kappa2,
+    lower = kappa_lower2,
+    upper = kappa_upper2
+  )
+
+  # --- Optional plots (base R, similar to what you did before) ---
+  if (isTRUE(show_plot)) {
+    old_par <- par(no.readonly = TRUE)
+    on.exit(par(old_par), add = TRUE)
+
+    par(mfrow = c(2, 1), mar = c(5, 6, 3, 1))
+
+    # kappa1
+    plot(kt_df1$year, kt_df1$kappa, type = "l", lwd = 2, col = "black",
+         ylim = c(min(kt_df1$lower), max(kt_df1$upper)),
+         main = expression(kappa[t]^{(1)} ~ "with 95% CI"),
+         xlab = "Year", ylab = expression(kappa[t]^{(1)}),
+         cex.main = 2, cex.lab = 2, cex.axis = 1.3)
+    lines(kt_df1$year, kt_df1$lower, col = "gray40", lty = 2, lwd = 2)
+    lines(kt_df1$year, kt_df1$upper, col = "gray40", lty = 2, lwd = 2)
+    legend("topright",
+           legend = c("kappa1(t)", "95% CI"),
+           col = c("black", "gray40"),
+           lty = c(1, 2),
+           lwd = 2, bty = "n")
+
+    # kappa2
+    plot(kt_df2$year, kt_df2$kappa, type = "l", lwd = 2, col = "black",
+         ylim = c(min(kt_df2$lower), max(kt_df2$upper)),
+         main = expression(kappa[t]^{(2)} ~ "with 95% CI"),
+         xlab = "Year", ylab = expression(kappa[t]^{(2)}),
+         cex.main = 2, cex.lab = 2, cex.axis = 1.3)
+    lines(kt_df2$year, kt_df2$lower, col = "gray40", lty = 2, lwd = 2)
+    lines(kt_df2$year, kt_df2$upper, col = "gray40", lty = 2, lwd = 2)
+    legend("topright",
+           legend = c("kappa2(t)", "95% CI"),
+           col = c("black", "gray40"),
+           lty = c(1, 2),
+           lwd = 2, bty = "n")
+
+    par(mfrow = c(1, 1))
+  }
+
+  return(list(kt_df1 = kt_df1, kt_df2 = kt_df2))
+}
+```
+
+### Parameter Plot with CI
+```{r}
+# Plot CBD kappa^(1) and kappa^(2) with CI (ggplot), with x-breaks built from data range
+# - x_break_by controls the spacing of breaks (e.g., 5, 10, 20)
+plot_CBD_kappa_CI_gg <- function(CBDfit, alpha = 0.05,
+                                 x_break_by = 20,
+                                 base_size = 12) {
+
+  out <- kappa_ci_df_CBD(CBDfit, alpha = alpha, show_plot = FALSE)
+  kt_df1 <- out$kt_df1
+  kt_df2 <- out$kt_df2
+
+  # Build breaks from data range
+  year_min <- floor(min(c(kt_df1$year, kt_df2$year), na.rm = TRUE))
+  year_max <- ceiling(max(c(kt_df1$year, kt_df2$year), na.rm = TRUE))
+  x_breaks <- seq(year_min, year_max, by = x_break_by)
+
+  p1 <- ggplot(kt_df1, aes(x = year, y = kappa)) +
+    geom_line(color = "black", linewidth = 0.6) +
+    geom_line(aes(y = lower), color = "gray40", linewidth = 0.6, linetype = "33") +
+    geom_line(aes(y = upper), color = "gray40", linewidth = 0.6, linetype = "33") +
+    labs(
+      x = "year",
+      y = expression(kappa[t]^{(1)}),
+      title = expression(kappa[t]^{(1)} ~ "vs. t")
+    ) +
+    scale_x_continuous(breaks = x_breaks) +
+    theme_classic(base_size = base_size) +
+    theme(
+      plot.title   = element_text(hjust = 0.5, size = 14),
+      axis.title.x = element_text(size = 14),
+      axis.title.y = element_text(size = 12),
+      axis.text    = element_text(size = 10)
+    )
+
+  p2 <- ggplot(kt_df2, aes(x = year, y = kappa)) +
+    geom_line(color = "black", linewidth = 0.6) +
+    geom_line(aes(y = lower), color = "gray40", linewidth = 0.6, linetype = "33") +
+    geom_line(aes(y = upper), color = "gray40", linewidth = 0.6, linetype = "33") +
+    labs(
+      x = "year",
+      y = expression(kappa[t]^{(2)}),
+      title = expression(kappa[t]^{(2)} ~ "vs. t")
+    ) +
+    scale_x_continuous(breaks = x_breaks) +
+    theme_classic(base_size = base_size) +
+    theme(
+      plot.title   = element_text(hjust = 0.5, size = 14),
+      axis.title.x = element_text(size = 14),
+      axis.title.y = element_text(size = 12),
+      axis.text    = element_text(size = 10)
+    )
+
+  gridExtra::grid.arrange(p1, p2, ncol = 1)
+
+  invisible(list(p1 = p1, p2 = p2, kt_df1 = kt_df1, kt_df2 = kt_df2, x_breaks = x_breaks))
+}
+```
+
+```{r}
+plot_CBD_kappa_CI_gg(CBDfit, x_break_by = 20)
+```
+
+1)  $\kappa_t^{(1)}$: overall mortality leve in year $t$
+
+-   $\kappa_t^{(1)}$ has a clear long-term decline from early 1930s to roughly 2010s, indicating substantial improvements in overall mortality over this period. The decline is not linear: the curve contains several stretches where it become almost flat, corresponding to periods in which mortality improvement temporarily slowed down. This pattern is consistent with the behavior of the period index $\kappa_t^{(1)}$ in both Lee-Carter and RH models.\
+-   However, around 2010, CBD highlight that $\kappa_t^{(1)}$ stop declining and begins to increase, signalling a reversal in the long-run trend.
+
+### Goodness of Fit
+
+```{r}
+# Ages and years actually used in the CBD model
+ages_fit  <- CBDfit$ages
+years_fit <- CBDfit$years
+
+# Extract deaths & exposures for those ages
+Dxt_fit <- mort_CBD$Dxt[match(ages_fit, mort_CBD$ages), ]
+Ext_fit <- mort_CBD$Ext[match(ages_fit, mort_CBD$ages), ]
+
+# Observed initial death probabilities q_{x,t}
+qxt_obs_CBD <- Dxt_fit / Ext_fit
+
+# Fitted q_{x,t} from CBD model
+qxt_fit_CBD <- fitted(CBDfit, type = "rates")   # matrix: age x year
+
+ages_to_plot <- c(25, 30, 40, 50, 60, 65)   # all must be in ages_fit
+age_index    <- match(ages_to_plot, ages_fit)
+
+plot_list_CBD <- vector("list", length(ages_to_plot))
+
+for (i in seq_along(age_index)) {
+  age <- ages_to_plot[i]
+  idx <- age_index[i]
+
+  df <- data.frame(
+    year     = years_fit,
+    observed = qxt_obs_CBD[idx, ],
+    fitted   = qxt_fit_CBD[idx, ]
+  )
+
+  df_melt <- melt(df, id.vars = "year")
+
+  p <- ggplot(df_melt, aes(x = year, y = value, color = variable)) +
+    geom_line(size = 0.9) +
+    scale_y_log10() +   # log scale for probabilities (optional but consistent)
+    labs(title = paste("Age", age, ": Observed vs Fitted CBD Mortality"),
+         y = "death probability (log scale)", x = "year",
+         color = "") +
+    theme_minimal()
+
+  plot_list_CBD[[i]] <- p
+}
+
+grid.arrange(
+  plot_list_CBD[[1]], plot_list_CBD[[2]], plot_list_CBD[[3]],
+  plot_list_CBD[[4]], plot_list_CBD[[5]], plot_list_CBD[[6]],
+  nrow = 2, ncol = 3
+)
+```
+
+## M6
+
+```{r}
+mort_M6 <- StMoMoData(US_data, type = "initial", series = "total")
+mort_M6$Dxt <- round(mort_M6$Dxt * N)
+mort_M6$Ext <- round(mort_M6$Ext * N)
+# Fit CBD
+# Binomial Distribution
+M6 <- m6(link = "logit")
+M6fit <- fit(M6, data = mort_M6, ages.fit = 25:65)
+
+# plot parameters
+plot(M6fit)
+```
+
+# Goodness of Fit
+
+## Scaled Deviance Residuals
+
+We use deviance residuals, which measure how much each observation contributes to the likelihood loss relative to a perfectly fitting model. 
+
+$$
+r_{xt} = \text{sign}(d_{xt}-\hat{d}_{xt})\sqrt{\frac{\text{dev}(xt)}{\hat{\phi}}
+$$
+
+$$
+\hat{\phi} = \frac{D(d_{xt}, \hat{d_{xt}})}{K-v}
+$$ 
+- $D(d_{xt}, \hat{d}_{xt}) = \sum_x\sum_tw_{xt}dev(x,t)$ is total deviance of the model, 
+- $K=\sum_x\sum_tw_{xt}$: number of observations (age-year cells) 
+- $v$: effective number of estimated parameters 
+
+### Deviance Contribution dev(x,t) GLM Deviance: 
+$D = 2\{l(\text{saturated)}-l(\text{fitted})\}$ 
+### Poisson Deviance Contribution Assume 
+$$
+D_{x,t} \sim \text{Poisson}(u_{x,t}), \quad u_{x,t} = \hat{D}_{x,t}
+$$ 
+Poisson log-likelihood: 
+$$
+l(u;y) = y\text{log}u-u
+$$ 
+- Saturated: $u=y$, $l(y;y)=ylogy-y$. 
+- Fitted: $l(\hat{u};y) = y\text{log}\hat{u}-\hat{u}$ 
+$$
+dev(y,\hat{u}) = 2[(y\text{log}y-y)-(y\text{log}\hat{u}-\hat{u})]=2[y\text{log}(\frac{y}{\hat{u}})-(y-\hat{u})]
+$$ 
+For mortality cells: 
+$$
+dev(x,t) = 2[D_{x,t}\text{log}(\frac{D_{x,t}}{\hat{D}_{x,t}})-(D_{x,t}-\hat{D}_{x,t})]
+$$ 
+### Binomial Deviance Contribution 
+Assume 
+$$
+D_{x,t} \sim Binomial(E_{x,t}^0, q_{x,t}), \quad \hat{D}_{x,t}=E_{x,t}^0\hat{q}_{x,t}
+$$ 
+Log-likelihood (again, constants cancel): 
+$$
+l(q;y) = y\text{log}q+(E-y)\text{log}(1-q)
+$$ 
+Saturated has $q = y/E$. Plugging into the deviance difference gives: 
+$$
+dev(y,\hat{q}) = 2[y\text{log}(\frac{y}{E\hat{q}}) + (E-y)\text{log}(\frac{E-y}{E(1-\hat{q})})
+$$ 
+For mortality cells, in terms of $\hat{D}=E\hat{q}$ 
+$$
+dev(x,t)) = 2[d_{xt}\text{log}(\frac{d_{xt}}{\hat{d}_{xt}}) + (E_{x,t}^0-d_{xt})\text{log}(\frac{E_{x,t}^0-d_{xt}}{E_{x,t}^0-\hat{d_{xt}}})]
+$$ 
+The total deviance of the model, $K=\sum_x\sum_tw_{xt}$ is the number of observations in the data and $v$ is the effective number of parameters in the model. 
+$$
+D(d_{xt}, \hat{d}_{xt}) = \sum_x\sum_tw_{xt}dev(x,t)
+$$
+
+
+```{r fig.show='hold', out.width = "50%"}
+# scatter plots of residuals
+# by age, period, and cohort
+resid_LC <- residuals(LCfit)
+plot(resid_LC, type = "scatter", main="LC Residuals")   
+
+resid_RH2 <- residuals(RHnp_fit)
+plot(resid_RH2, type = "scatter", main="RH Residuals") 
+
+resid_CBD <- residuals(CBDfit)
+plot(resid_CBD, type = "scatter", main="CBD Residuals") 
+```
+
+```{r fig.show='hold', out.width = "50%"}
+# Residual heatmaps
+plot(resid_LC,  type="colourmap", main="LC residuals")
+plot(resid_RH2, type="colourmap", main="RH (NP) residuals")
+plot(resid_CBD,type="colourmap", main="CBD residuals")
+```
+
+## AIC and BIC
+
+Generally, models with more parameters provide a better fit to the data. To avoid over-parametrization and compare the relative performance of several models, it is common in the mortality literature to use information criteria which modify the maximum likelihood criterion by penalizing models with more parameters.
+
+AIC and BIC compare models by trading off: - Goodness of fit - Number of parameters
+
+AIC: 
+$$
+AIC = 2\nu - 2\mathcal{L}
+$$ 
+BIC: 
+$$
+BIC = \nu \log K - 2\mathcal{L}
+$$ 
+where: - $\mathcal{L}=$ maximized log-likelihood - $\nu=$ number of estimated parameters - $K$ = number of observation
+
+```{r}
+AIC(LCfit, RHnp_fit, CBDfit) %>%
+  mutate(AIC = format(AIC, scientific = FALSE, big.mark = ","))
+
+BIC(LCfit, RHnp_fit, CBDfit) %>%
+  mutate(BIC = format(BIC, scientific = FALSE, big.mark = ","))
+```
+
+# Forecast
+
+## Multivariate random walk with drfit
+
+Define the $N$-vector 
+$$
+\kappa_t = \left( \kappa_t^{(1)}, \kappa_t^{(2)}, \dots, \kappa_t^{(N)} \right)^\top.
+$$ 
+Assume 
+$$
+\kappa_t = \delta + \kappa_{t-1} + \xi_t, \quad \xi_t \sim \mathcal{N}(0, \Sigma).
+$$ 
+This is a $\text{VARIMA}(0,1,0)$ with drift.
+
+\textbf{h-step forecast (conditional mean)} Iterate: 
+\textbf{Simulation form} 
+$$
+\kappa_{t+h} = \kappa_t + h\delta + \sum_{j=1}^h \xi_{t+j}.
+$$ 
+So simulate $\xi_{t+j} \sim \mathcal{N}(0, \Sigma)$ and accumulate.
+
+Conditional on information up to time $t$ (call it $\mathcal{F}_t$), $\kappa_t$ is known, and the future noises are independent mean-zero Gaussians. 
+$$
+\mathbb{E}\left[ \kappa_{t+h} \mid \mathcal{F}_t \right] = \kappa_t + h\delta.
+$$ 
+\textbf{h-step forecast variance} Because increments add: 
+$$
+\text{Var}\left( \kappa_{t+h} \mid \mathcal{F}_t \right) = \text{Var}\left( \sum_{j=1}^h \Sigma\right) = h\Sigma.
+$$
+
+And since it's a linear combination of normals: 
+$$
+\kappa_{t+s} \mid \mathcal{F}_t \sim N(\kappa_t+s\delta, s\Sigma)
+$$
+
+\textbf{Estimating $\delta, \Sigma$ (simple, useful derivation):} 
+Define increments $\Delta \kappa_t = \kappa_t - \kappa_{t-1}$. Under the model, 
+$$
+\Delta \kappa_t = \delta + \xi_t.
+$$ 
+So 
+$$
+\widehat{\delta} = \frac{1}{T-1} \sum_{t=2}^T \Delta \kappa_t, \quad \widehat{\Sigma} = \frac{1}{T-2} \sum_{t=2}^T \left( \Delta \kappa_t - \widehat{\delta} \right) \left( \Delta \kappa_t - \widehat{\delta} \right)^\top.
+$$
+
+## Univariate ARIMA for each $\kappa$
+
+For each $i$,
+
+$$
+\Delta^d_i \kappa^{(i)}_t = \delta^{(i)} + \sum_{j=1}^{p_i} \phi^{(i)}_j \Delta^d_i \kappa^{(i)}_{t-j} + \sum_{j=1}^{q_i} \theta^{(i)}_j \varepsilon^{(i)}_{t-j} + \varepsilon^{(i)}_t, \quad \varepsilon^{(i)}_t \sim \mathcal{N}(0, \sigma^2_i).
+$$
+
+Then you use standard ARIMA forecasting formulas (via Kalman filter / innovations algorithm under the hood), producing:
+
+\begin{itemize}
+    \item forecast mean $\hat{\kappa}^{(i)}_{t+h}$
+    \item forecast variance $\widehat{\text{Var}}(r^{(i)}_{t+h})$
+\end{itemize}
+
+Practical note: Approach 1 preserves correlation among period components via $\Sigma $.
+
+## Rolling one-step-ahead algorithm
+
+```{r}
+get_fc_rates_vec <- function(fc, ages) {
+  r <- fc$rates
+  if (is.null(dim(r))) {
+    v <- r
+  } else {
+    v <- r[, 1]
+  }
+  v <- as.numeric(v)
+  names(v) <- rownames(as.matrix(fc$rates)) %||% names(fc$rates) # optional, but safer
+
+  # best: just reorder by ages using names when available
+  if (!is.null(names(fc$rates)) || !is.null(rownames(as.matrix(fc$rates)))) {
+    nm <- if (!is.null(names(fc$rates))) names(fc$rates) else rownames(as.matrix(fc$rates))
+    names(v) <- nm
+    v <- v[as.character(ages)]
+  }
+  v
+}
+
+```
+
+### LC
+
+```{r message=FALSE}
+## LC
+# setting 
+evalYears <- 2003:2023
+origins <- evalYears - 1
+mort_F <- StMoMoData(US_data, type = "central", series = "total")
+# forecast rate
+mx_hat_lc_rw <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                     dimnames = list(as.character(ages), as.character(evalYears)))
+
+mx_hat_lc_ar <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                     dimnames = list(as.character(ages), as.character(evalYears)))
+
+# observed death count
+obs_death <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                     dimnames = list(as.character(ages), as.character(evalYears)))
+# observed exposure
+obs_exp <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                     dimnames = list(as.character(ages), as.character(evalYears)))
+
+for (i in seq_along(origins)) {
+  T <- origins[i]
+  # fit LC with design experience year
+  fitLC_f <- fit(LC, data = mort_F, ages.fit = 25:65, years.fit = 1933:T)
+  # check convergence
+  print(paste("Year:", T, fitLC_f$conv))
+  # one step ahead forecast
+  fcLC_rw <- forecast(fitLC_f, h=1, level=95)
+  fcLC_ar <- forecast(fitLC_f, h=1, kt.method = "iarima", kt.order = c(1,0,0), level=95)
+  
+  # extract forecast rate
+  mx_hat_lc_rw[, as.character(T+1)] <- get_fc_rates_vec(fcLC_rw, ages)
+  mx_hat_lc_ar[, as.character(T+1)] <- get_fc_rates_vec(fcLC_ar, ages)
+  # extract observed count in forecast year
+  obs_death[, as.character(T+1)] <- mort_F$Dxt[ages+1,years == T+1]
+  # observed exposure
+  obs_exp[, as.character(T+1)] <- mort_F$Ext[ages+1,years == T+1]
+}
+
+```
+
+### RH
+
+```{r}
+# setting for forecast
+ages <- 25:65
+years <- 1933:2023
+evalYears <- 2003:2023
+origins <- evalYears - 1
+# list of matrix
+sum_list <- vector("list", length(origins))
+names(sum_list) <- as.character(origins)
+# list of best matrix
+sum_list_best <- vector("list", length(origins))
+names(sum_list_best) <- as.character(origins)
+
+
+mx_hat_rh_ar <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                     dimnames = list(as.character(ages), as.character(evalYears)))
+
+for (i in seq_along(origins)) {
+  T <- origins[i]
+  set.seed(296 + T)   # fixed seed for this origin year
+  cat("\n========================================\n")
+  cat("Processing Origin Year:", T, "| Forecast Year:", T+1, "\n")
+  cat("========================================\n")
+  max_try <- 15
+  # prepare data
+  mort_rh_for <- StMoMoData(US_data, type = "central", series = "total")
+  RHnp_mod <- rh(link = "log", cohortAgeFun = "NP")
+  
+  # fixed grids for THIS origin year (so matrix columns are fixed)
+  ages_fit   <- 25:65
+  years_fit  <- 1933:T
+  cohorts_fit <- (min(years_fit) - max(ages_fit)):(max(years_fit) - min(ages_fit))
+  
+  # --- define column names for the summary matrix ---
+  cn <- c(
+    "conv", "fc_ok",
+    paste0("ax_", ages_fit),
+    paste0("bx1_", ages_fit),
+    paste0("bx2_", ages_fit),
+    paste0("kt_", years_fit),
+    paste0("gc_", cohorts_fit),
+    paste0("mx_fc_", ages_fit)   # 1-step-ahead forecast rate by age
+  )
+  
+  # initialize matrix: rows = iterations
+  sum_mat <- matrix(NA_real_, nrow = max_try, ncol = length(cn),
+                    dimnames = list(paste0("iter_", 1:max_try), cn))
+  sum_mat_best <- matrix(NA_real_, nrow = 1, ncol = length(cn),
+                    dimnames = list(paste0("iter_", 1), cn))
+  
+  # --- track best successful attempt ---
+  best_logLik <- -Inf
+  best_fc <- NULL
+  
+  for (j in seq_len(max_try)) {
+    # 1) Try fitting RH 
+    fitRH_j <- tryCatch(
+      fit(RHnp_mod, data = mort_rh_for,
+          ages.fit = ages_fit, years.fit = 1933:T, control = list(maxit = 200)),
+      error = function(e) NULL
+    )
+    
+    # 2) if fit error -> record conv, fc_ok=0 and move on
+    if (is.null(fitRH_j) || isTRUE(fitRH_j$fail)){
+      sum_mat[j, "conv"] <- 0
+      sum_mat[j, "fc_ok"] <- 0
+      next
+    }
+    
+    # 3) fill parameters
+    # ax
+    sum_mat[j, paste0("ax_", ages_fit)] <- as.numeric(fitRH_j$ax[as.character(ages_fit)])
+    
+    # bx
+    bx1 <- fitRH_j$bx
+    bx2 <- fitRH_j$b0x
+    sum_mat[j, paste0("bx1_", ages_fit)] <- as.numeric(bx1[as.character(ages_fit), 1])
+    sum_mat[j, paste0("bx2_", ages_fit)] <- as.numeric(bx2[as.character(ages_fit)])
+  
+    # kt (period index)
+    # StMoMo usually stores kt as a matrix [1, years]
+    ky <- as.integer(colnames(fitRH_j$kt))
+    sum_mat[j, paste0("kt_", ky)] <- as.numeric(fitRH_j$kt[1, ])
+
+    # gc (cohort index)
+    gc <- fitRH_j$gc
+    gc_names <- as.integer(names(gc))
+    sum_mat[j, paste0("gc_", gc_names)] <- as.numeric(gc)
+    
+    # 4) check convergence
+    conv_j <- isTRUE(fitRH_j$conv)
+    sum_mat[j, "conv"] <- as.numeric(conv_j)
+    # if not converged -> no forecast
+    if (!conv_j) {
+      sum_mat[j, "fc_ok"] <- 0
+      next
+    }
+    
+    # 5) Try forecasting (skip if error or NULL)
+    fcRH_j <- tryCatch(
+      forecast(fitRH_j, h = 1, kt.method = "mrwd", gc.order = c(1, 1, 0)),
+      error = function(e) NULL
+    )
+    
+    if (is.null(fcRH_j)){
+      sum_mat[j, "fc_ok"] <- 0
+      next
+    } 
+    # forecast status
+    sum_mat[j, "fc_ok"] <- 1
+    # fill forecast rate 
+    sum_mat[j, paste0("mx_fc_", ages_fit)] <-  as.numeric(fcRH_j$rates[as.character(ages_fit)])
+    
+    # 6) Record logLik and update best
+    ll_j <- fitRH_j$loglik
+
+    if (ll_j > best_logLik & !is.null(fcRH_j)) {
+      best_logLik <- ll_j
+      best_fc <- fcRH_j
+      sum_mat_best[,] <- sum_mat[j, ]
+      mx_hat_rh_ar[, as.character(T+1)] <- get_fc_rates_vec(fcRH_j, ages)
+    }
+  }
+  # append best list for each year
+  sum_list_best[[as.character(T)]] <- sum_mat_best
+  # append list for each year
+  sum_list[[as.character(T)]] <- sum_mat
+}
+```
+
+In the code above, we create, `mx_hat_rh_ar`: the forecast rate 2003-2023 but 2017 and 2018 missing. `sum_list_best`: a list contain the best iteration for each year. `sum_list`: matrix of parameters and forecast rate for all iteration each year.
+
+RH fitting can fail to converge in some rolling windows because cohort-based models create a higher-dimensional, weakly identified likelihood surface with potential local stationary points. Multiple restarts mitigate sensitivity to initial values by re-optimizing from different starting points and selecting the best converged likelihood solution.
+
+#### Save RH output
+
+```{r}
+# sum_list
+# sum list object
+for (yr in names(sum_list)) {
+  assign(paste0("sum_", yr), sum_list[[yr]], envir = .GlobalEnv)
+}
+# save rds for each year
+for (yr in names(sum_list)) {
+  saveRDS(sum_list[[yr]], paste0("sum_", yr, ".rds"))
+}
+# save rds for list
+saveRDS(sum_list, "sum_list_2002_2023.rds")
+
+
+# sum_list_best
+for (yr in names(sum_list_best)) {
+  assign(paste0("sum_best_", yr), sum_list_best[[yr]], envir = .GlobalEnv)
+}
+# save rds for each year
+for (yr in names(sum_list_best)) {
+  saveRDS(sum_list_best[[yr]], paste0("sum_best_", yr, ".rds"))
+}
+# save rds for list
+saveRDS(sum_list_best, "sum_list_2002_2023.rds")
+
+# Forecast Rate
+write.csv(
+  mx_hat_rh_ar,
+  file = "mx_hat_rh_ar.csv",
+  row.names = TRUE
+)
+View(mx_hat_rh_ar)
+```
+
+#### Plot Parameters
+
+```{r}
+pdf("RH_parameter_plots.pdf", width = 28, height = 4 * length(years)) 
+
+ages <- 25:65
+status_colors <- c(
+  "Converged + Forecast"        = "darkgreen",
+  "Converged + No Forecast"     = "orange",
+  "Not Converged + No Forecast" = "red"
+)
+
+years <- names(sum_list)
+n_year <- length(years)
+
+# Layout: rows = years, columns = 6 parameter blocks
+par(mfrow = c(n_year, 6), mar = c(2,2,2,1))
+
+
+# ---------- LOOP THROUGH YEARS ----------
+for (y in years) {
+
+  M <- as.data.frame(sum_list[[y]])
+
+  # Drop rows where parameter part all NA
+  M <- M[rowSums(!is.na(M[, -c(1,2)])) > 0, ]
+
+  # Convert conv / fc_ok to logical
+  M$conv  <- as.integer(M$conv) == 1
+  M$fc_ok <- as.integer(M$fc_ok) == 1
+
+  # Status label
+  M$status <- with(M,
+    ifelse(conv & fc_ok, "Converged + Forecast",
+    ifelse(!conv & !fc_ok, "Not Converged + No Forecast",
+           "Converged + No Forecast"))
+  )
+
+  # transparent colors by status
+  cols <- adjustcolor(status_colors[M$status], alpha.f = 0.35)
+  
+  M$iter <- seq_len(nrow(M))
+
+  # Extract parameter blocks (robust)
+  ax_block  <- M[, grep("^ax_",     colnames(M)), drop = FALSE]
+  bx1_block <- M[, grep("^bx1_",    colnames(M)), drop = FALSE]
+  bx2_block <- M[, grep("^bx2_",    colnames(M)), drop = FALSE]
+  kt_block  <- M[, grep("^kt_",     colnames(M)), drop = FALSE]
+  gc_block  <- M[, grep("^gc_",     colnames(M)), drop = FALSE]
+  mx_block  <- M[, grep("^mx_fc_",  colnames(M)), drop = FALSE]
+
+  cols <- status_colors[M$status]
+
+  # =========================
+  # 5) PLOT BLOCKS
+  # =========================
+
+  # ax
+  if (ncol(ax_block) > 0) {
+    matplot(ages, t(ax_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("ax -", y),
+            xlab = "", ylab = "")
+    legend("bottomright", legend=names(status_colors),
+           col=status_colors, lty=1, cex=1, bty="n")
+  } else plot.new()
+
+  # bx1
+  if (ncol(bx1_block) > 0) {
+    matplot(ages, t(bx1_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("bx1 -", y),
+            xlab = "", ylab = "")
+    legend("topright", legend=names(status_colors),
+           col=status_colors, lty=1, cex=1, bty="n")
+  } else plot.new()
+
+  # bx2
+  if (ncol(bx2_block) > 0) {
+    matplot(ages, t(bx2_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("bx2 -", y),
+            xlab = "", ylab = "")
+    legend("topright", legend=names(status_colors),
+           col=status_colors, lty=1, cex=1, bty="n")
+  } else plot.new()
+
+  # kt (period index)
+  if (ncol(kt_block) > 0) {
+    kt_years <- as.numeric(sub("kt_", "", colnames(kt_block)))
+    matplot(kt_years, t(kt_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("kt -", y),
+            xlab = "", ylab = "")
+    legend("topright", legend=names(status_colors),
+           col=status_colors, lty=1, cex=1, bty="n")
+  } else plot.new()
+
+  # gc (cohort index)
+  if (ncol(gc_block) > 0) {
+    gc_vals <- as.numeric(sub("gc_", "", colnames(gc_block)))
+    matplot(gc_vals, t(gc_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("gc -", y),
+            xlab = "", ylab = "")
+    legend("bottomright", legend=names(status_colors),
+           col=status_colors, lty=1, cex=1, bty="n")
+  } else plot.new()
+
+  # mx forecast (only successful)
+  idx_ok <- which(M$status == "Converged + Forecast")
+
+  if (length(idx_ok) > 0 && ncol(mx_block) > 0) {
+    matplot(ages, t(mx_block[idx_ok, , drop = FALSE]),
+            type = "l", lty = 1,
+            col = status_colors["Converged + Forecast"],
+            main = paste("mx_fc -", as.integer(y) + 1),
+            xlab = "", ylab = "")
+    legend("topleft", legend=names(status_colors),
+           col=status_colors, lty=1, cex=1, bty="n")
+  } else {
+    plot.new()
+  }
+}
+
+# Reset layout
+par(mfrow = c(1,1))
+dev.off()
+```
+
+#### Plot for best fit and forecast
+
+```{r}
+pdf("RH_parameter_plots_best.pdf", width = 26, height = 4 * length(years)) 
+
+ages <- 25:65
+status_colors <- c(
+  "Converged + Forecast"        = "darkgreen",
+  "Converged + No Forecast"     = "orange",
+  "Not Converged + No Forecast" = "red"
+)
+
+
+years <- names(sum_list_best)
+# keep only years where there is at least ONE non-NA beyond conv/fc_ok
+years_ok <- years[sapply(years, function(y) {
+  M <- as.data.frame(sum_list_best[[y]])
+  nrow(M) > 0 && any(!is.na(M[1, -c(1,2)]))
+})]
+
+years <- years_ok
+n_year <- length(years)
+
+# Layout: rows = years, columns = 6 parameter blocks
+par(mfrow = c(n_year, 6), mar = c(2,2,2,1))
+
+
+# ---------- LOOP THROUGH YEARS ----------
+for (y in years) {
+  
+  M <- as.data.frame(sum_list_best[[y]])
+  
+  # Drop rows where parameter part all NA
+  M <- M[rowSums(!is.na(M[, -c(1,2)])) > 0, ]
+  
+  # Convert conv / fc_ok to logical
+  M$conv  <- as.integer(M$conv) == 1
+  M$fc_ok <- as.integer(M$fc_ok) == 1
+  
+  # Status label
+  M$status <- with(M,
+                   ifelse(conv & fc_ok, "Converged + Forecast",
+                          ifelse(!conv & !fc_ok, "Not Converged + No Forecast",
+                                 "Converged + No Forecast"))
+  )
+  
+  # transparent colors by status
+cols <- adjustcolor(status_colors[M$status], alpha.f = 0.35)
+
+  M$iter <- seq_len(nrow(M))
+  
+  #Extract parameter blocks (robust)
+  # -------------------------
+  ax_block  <- M[, grep("^ax_",     colnames(M)), drop = FALSE]
+  bx1_block <- M[, grep("^bx1_",    colnames(M)), drop = FALSE]
+  bx2_block <- M[, grep("^bx2_",    colnames(M)), drop = FALSE]
+  kt_block  <- M[, grep("^kt_",     colnames(M)), drop = FALSE]
+  gc_block  <- M[, grep("^gc_",     colnames(M)), drop = FALSE]
+  mx_block  <- M[, grep("^mx_fc_",  colnames(M)), drop = FALSE]
+  
+  cols <- status_colors[M$status]
+  
+  # =========================
+  # 5) PLOT BLOCKS
+  # =========================
+  
+  # ax
+  if (ncol(ax_block) > 0) {
+    matplot(ages, t(ax_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("ax -", y),
+            xlab = "", ylab = "")
+    legend("bottomright", legend=names(status_colors),
+           col=status_colors, lty=1, cex=1, bty="n")
+  } else plot.new()
+  
+  # bx1
+  if (ncol(bx1_block) > 0) {
+    matplot(ages, t(bx1_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("bx1 -", y),
+            xlab = "", ylab = "")
+    legend("topright", legend=names(status_colors),
+           col=status_colors, lty=1, cex=1, bty="n")
+  } else plot.new()
+  
+  # bx2
+  if (ncol(bx2_block) > 0) {
+    matplot(ages, t(bx2_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("bx2 -", y),
+            xlab = "", ylab = "")
+    legend("topright", legend=names(status_colors),
+           col=status_colors, lty=1, cex=1, bty="n")
+  } else plot.new()
+  
+  # kt (period index)
+  if (ncol(kt_block) > 0) {
+    kt_years <- as.numeric(sub("kt_", "", colnames(kt_block)))
+    matplot(kt_years, t(kt_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("kt -", y),
+            xlab = "", ylab = "")
+    legend("topright", legend=names(status_colors),
+           col=status_colors, lty=1, cex=1, bty="n")
+  } else plot.new()
+  
+  # gc (cohort index)
+  if (ncol(gc_block) > 0) {
+    gc_vals <- as.numeric(sub("gc_", "", colnames(gc_block)))
+    matplot(gc_vals, t(gc_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("gc -", y),
+            xlab = "", ylab = "")
+    legend("bottomright", legend=names(status_colors),
+           col=status_colors, lty=1, cex=1, bty="n")
+  } else plot.new()
+  
+  # mx forecast (only successful)
+  idx_ok <- which(M$status == "Converged + Forecast")
+  
+  if (length(idx_ok) > 0 && ncol(mx_block) > 0) {
+    matplot(ages, t(mx_block[idx_ok, , drop = FALSE]),
+            type = "l", lty = 1,
+            col = status_colors["Converged + Forecast"],
+            main = paste("mx_fc -", as.integer(y) + 1),
+            xlab = "", ylab = "")
+    legend("topleft", legend=names(status_colors),
+           col=status_colors, lty=1, cex=1, bty="n")
+  } else {
+    plot.new()
+  }
+}
+
+# Reset layout
+par(mfrow = c(1,1))
+
+dev.off()
+```
+
+### CBD
+```{r}
+# CBD data
+mort_CBD_for <- StMoMoData(US_data, type = "initial", series = "total")
+
+# observed exposure
+obs_exp_CBD <- mort_CBD_for$Ext[ages + 1, years %in% evalYears, drop = FALSE]
+
+N <- 1e6
+mort_CBD_for$Dxt <- round(mort_CBD_for$Dxt * N)
+mort_CBD_for$Ext <- round(mort_CBD_for$Ext * N)
+CBD <- cbd(link = "logit")
+
+# forecast mortality prob
+qx_hat_CBD <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                     dimnames = list(as.character(ages), as.character(evalYears)))
+
+for (i in seq_along(origins)) {
+  T <- origins[i]
+  fitCBD_f <- fit(CBD, data = mort_CBD_for, ages.fit = 25:65, years.fit = 1933:T)
+
+  fcCBD <- forecast(fitCBD_f, h=1, level=95)
+
+  qx_hat_CBD[, as.character(T+1)] <- get_fc_rates_vec(fcCBD, ages)
+}
+
+```
+
+## DM Test
+
+Poisson deviance (counts-based): 
+$$
+dev(x,t) = 2[D_{x,t}\text{log}(\frac{D_{x,t}}{\hat{D}_{x,t}})-(D_{x,t}-\hat{D}_{x,t})]
+$$ 
+
+### Poisson Deviance
+
+```{r}
+# Define loss function 
+# Poisson Deviance
+poisson_deviance_cell <- function(D, Dhat) {
+  # D, Dhat numeric vectors/matrices; returns same shape
+  Dhat <- pmax(Dhat, 1e-12)  # avoid division by 0
+  out <- 2 * (D * ifelse(D == 0, 0, log(D / Dhat)) - (D - Dhat))
+  out
+}
+
+# average
+loss_per_year_poisson_dev_avg <- function(D_obs, D_hat) {
+  dev_mat <- poisson_deviance_cell(D_obs, D_hat)  # age x year
+  colMeans(dev_mat, na.rm = TRUE)                  # length T vector (years)
+}
+```
+
+### Binomial Deviance
+
+$$
+dev(x,t)) = 2[d_{xt}\text{log}(\frac{d_{xt}}{\hat{d}_{xt}}) + (E_{x,t}^0-d_{xt})\text{log}(\frac{E_{x,t}^0-d_{xt}}{E_{x,t}^0-\hat{d_{xt}}})]
+$$
+
+```{r}
+# Define loss function 
+# Binomial Deviance
+binom_deviance_cell <- function(D, E, qhat) {
+  qhat <- pmin(pmax(qhat, 1e-12), 1 - 1e-12)
+  mu <- E * qhat
+
+  term1 <- ifelse(D == 0, 0, D * log(D / mu))
+  term2 <- ifelse(D == E, 0, (E - D) * log((E - D) / (E - mu)))
+
+  2 * (term1 + term2)
+}
+
+# average
+loss_per_year_binom_dev_avg <- function(D_obs, E_obs, q_hat) {
+  dev_mat <- binom_deviance_cell(D_obs, E_obs, q_hat)
+  colMeans(dev_mat, na.rm = TRUE)
+}
+```
+
+### Compare LC with mrwd and AR(1)
+
+```{r}
+# forecast death count 
+hat_death_rw <- obs_exp*mx_hat_lc_rw
+hat_death_ar <- obs_exp*mx_hat_lc_ar
+
+# the yearly loss series for LC (avg)
+# rw
+lc_dev_rw <- loss_per_year_poisson_dev_avg(obs_death, hat_death_rw)
+# AR
+lc_dev_ar <- loss_per_year_poisson_dev_avg(obs_death, hat_death_ar)
+
+# Put them in time series form
+# rw
+lc_dev_rw <- ts(lc_dev_rw, start = min(evalYears), frequency = 1)
+# ar
+lc_dev_ar <- ts(lc_dev_ar, start = min(evalYears), frequency = 1)
+
+# dm test
+dm.test(as.numeric(lc_dev_rw), as.numeric(lc_dev_ar), alternative = "two.sided", 
+        h = 1, power = 1)
+```
+
+### Compare LC and CBD
+
+```{r}
+# the yearly loss series for CBD
+# avg
+L_CBD_dev_avg <- loss_per_year_binom_dev_avg(obs_death, obs_exp_CBD, qx_hat_CBD)
+
+# Put them in time series form (optional but nice)
+# avg
+L_CBD_dev_avg <- ts(L_CBD_dev_avg, start = min(evalYears), frequency = 1)
+
+# compare LC and CBD
+dm.test(as.numeric(L_CBD_dev_avg), as.numeric(lc_dev_ar), alternative = "two.sided", 
+        h = 1, power = 1)
+```
+
+### Compare LC and RH
+```{r}
+# forecast death count 
+# RH
+hat_death_rh <- obs_exp*mx_hat_rh_ar
+# LC
+hat_death_lc_rw <- obs_exp*mx_hat_lc_rw
+
+# extract death count from 2003-2019
+# RH
+hat_death_rh <- hat_death_rh[,1:17]
+# LC
+hat_death_lc_rw <- hat_death_lc_rw[,1:17]
+# obs
+obs_death_0319 <- obs_death[,1:17]
+
+# the yearly loss series for LC (avg)
+# RH
+rh_dev <- loss_per_year_poisson_dev_avg(obs_death_0319, hat_death_rh)
+# LC
+lc_dev_rw <- loss_per_year_poisson_dev_avg(obs_death_0319, hat_death_lc_rw)
+
+# dm test
+dm.test(as.numeric(rh_dev), as.numeric(lc_dev_rw), alternative = "two.sided", 
+        h = 1, power = 1)
+```
+
+### Compare RH and CBD
+```{r}
+# the yearly loss series for CBD
+# avg
+CBD_dev_0319 <- loss_per_year_binom_dev_avg(obs_death[,1:17], obs_exp_CBD[,1:17], 
+                                             qx_hat_CBD[,1:17])
+
+# dm test
+dm.test(as.numeric(rh_dev), as.numeric(CBD_dev_0319), alternative = "two.sided", 
+        h = 1, power = 1)
+```
+
+### Small sample adjustment
+```{r}
+dm_hln_test <- function(e1, e2, h = 1, power = 1) {
+  # e1, e2 = forecast errors from model 1 and model 2
+  # h      = forecast horizon
+  # power  = 1 for absolute loss
+  
+  T <- length(e1)
+  
+  # Loss differential
+  d <- abs(e1)^power - abs(e2)^power
+  
+  # Mean loss differential
+  d_bar <- mean(d)
+  
+  # Estimate autocovariance of d up to lag h-1
+  gamma <- numeric(h)
+  for (k in 0:(h - 1)) {
+    gamma[k + 1] <- mean((d[(k + 1):T] - d_bar) * (d[1:(T - k)] - d_bar))
+  }
+  
+  # Long-run variance estimate
+  var_d <- (gamma[1] + 2 * sum(gamma[-1])) / T
+  
+  # Original DM statistic
+  DM <- d_bar / sqrt(var_d)
+  
+  # HLN correction factor
+  correction <- sqrt((T + 1 - 2*h + h*(h-1)/T) / T)
+  
+  # Corrected statistic
+  HLN <- DM * correction
+  
+  # p-value from t(T-1) distribution
+  p_value <- 2 * pt(-abs(HLN), df = T - 1)
+  
+  cat("=== Harvey-Leybourne-Newbold DM Test ===\n")
+  cat("Forecast horizon (h)   :", h, "\n")
+  cat("Sample size (T)        :", T, "\n")
+  cat("Original DM statistic  :", round(DM, 4), "\n")
+  cat("HLN correction factor  :", round(correction, 4), "\n")
+  cat("HLN statistic          :", round(HLN, 4), "\n")
+  cat("Degrees of freedom     :", T - 1, "\n")
+  cat("p-value                :", round(p_value, 4), "\n")
+  
+  return(invisible(list(
+    DM        = DM,
+    HLN       = HLN,
+    p_value   = p_value,
+    df        = T - 1,
+    correction = correction
+  )))
+}
+```
+
+```{r}
+dm_hln_test(as.numeric(rh_dev), as.numeric(CBD_dev_0319), h = 1, power = 1)
+```
+
