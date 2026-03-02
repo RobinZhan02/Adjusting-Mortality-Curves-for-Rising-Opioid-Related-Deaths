@@ -11,11 +11,23 @@ library(parallel)
 # load dataset
 region_data <- readRDS("../data/wonder_opioid/allcause_stmomo_monthly.rds")
 
-# assign regional data
-Midwest_data <- region_data[["Midwest"]]
-Northeast_data <- region_data[["Northeast"]]
-South_data <- region_data[["South"]]
-West_data <- region_data[["West"]]
+# prepare data
+# Function to subset StMoMo data to ages 25-65
+subset_stmomo_ages <- function(stmomo_data, age_min = 25, age_max = 65) {
+  age_idx <- which(stmomo_data$ages %in% age_min:age_max)
+
+  stmomo_data$Dxt  <- stmomo_data$Dxt[age_idx, ]
+  stmomo_data$Ext  <- stmomo_data$Ext[age_idx, ]
+  stmomo_data$ages <- stmomo_data$ages[age_idx]
+
+  return(stmomo_data)
+}
+
+# Apply to all four regions (overwrite original objects)
+Midwest_data   <- subset_stmomo_ages(region_data[["Midwest"]])
+Northeast_data <- subset_stmomo_ages(region_data[["Northeast"]])
+South_data     <- subset_stmomo_ages(region_data[["South"]])
+West_data      <- subset_stmomo_ages(region_data[["West"]])
 
 # Forecast
 ## get rate function
@@ -39,7 +51,7 @@ get_fc_rates_vec <- function(fc, ages) {
 }
 
 ## One-month ahead forecast function
-rh_roll_1mo_forecast <- function(mort_data, start_year = 2003, end_year = 2021) {
+rh_roll_1mo_forecast <- function(mort_data, start_year = 2010, end_year = 2021) {
 
   # ---- fixed settings ----
   ages_fit <- 25:65
@@ -143,7 +155,7 @@ rh_roll_1mo_forecast <- function(mort_data, start_year = 2003, end_year = 2021) 
             data      = mort_data,
             ages.fit  = ages_fit_mo,
             years.fit = years_fit_mo,
-            control   = list(maxit = 200)),
+            control = gnm::gnm.control(start.iter = 4)),
         error = function(e) NULL
       )
 
@@ -235,8 +247,9 @@ rh_roll_1mo_forecast <- function(mort_data, start_year = 2003, end_year = 2021) 
 }
 stop("stopping here")
 
-## Midwest
-RH_Midwest <- rh_roll_1mo_forecast(Midwest_data)
+
+## Model and ForecastR
+RH_Midwest2010 <- rh_roll_1mo_forecast(Midwest_data)
 RH_Northeast  <- rh_roll_1mo_forecast(Northeast_data)
 RH_South      <- rh_roll_1mo_forecast(South_data)
 RH_West       <- rh_roll_1mo_forecast(West_data)
