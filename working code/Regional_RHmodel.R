@@ -43,7 +43,7 @@ rh_roll_1mo_forecast <- function(mort_data, start_year = 2003, end_year = 2021) 
 
   # ---- fixed settings ----
   ages_fit <- 25:65
-  max_try  <- 10
+  max_try  <- 6
 
   # scale to monthly units (same as fit_RH_rr)
   mort_data$years <- mort_data$years * 12
@@ -149,6 +149,7 @@ rh_roll_1mo_forecast <- function(mort_data, start_year = 2003, end_year = 2021) 
 
       # 2) skip if failed
       if (is.null(fitRH_j) || isTRUE(fitRH_j$fail)) {
+        cat("\n--- Iteration: ", j, "Model Fit Fail", "---\n")
         sum_mat[j, "conv"]  <- 0
         sum_mat[j, "fc_ok"] <- 0
         next
@@ -181,10 +182,12 @@ rh_roll_1mo_forecast <- function(mort_data, start_year = 2003, end_year = 2021) 
       conv_j <- isTRUE(fitRH_j$conv)
       sum_mat[j, "conv"] <- as.numeric(conv_j)
       if (!conv_j) {
+        cat("\n--- Iteration: ", j, "Does not converged ---\n")
         sum_mat[j, "fc_ok"] <- 0
         next
       }
 
+      cat("\n--- Iteration: ", j, "Converged ---\n")
       # 5) try forecasting
       fcRH_j <- tryCatch(
         forecast(fitRH_j, h = 1, kt.method = "mrwd", gc.order = c(1, 1, 0)),
@@ -193,10 +196,12 @@ rh_roll_1mo_forecast <- function(mort_data, start_year = 2003, end_year = 2021) 
 
       if (is.null(fcRH_j)) {
         sum_mat[j, "fc_ok"] <- 0
+        cat("\n--- Iteration: ", j, "Forecast Fail", "---\n")
         next
       }
 
       # 6) record forecast status and rates (index monthly, name yearly)
+      cat("\n--- Iteration: ", j,"Forecast Success", "---\n")
       sum_mat[j, "fc_ok"] <- 1
       sum_mat[j, paste0("mx_fc_", ages_fit)] <-
         as.numeric(fcRH_j$rates[as.character(ages_fit_mo)])
@@ -228,7 +233,7 @@ rh_roll_1mo_forecast <- function(mort_data, start_year = 2003, end_year = 2021) 
     sum_list_best = sum_list_best
   ))
 }
-
+stop("stopping here")
 
 ## Midwest
 RH_Midwest <- rh_roll_1mo_forecast(Midwest_data)
@@ -241,10 +246,3 @@ saveRDS(RH_Midwest,   file = "rh_monthly_Midwest.rds")
 saveRDS(RH_Northeast, file = "rh_monthly_Northeast.rds")
 saveRDS(RH_South,     file = "rh_monthly_South.rds")
 saveRDS(RH_West,      file = "rh_monthly_West.rds")
-
-
-
-
-
-
-
