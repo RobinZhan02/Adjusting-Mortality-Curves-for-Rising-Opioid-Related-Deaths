@@ -318,7 +318,7 @@ plot_lc_components_with_kappa_ci <- function(LCfit) {
          bty = "n")
   
   invisible(NULL)
-}`
+}
 ```
 
 ```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=10}
@@ -832,21 +832,6 @@ grid.arrange(
 )
 ```
 
-## M6
-
-```{r}
-mort_M6 <- StMoMoData(US_data, type = "initial", series = "total")
-mort_M6$Dxt <- round(mort_M6$Dxt * N)
-mort_M6$Ext <- round(mort_M6$Ext * N)
-# Fit CBD
-# Binomial Distribution
-M6 <- m6(link = "logit")
-M6fit <- fit(M6, data = mort_M6, ages.fit = 25:65)
-
-# plot parameters
-plot(M6fit)
-```
-
 # Goodness of Fit
 
 ## Scaled Deviance Residuals
@@ -1037,56 +1022,122 @@ get_fc_rates_vec <- function(fc, ages) {
 ```
 
 ### LC
-
-```{r message=FALSE}
+```{r}
 ## LC
-# setting 
+# setting
 evalYears <- 2003:2023
-origins <- evalYears - 1
+origins   <- evalYears - 1
+ages      <- 25:65
+
 mort_F <- StMoMoData(US_data, type = "central", series = "total")
-# forecast rate
+
+# ── Extract observed data ONCE outside loop ───────────────────
+obs_death <- mort_F$Dxt[as.character(ages), as.character(evalYears)]
+obs_exp   <- mort_F$Ext[as.character(ages), as.character(evalYears)]
+obs_mx    <- obs_death / obs_exp
+
+# ── Forecast rate matrices ────────────────────────────────────
 mx_hat_lc_rw <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
-                     dimnames = list(as.character(ages), as.character(evalYears)))
-
+                        dimnames = list(as.character(ages), as.character(evalYears)))
 mx_hat_lc_ar <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
-                     dimnames = list(as.character(ages), as.character(evalYears)))
+                        dimnames = list(as.character(ages), as.character(evalYears)))
 
-# observed death count
-obs_death <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
-                     dimnames = list(as.character(ages), as.character(evalYears)))
-# observed exposure
-obs_exp <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
-                     dimnames = list(as.character(ages), as.character(evalYears)))
+# ── CI matrices ───────────────────────────────────────────────
+mx_hat_lc_rw_lower <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                              dimnames = list(as.character(ages), as.character(evalYears)))
+mx_hat_lc_rw_upper <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                              dimnames = list(as.character(ages), as.character(evalYears)))
+mx_hat_lc_ar_lower <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                              dimnames = list(as.character(ages), as.character(evalYears)))
+mx_hat_lc_ar_upper <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                              dimnames = list(as.character(ages), as.character(evalYears)))
 
+# ── LC CI extraction function ─────────────────────────────────
+extract_lc_ci <- function(fitLC, fcLC, ages) {
+  ax <- as.numeric(fitLC$ax[as.character(ages)])
+  bx <- as.numeric(fitLC$bx[as.character(ages), 1])
+  
+  kt_mean  <- as.numeric(fcLC$kt.f$mean)
+  kt_lower <- as.numeric(fcLC$kt.f$lower)
+  kt_upper <- as.numeric(fcLC$kt.f$upper)
+  
+  log_mx_mean  <- ax + bx * kt_mean
+  log_mx_upper <- ax + bx * ifelse(bx >= 0, kt_upper, kt_lower)
+  log_mx_lower <- ax + bx * ifelse(bx >= 0, kt_lower, kt_upper)
+  
+  data.frame(
+    age      = ages,
+    mx_mean  = exp(log_mx_mean),
+    mx_lower = exp(log_mx_lower),
+    mx_upper = exp(log_mx_upper)
+  )
+}
+
+# ── Forecast loop ─────────────────────────────────────────────
 for (i in seq_along(origins)) {
   T <- origins[i]
-  # fit LC with design experience year
-  fitLC_f <- fit(LC, data = mort_F, ages.fit = 25:65, years.fit = 1933:T)
-  # check convergence
-  print(paste("Year:", T, fitLC_f$conv))
-  # one step ahead forecast
-  fcLC_rw <- forecast(fitLC_f, h=1, level=95)
-  fcLC_ar <- forecast(fitLC_f, h=1, kt.method = "iarima", kt.order = c(1,0,0), level=95)
   
-  # extract forecast rate
+  fitLC_f <- fit(LC, data = mort_F, ages.fit = 25:65, years.fit = 1933:T)
+  print(paste("Year:", T, fitLC_f$conv))
+  
+  fcLC_rw <- forecast(fitLC_f, h = 1, level = 95)
+  fcLC_ar <- forecast(fitLC_f, h = 1, kt.method = "iarima", 
+                      kt.order = c(1, 0, 0), level = 95)
+  
+  # point forecast
   mx_hat_lc_rw[, as.character(T+1)] <- get_fc_rates_vec(fcLC_rw, ages)
   mx_hat_lc_ar[, as.character(T+1)] <- get_fc_rates_vec(fcLC_ar, ages)
-  # extract observed count in forecast year
-  obs_death[, as.character(T+1)] <- mort_F$Dxt[ages+1,years == T+1]
-  # observed exposure
-  obs_exp[, as.character(T+1)] <- mort_F$Ext[ages+1,years == T+1]
+  
+  # CI
+  ci_rw <- extract_lc_ci(fitLC_f, fcLC_rw, ages)
+  ci_ar <- extract_lc_ci(fitLC_f, fcLC_ar, ages)
+  
+  mx_hat_lc_rw_lower[, as.character(T+1)] <- ci_rw$mx_lower
+  mx_hat_lc_rw_upper[, as.character(T+1)] <- ci_rw$mx_upper
+  mx_hat_lc_ar_lower[, as.character(T+1)] <- ci_ar$mx_lower
+  mx_hat_lc_ar_upper[, as.character(T+1)] <- ci_ar$mx_upper
 }
 
 ```
 
-### RH
+#### Save Output for LC
+```{r}
+# Save as CSV
+write.csv(mx_hat_lc_rw,       file = "mx_hat_lc_rw.csv",       row.names = TRUE)
+write.csv(mx_hat_lc_ar,       file = "mx_hat_lc_ar.csv",       row.names = TRUE)
+write.csv(mx_hat_lc_rw_lower, file = "mx_hat_lc_rw_lower.csv", row.names = TRUE)
+write.csv(mx_hat_lc_rw_upper, file = "mx_hat_lc_rw_upper.csv", row.names = TRUE)
+write.csv(mx_hat_lc_ar_lower, file = "mx_hat_lc_ar_lower.csv", row.names = TRUE)
+write.csv(mx_hat_lc_ar_upper, file = "mx_hat_lc_ar_upper.csv", row.names = TRUE)
+write.csv(obs_death,          file = "obs_death.csv",           row.names = TRUE)
+write.csv(obs_exp,            file = "obs_exp.csv",             row.names = TRUE)
+write.csv(obs_mx,             file = "obs_mx.csv",              row.names = TRUE)
 
+# Remove X prefix from column names when loading
+load_matrix <- function(file) {
+  m <- as.matrix(read.csv(file, row.names = 1, check.names = FALSE))
+  return(m)
+}
+
+mx_hat_lc_rw       <- load_matrix("mx_hat_lc_rw.csv")
+mx_hat_lc_ar       <- load_matrix("mx_hat_lc_ar.csv")
+mx_hat_lc_rw_lower <- load_matrix("mx_hat_lc_rw_lower.csv")
+mx_hat_lc_rw_upper <- load_matrix("mx_hat_lc_rw_upper.csv")
+mx_hat_lc_ar_lower <- load_matrix("mx_hat_lc_ar_lower.csv")
+mx_hat_lc_ar_upper <- load_matrix("mx_hat_lc_ar_upper.csv")
+obs_death          <- load_matrix("obs_death.csv")
+obs_exp            <- load_matrix("obs_exp.csv")
+obs_mx             <- load_matrix("obs_mx.csv")
+```
+
+### RH
 ```{r}
 # setting for forecast
-ages <- 25:65
-years <- 1933:2023
+ages     <- 25:65
+years    <- 1933:2023
 evalYears <- 2003:2023
-origins <- evalYears - 1
+origins  <- evalYears - 1
+
 # list of matrix
 sum_list <- vector("list", length(origins))
 names(sum_list) <- as.character(origins)
@@ -1094,167 +1145,228 @@ names(sum_list) <- as.character(origins)
 sum_list_best <- vector("list", length(origins))
 names(sum_list_best) <- as.character(origins)
 
+# ── Initialize forecast + CI matrices ─────────────────────────
+mx_hat_rh_ar       <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                              dimnames = list(as.character(ages), as.character(evalYears)))
+mx_hat_rh_ar_lower <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                              dimnames = list(as.character(ages), as.character(evalYears)))
+mx_hat_rh_ar_upper <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                              dimnames = list(as.character(ages), as.character(evalYears)))
 
-mx_hat_rh_ar <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
-                     dimnames = list(as.character(ages), as.character(evalYears)))
+# ── CI extraction function ────────────────────────────────────
+extract_rh_ci <- function(fitRH, fcRH, ages_fit) {
+  
+  bx  <- as.numeric(fitRH$bx[as.character(ages_fit), 1])
+  b0x <- as.numeric(fitRH$b0x[as.character(ages_fit)])
+  
+  # kt forecast bounds
+  kt_mean  <- as.numeric(fcRH$kt.f$mean)
+  kt_lower <- as.numeric(fcRH$kt.f$lower)
+  kt_upper <- as.numeric(fcRH$kt.f$upper)
+  
+  # extract forecast year from colnames
+  forecast_year <- as.numeric(colnames(fcRH$kt.f$mean))
+  
+  # cohort for each age
+  new_cohort <- forecast_year - ages_fit
+  
+  # extract fitted gc for all ages
+  gc_val <- sapply(new_cohort, function(cohort) {
+    as.numeric(fitRH$gc[as.character(cohort)])
+  })
+  
+  # for age 25 (new cohort) replace with forecast gc
+  age25_idx         <- which(ages_fit == 25)
+  gc_val[age25_idx] <- as.numeric(fcRH$gc.f$mean)
+  
+  # gc CI deviation — only age 25 has uncertainty
+  gc_lower_dev <- numeric(length(ages_fit))
+  gc_upper_dev <- numeric(length(ages_fit))
+  gc_lower_dev[age25_idx] <- as.numeric(fcRH$gc.f$lower) - as.numeric(fcRH$gc.f$mean)
+  gc_upper_dev[age25_idx] <- as.numeric(fcRH$gc.f$upper) - as.numeric(fcRH$gc.f$mean)
+  
+  # use fcRH$rates as mean directly
+  mx_mean  <- as.numeric(fcRH$rates[as.character(ages_fit)])
+  log_mean <- log(mx_mean)
+  
+  # CI from kt deviation + gc deviation (age 25 only)
+  kt_dev_upper <- ifelse(bx >= 0, kt_upper - kt_mean, kt_lower - kt_mean)
+  kt_dev_lower <- ifelse(bx >= 0, kt_lower - kt_mean, kt_upper - kt_mean)
+  
+  log_mx_upper <- log_mean + bx * kt_dev_upper + b0x * gc_upper_dev
+  log_mx_lower <- log_mean + bx * kt_dev_lower + b0x * gc_lower_dev
+  
+  data.frame(
+    age      = ages_fit,
+    mx_mean  = mx_mean,
+    mx_lower = exp(log_mx_lower),
+    mx_upper = exp(log_mx_upper)
+  )
+}
 
+# ── Forecast loop ─────────────────────────────────────────────
 for (i in seq_along(origins)) {
   T <- origins[i]
-  set.seed(296 + T)   # fixed seed for this origin year
-  cat("\n========================================\n")
+  set.seed(296 + T)
+  cat("\n==========================================\n")
   cat("Processing Origin Year:", T, "| Forecast Year:", T+1, "\n")
-  cat("========================================\n")
-  max_try <- 15
-  # prepare data
-  mort_rh_for <- StMoMoData(US_data, type = "central", series = "total")
-  RHnp_mod <- rh(link = "log", cohortAgeFun = "NP")
+  cat("==========================================\n")
   
-  # fixed grids for THIS origin year (so matrix columns are fixed)
-  ages_fit   <- 25:65
-  years_fit  <- 1933:T
+  max_try     <- 15
+  ages_fit    <- 25:65
+  years_fit   <- 1933:T
   cohorts_fit <- (min(years_fit) - max(ages_fit)):(max(years_fit) - min(ages_fit))
   
-  # --- define column names for the summary matrix ---
+  mort_rh_for <- StMoMoData(US_data, type = "central", series = "total")
+  RHnp_mod    <- rh(link = "log", cohortAgeFun = "NP")
+  
   cn <- c(
     "conv", "fc_ok",
-    paste0("ax_", ages_fit),
-    paste0("bx1_", ages_fit),
-    paste0("bx2_", ages_fit),
-    paste0("kt_", years_fit),
-    paste0("gc_", cohorts_fit),
-    paste0("mx_fc_", ages_fit)   # 1-step-ahead forecast rate by age
+    paste0("ax_",    ages_fit),
+    paste0("bx1_",   ages_fit),
+    paste0("bx2_",   ages_fit),
+    paste0("kt_",    years_fit),
+    paste0("gc_",    cohorts_fit),
+    paste0("mx_fc_", ages_fit)
   )
   
-  # initialize matrix: rows = iterations
   sum_mat <- matrix(NA_real_, nrow = max_try, ncol = length(cn),
                     dimnames = list(paste0("iter_", 1:max_try), cn))
   sum_mat_best <- matrix(NA_real_, nrow = 1, ncol = length(cn),
-                    dimnames = list(paste0("iter_", 1), cn))
-  
-  # --- track best successful attempt ---
-  best_logLik <- -Inf
-  best_fc <- NULL
+                         dimnames = list("iter_1", cn))
+  best_loglik <- -Inf
+  best_fc     <- NULL
   
   for (j in seq_len(max_try)) {
-    # 1) Try fitting RH 
+    # 1) Try fitting
     fitRH_j <- tryCatch(
       fit(RHnp_mod, data = mort_rh_for,
-          ages.fit = ages_fit, years.fit = 1933:T, control = list(maxit = 200)),
+          ages.fit  = ages_fit,
+          years.fit = years_fit,
+          control   = list(maxit = 200)),
       error = function(e) NULL
     )
     
-    # 2) if fit error -> record conv, fc_ok=0 and move on
-    if (is.null(fitRH_j) || isTRUE(fitRH_j$fail)){
-      sum_mat[j, "conv"] <- 0
+    # 2) Fit error
+    if (is.null(fitRH_j) || isTRUE(fitRH_j$fail)) {
+      cat("\n--- Iteration:", j, "Model Fit Fail ---\n")
+      sum_mat[j, "conv"]  <- 0
       sum_mat[j, "fc_ok"] <- 0
       next
     }
     
-    # 3) fill parameters
-    # ax
-    sum_mat[j, paste0("ax_", ages_fit)] <- as.numeric(fitRH_j$ax[as.character(ages_fit)])
-    
-    # bx
+    # 3) Fill parameters
+    sum_mat[j, paste0("ax_",  ages_fit)] <- as.numeric(fitRH_j$ax[as.character(ages_fit)])
     bx1 <- fitRH_j$bx
     bx2 <- fitRH_j$b0x
     sum_mat[j, paste0("bx1_", ages_fit)] <- as.numeric(bx1[as.character(ages_fit), 1])
     sum_mat[j, paste0("bx2_", ages_fit)] <- as.numeric(bx2[as.character(ages_fit)])
-  
-    # kt (period index)
-    # StMoMo usually stores kt as a matrix [1, years]
     ky <- as.integer(colnames(fitRH_j$kt))
-    sum_mat[j, paste0("kt_", ky)] <- as.numeric(fitRH_j$kt[1, ])
-
-    # gc (cohort index)
-    gc <- fitRH_j$gc
+    sum_mat[j, paste0("kt_",  ky)]       <- as.numeric(fitRH_j$kt[1, ])
+    gc       <- fitRH_j$gc
     gc_names <- as.integer(names(gc))
-    sum_mat[j, paste0("gc_", gc_names)] <- as.numeric(gc)
+    sum_mat[j, paste0("gc_",  gc_names)] <- as.numeric(gc)
     
-    # 4) check convergence
+    # 4) Check convergence
     conv_j <- isTRUE(fitRH_j$conv)
     sum_mat[j, "conv"] <- as.numeric(conv_j)
-    # if not converged -> no forecast
     if (!conv_j) {
+      cat("\n--- Iteration:", j, "Does not converge ---\n")
       sum_mat[j, "fc_ok"] <- 0
       next
     }
+    cat("\n--- Iteration:", j, "Converged ---\n")
     
-    # 5) Try forecasting (skip if error or NULL)
+    # 5) Try forecasting
     fcRH_j <- tryCatch(
-      forecast(fitRH_j, h = 1, kt.method = "mrwd", gc.order = c(1, 1, 0)),
+      forecast(fitRH_j, h = 1, kt.method = "mrwd",
+               gc.order = c(1, 1, 0), level = 95),
       error = function(e) NULL
     )
-    
-    if (is.null(fcRH_j)){
+    if (is.null(fcRH_j)) {
+      cat("\n--- Iteration:", j, "Forecast Fail ---\n")
       sum_mat[j, "fc_ok"] <- 0
       next
-    } 
-    # forecast status
-    sum_mat[j, "fc_ok"] <- 1
-    # fill forecast rate 
-    sum_mat[j, paste0("mx_fc_", ages_fit)] <-  as.numeric(fcRH_j$rates[as.character(ages_fit)])
+    }
+    cat("\n--- Iteration:", j, "Forecast Success ---\n")
     
-    # 6) Record logLik and update best
+    # 6) Record forecast
+    sum_mat[j, "fc_ok"] <- 1
+    sum_mat[j, paste0("mx_fc_", ages_fit)] <-
+      as.numeric(fcRH_j$rates[as.character(ages_fit)])
+    
+    # 7) Update best
     ll_j <- fitRH_j$loglik
-
-    if (ll_j > best_logLik & !is.null(fcRH_j)) {
-      best_logLik <- ll_j
-      best_fc <- fcRH_j
-      sum_mat_best[,] <- sum_mat[j, ]
-      mx_hat_rh_ar[, as.character(T+1)] <- get_fc_rates_vec(fcRH_j, ages)
+    if (ll_j > best_loglik && !is.null(fcRH_j)) {
+      best_loglik       <- ll_j
+      best_fc           <- fcRH_j
+      sum_mat_best[1, ] <- sum_mat[j, ]
+      
+      # point forecast
+      mx_hat_rh_ar[, as.character(T+1)] <- get_fc_rates_vec(fcRH_j, ages_fit)
+      
+      # CI from best model only
+      ci_rh <- extract_rh_ci(fitRH_j, fcRH_j, ages_fit)
+      mx_hat_rh_ar_lower[, as.character(T+1)] <- ci_rh$mx_lower
+      mx_hat_rh_ar_upper[, as.character(T+1)] <- ci_rh$mx_upper
+      
+      cat("*** New best loglik:", round(ll_j, 2), "***\n")
     }
   }
-  # append best list for each year
+  
+  sum_list[[as.character(T)]]      <- sum_mat
   sum_list_best[[as.character(T)]] <- sum_mat_best
-  # append list for each year
-  sum_list[[as.character(T)]] <- sum_mat
 }
 ```
+
+The key addition is `extract_rh_ci()` which handles **both `kt` and `gc`** bounds — unlike LC which only has `kt`. Both `bx` and `b0x` signs are checked independently to correctly maximize the CI width.
 
 In the code above, we create, `mx_hat_rh_ar`: the forecast rate 2003-2023 but 2017 and 2018 missing. `sum_list_best`: a list contain the best iteration for each year. `sum_list`: matrix of parameters and forecast rate for all iteration each year.
 
 RH fitting can fail to converge in some rolling windows because cohort-based models create a higher-dimensional, weakly identified likelihood surface with potential local stationary points. Multiple restarts mitigate sensitivity to initial values by re-optimizing from different starting points and selecting the best converged likelihood solution.
 
+
 #### Save RH output
+```{r}
+# ── Save RH forecast matrices ──────────────────────────────────
+saveRDS(mx_hat_rh_ar,       file = "mx_hat_rh_ar.rds")
+saveRDS(mx_hat_rh_ar_lower, file = "mx_hat_rh_ar_lower.rds")
+saveRDS(mx_hat_rh_ar_upper, file = "mx_hat_rh_ar_upper.rds")
+
+# ── Save RH summary lists ──────────────────────────────────────
+saveRDS(sum_list,      file = "sum_list_rh.rds")
+saveRDS(sum_list_best, file = "sum_list_best_rh.rds")
+
+# ── Save as CSV for easy viewing ──────────────────────────────
+write.csv(mx_hat_rh_ar,       file = "mx_hat_rh_ar.csv",       row.names = TRUE)
+write.csv(mx_hat_rh_ar_lower, file = "mx_hat_rh_ar_lower.csv", row.names = TRUE)
+write.csv(mx_hat_rh_ar_upper, file = "mx_hat_rh_ar_upper.csv", row.names = TRUE)
+
+# ── Verify all saved ──────────────────────────────────────────
+cat("Files saved:\n")
+cat(" mx_hat_rh_ar:      ", file.exists("mx_hat_rh_ar.rds"),       "\n")
+cat(" mx_hat_rh_ar_lower:", file.exists("mx_hat_rh_ar_lower.rds"), "\n")
+cat(" mx_hat_rh_ar_upper:", file.exists("mx_hat_rh_ar_upper.rds"), "\n")
+cat(" sum_list_rh:        ", file.exists("sum_list_rh.rds"),        "\n")
+cat(" sum_list_best_rh:   ", file.exists("sum_list_best_rh.rds"),   "\n")
+```
 
 ```{r}
-# sum_list
-# sum list object
-for (yr in names(sum_list)) {
-  assign(paste0("sum_", yr), sum_list[[yr]], envir = .GlobalEnv)
-}
-# save rds for each year
-for (yr in names(sum_list)) {
-  saveRDS(sum_list[[yr]], paste0("sum_", yr, ".rds"))
-}
-# save rds for list
-saveRDS(sum_list, "sum_list_2002_2023.rds")
+# Load Saved RH output
+# ── Load RH forecast matrices ──────────────────────────────────
+mx_hat_rh_ar       <- readRDS("mx_hat_rh_ar.rds")
+mx_hat_rh_ar_lower <- readRDS("mx_hat_rh_ar_lower.rds")
+mx_hat_rh_ar_upper <- readRDS("mx_hat_rh_ar_upper.rds")
 
-
-# sum_list_best
-for (yr in names(sum_list_best)) {
-  assign(paste0("sum_best_", yr), sum_list_best[[yr]], envir = .GlobalEnv)
-}
-# save rds for each year
-for (yr in names(sum_list_best)) {
-  saveRDS(sum_list_best[[yr]], paste0("sum_best_", yr, ".rds"))
-}
-# save rds for list
-saveRDS(sum_list_best, "sum_list_2002_2023.rds")
-
-# Forecast Rate
-write.csv(
-  mx_hat_rh_ar,
-  file = "mx_hat_rh_ar.csv",
-  row.names = TRUE
-)
-View(mx_hat_rh_ar)
+# ── Load RH summary lists ──────────────────────────────────────
+sum_list      <- readRDS("sum_list_rh.rds")
+sum_list_best <- readRDS("sum_list_best_rh.rds")
 ```
 
 #### Plot Parameters
 
 ```{r}
-pdf("RH_parameter_plots.pdf", width = 28, height = 4 * length(years)) 
+pdf("RH_parameter_plots.pdf", width = 40, height = 4 * length(years))
 
 ages <- 25:65
 status_colors <- c(
@@ -1523,34 +1635,277 @@ dev.off()
 
 ### CBD
 ```{r}
-# CBD data
-mort_CBD_for <- StMoMoData(US_data, type = "initial", series = "total")
+# ── Settings FIRST ────────────────────────────────────────────
+ages      <- 25:65
+years     <- 1933:2023
+evalYears <- 2003:2023
+origins   <- evalYears - 1
 
-# observed exposure
-obs_exp_CBD <- mort_CBD_for$Ext[ages + 1, years %in% evalYears, drop = FALSE]
+# ── CBD data ──────────────────────────────────────────────────
+mort_CBD_for <- StMoMoData(US_data, type = "initial", series = "total")
+obs_exp_CBD  <- mort_CBD_for$Ext[as.character(ages), as.character(evalYears)]
 
 N <- 1e6
 mort_CBD_for$Dxt <- round(mort_CBD_for$Dxt * N)
 mort_CBD_for$Ext <- round(mort_CBD_for$Ext * N)
 CBD <- cbd(link = "logit")
 
-# forecast mortality prob
+# ── CBD CI extraction function ────────────────────────────────
+extract_cbd_ci <- function(fitCBD, fcCBD, ages) {
+  
+  xbar <- mean(ages)  # CBD uses mean-centered age
+  
+  # ── Extract kt forecast: mean, lower, upper ──────────────────
+  # CBD has two kappas: k1 and k2
+  kt_mean  <- fcCBD$kt.f$mean    # [2 x 1] matrix
+  kt_lower <- fcCBD$kt.f$lower   # [2 x 1 x 1] array
+  kt_upper <- fcCBD$kt.f$upper   # [2 x 1 x 1] array
+  
+  k1_mean  <- as.numeric(kt_mean[1,  ])
+  k2_mean  <- as.numeric(kt_mean[2,  ])
+  k1_lower <- as.numeric(kt_lower[1, ,])
+  k2_lower <- as.numeric(kt_lower[2, ,])
+  k1_upper <- as.numeric(kt_upper[1, ,])
+  k2_upper <- as.numeric(kt_upper[2, ,])
+  
+  # ── For each age, compute logit(q) bounds ────────────────────
+  # logit(q_x) = k1 + (x - xbar) * k2
+  # coefficient of k1 = 1 (always positive)
+  # coefficient of k2 = (x - xbar), sign depends on age vs xbar
+  
+  logit_mean  <- numeric(length(ages))
+  logit_lower <- numeric(length(ages))
+  logit_upper <- numeric(length(ages))
+  
+  for (idx in seq_along(ages)) {
+    x    <- ages[idx]
+    coef <- x - xbar  # coefficient for k2
+    
+    # k1: coefficient is always +1, so upper k1 → upper logit
+    # k2: coefficient sign depends on (x - xbar)
+    logit_mean[idx]  <- k1_mean  + coef * k2_mean
+    
+    logit_upper[idx] <- k1_upper + coef * ifelse(coef >= 0, k2_upper, k2_lower)
+    logit_lower[idx] <- k1_lower + coef * ifelse(coef >= 0, k2_lower, k2_upper)
+  }
+  
+  
+  # convert back to probability scale to match fcCBD$rates
+  inv_logit <- function(x) exp(x) / (1 + exp(x))
+  
+  data.frame(
+    age      = ages,
+    qx_mean  = inv_logit(logit_mean),
+    qx_lower = inv_logit(logit_lower),
+    qx_upper = inv_logit(logit_upper)
+  )
+}
+
+# ── Initialize matrices (AFTER ages and evalYears defined) ────
 qx_hat_CBD <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
                      dimnames = list(as.character(ages), as.character(evalYears)))
 
+qx_hat_CBD_lower <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                            dimnames = list(as.character(ages), as.character(evalYears)))
+
+qx_hat_CBD_upper <- matrix(NA_real_, nrow = length(ages), ncol = length(evalYears),
+                            dimnames = list(as.character(ages), as.character(evalYears)))
+
+# ── Loop ──────────────────────────────────────────────────────
 for (i in seq_along(origins)) {
   T <- origins[i]
+  
   fitCBD_f <- fit(CBD, data = mort_CBD_for, ages.fit = 25:65, years.fit = 1933:T)
-
-  fcCBD <- forecast(fitCBD_f, h=1, level=95)
-
+  fcCBD    <- forecast(fitCBD_f, h = 1, level = 95)
+  
   qx_hat_CBD[, as.character(T+1)] <- get_fc_rates_vec(fcCBD, ages)
+  
+  ci_cbd <- extract_cbd_ci(fitCBD_f, fcCBD, ages)
+  qx_hat_CBD_lower[, as.character(T+1)] <- ci_cbd$qx_lower
+  qx_hat_CBD_upper[, as.character(T+1)] <- ci_cbd$qx_upper
 }
 
+# ── Sanity check ──────────────────────────────────────────────
+cat("CBD CI valid:", all(qx_hat_CBD_upper >= qx_hat_CBD_lower, na.rm = TRUE), "\n")
+
+# Visual check for age 40, year 2010
+cat("\nAge 40 CBD forecast for 2023:\n")
+cat("  Lower:", qx_hat_CBD_lower["40", "2023"], "\n")
+cat("  Mean: ", qx_hat_CBD["40",       "2023"], "\n")
+cat("  Upper:", qx_hat_CBD_upper["40",  "2023"], "\n")
 ```
 
-## DM Test
+# Forecast Result 
+```{r}
+# ── Settings ──────────────────────────────────────────────────
+rep_ages  <- c(30, 40, 50, 60)
+evalYears <- 2003:2019
 
+# ── Compute observed mortality rate ───────────────────────────
+obs_mx <- obs_death / obs_exp
+
+# ── Convert qx to mx ──────────────────────────────────────────
+mx_hat_CBD       <- qx_hat_CBD       / (1 - qx_hat_CBD)
+mx_hat_CBD_lower <- qx_hat_CBD_lower / (1 - qx_hat_CBD_lower)
+mx_hat_CBD_upper <- qx_hat_CBD_upper / (1 - qx_hat_CBD_upper)
+
+# ── Helper: extract mean series ───────────────────────────────
+extract_age_series <- function(mat, age, years) {
+  data.frame(
+    year = years,
+    rate = as.numeric(mat[as.character(age), as.character(years)])
+  )
+}
+
+# ── Helper: extract CI series ─────────────────────────────────
+extract_age_ci <- function(mat_lower, mat_upper, age, years) {
+  data.frame(
+    year  = years,
+    lower = as.numeric(mat_lower[as.character(age), as.character(years)]),
+    upper = as.numeric(mat_upper[as.character(age), as.character(years)])
+  )
+}
+
+# ── Build long data frame for mean lines ──────────────────────
+plot_data <- lapply(rep_ages, function(age) {
+  bind_rows(
+    extract_age_series(obs_mx, age, evalYears) %>% mutate(model = "Actual"),
+    extract_age_series(mx_hat_lc_rw, age, evalYears) %>% mutate(model = "Lee-Carter"),
+    extract_age_series(mx_hat_rh_ar, age, evalYears) %>% mutate(model = "Renshaw-Haberman"),
+    extract_age_series(mx_hat_CBD,   age, evalYears) %>% mutate(model = "CBD")
+  ) %>% mutate(age = paste0("Age ", age))
+}) %>% bind_rows()
+
+# ── Build long data frame for CI ribbons ──────────────────────
+ci_data <- lapply(rep_ages, function(age) {
+  bind_rows(
+    extract_age_ci(mx_hat_lc_rw_lower, mx_hat_lc_rw_upper, age, evalYears) %>% 
+      mutate(model = "Lee-Carter"),
+    extract_age_ci(mx_hat_rh_ar_lower, mx_hat_rh_ar_upper, age, evalYears) %>%
+      mutate(model = "Renshaw-Haberman"),
+    extract_age_ci(mx_hat_CBD_lower,   mx_hat_CBD_upper,   age, evalYears) %>% 
+      mutate(model = "CBD")
+  ) %>% mutate(age = paste0("Age ", age))
+}) %>% bind_rows()
+
+# ── Plot ──────────────────────────────────────────────────────
+ggplot() +
+  # CI ribbons (behind lines)
+  geom_ribbon(data = ci_data,
+              aes(x = year, ymin = log(lower), ymax = log(upper), fill = model),
+              alpha = 0.2) +
+  # Mean forecast lines
+  geom_line(data = plot_data,
+            aes(x = year, y = log(rate), color = model, linetype = model),
+            linewidth = 0.8) +
+  # Actual points
+  geom_point(data = filter(plot_data, model == "Actual"),
+             aes(x = year, y = log(rate)),
+             size = 1.2, color = "black") +
+  facet_wrap(~ age, ncol = 2, scales = "free_y") +
+  scale_color_manual(values = c(
+    "Actual"           = "black",
+    "Lee-Carter"       = "#E41A1C",
+    "Renshaw-Haberman" = "#377EB8",
+    "CBD"              = "#FF7F00"
+  )) +
+  scale_fill_manual(values = c(
+    "Lee-Carter"       = "#E41A1C",
+    "Renshaw-Haberman" = "#377EB8",
+    "CBD"              = "#FF7F00"
+  )) +
+  scale_linetype_manual(values = c(
+    "Actual"           = "solid",
+    "Lee-Carter"       = "dashed",
+    "Renshaw-Haberman" = "dotdash",
+    "CBD"              = "dotted"
+  )) +
+  labs(
+    title    = "One-Year Ahead Forecast vs Actual Mortality Rate (2003-2019)",
+    x        = "Year",
+    y        = "Log Mortality Rate",
+    color    = "Model",
+    linetype = "Model",
+    fill     = "Model"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom",
+    strip.text      = element_text(size = 12, face = "bold"),
+    axis.text.x     = element_text(angle = 45, hjust = 1),
+    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5)
+  )
+
+# ── Save ──────────────────────────────────────────────────────
+ggsave("forecast_vs_actual.png", width = 12, height = 8, dpi = 300)
+```
+
+```{r}
+# ── Settings ──────────────────────────────────────────────────
+rep_ages  <- c(30, 40, 50, 60)
+evalYears <- 2003:2019
+# ── Compute observed mortality rate ───────────────────────────
+obs_mx <- obs_death / obs_exp
+
+# ── Helper: extract one age across all years ──────────────────
+extract_age_series <- function(mat, age, years) {
+  data.frame(
+    year = years,
+    rate = as.numeric(mat[as.character(age), as.character(years)])
+  )
+}
+
+# convert qx to mx before plotting
+mx_hat_CBD <- qx_hat_CBD / (1 - qx_hat_CBD)
+
+# ── Build long data frame ─────────────────────────────────────
+plot_data <- lapply(rep_ages, function(age) {
+  bind_rows(
+    extract_age_series(obs_mx,       age, evalYears) %>% mutate(model = "Actual"),
+    extract_age_series(mx_hat_lc_rw, age, evalYears) %>% mutate(model = "Lee-Carter"),
+    extract_age_series(mx_hat_rh_ar, age, evalYears) %>% mutate(model = "Renshaw-Haberman"),
+    extract_age_series(mx_hat_CBD,   age, evalYears) %>% mutate(model = "CBD")
+  ) %>% mutate(age = paste0("Age ", age))
+}) %>% bind_rows()
+
+# ── Plot ──────────────────────────────────────────────────────
+ggplot(plot_data, aes(x = year, y = log(rate), color = model, linetype = model)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(data = filter(plot_data, model == "Actual"), 
+             size = 1.2, show.legend = FALSE) +
+  facet_wrap(~ age, ncol = 2, scales = "free_y") +
+  scale_color_manual(values = c(
+    "Actual"           = "black",
+    "Lee-Carter"       = "#E41A1C",
+    "Renshaw-Haberman" = "#377EB8",
+    "CBD"              = "#FF7F00"
+  )) +
+  scale_linetype_manual(values = c(
+    "Actual"           = "solid",
+    "Lee-Carter"       = "dashed",
+    "Renshaw-Haberman" = "dotdash",
+    "CBD"              = "dotted"
+  )) +
+  labs(
+    title    = "One-Step Ahead Forecast vs Actual Mortality Rate (2003-2019)",
+    x        = "Year",
+    y        = "Log Mortality Rate",
+    color    = "Model",
+    linetype = "Model"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom",
+    strip.text      = element_text(size = 12, face = "bold"),
+    axis.text.x     = element_text(angle = 45, hjust = 1),
+    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5)
+  )
+
+# ── Save ──────────────────────────────────────────────────────
+ggsave("forecast_vs_actual.png", width = 12, height = 8, dpi = 300)
+```
+
+# DM Test
 Poisson deviance (counts-based): 
 $$
 dev(x,t) = 2[D_{x,t}\text{log}(\frac{D_{x,t}}{\hat{D}_{x,t}})-(D_{x,t}-\hat{D}_{x,t})]
@@ -1739,3 +2094,4 @@ dm_hln_test <- function(e1, e2, h = 1, power = 1) {
 dm_hln_test(as.numeric(rh_dev), as.numeric(CBD_dev_0319), h = 1, power = 1)
 ```
 
+# Combined Model
