@@ -2095,3 +2095,245 @@ dm_hln_test(as.numeric(rh_dev), as.numeric(CBD_dev_0319), h = 1, power = 1)
 ```
 
 # Combined Model
+```{r}
+# load opioid related mortality rate
+logmxt_opioid <- as.matrix(read.csv("national_opioid_logmxt.csv", 
+                                    row.names = 1, check.names = FALSE))
+```
+
+## LC
+```{r}
+# setting
+ages      <- 25:65
+fit_years <- 1933:2020
+out_years <- 2003:2020
+
+# Prepare data
+mort_F <- StMoMoData(US_data, type = "central", series = "total")
+
+# Fit LC model 
+LC <- lc(link = "log")
+LCfit <- fit(LC, data = mort_F, ages.fit = ages, years.fit = fit_years)
+
+# Extract Fitted Rate
+fitted_rates <- fitted(LCfit, type = "rates")
+
+# Subset to ages 25-65 and years 2003-2020
+mx_base_lc <- fitted_rates[as.character(ages), as.character(out_years)]
+
+# combine two mortality
+mxt_lc <- mx_base_lc + exp(logmxt_opioid)
+
+# ratio
+ratio_lc <- mxt_lc / mx_base_lc
+write.csv(ratio_lc, file = "../hmd/ratio_adjust_mortality_lc.csv", 
+          row.names = TRUE, quote = FALSE)
+```
+
+```{r}
+# ── Convert matrix to long format ─────────────────────────────
+ratio_lc_long <- melt(ratio_lc,
+                      varnames   = c("Age", "Year"),
+                      value.name = "Ratio")
+
+# ── Plot heatmap ──────────────────────────────────────────────
+ggplot(ratio_lc_long, aes(x = as.factor(Year), y = as.factor(Age), fill = Ratio)) +
+  geom_tile() +
+  scale_fill_gradient(
+    low    = "white",
+    high   = "red",
+    limits = c(1.0, 1.3),
+    breaks = seq(1.0, 1.3, by = 0.05),
+    labels = seq(1.0, 1.3, by = 0.05),
+    name   = "Ratio"
+  ) +
+  labs(
+    title    = "Ratio of Adjusted to Base LC Mortality Rate (2003-2020)",
+    x        = "Year",
+    y        = "Age"
+  ) +
+  theme_bw() +
+  theme(
+    axis.text.x     = element_text(angle = 45, hjust = 1, size = 8),
+    axis.text.y     = element_text(size = 8),
+    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5),
+    plot.subtitle   = element_text(size = 10, hjust = 0.5, color = "grey40"),
+    legend.position = "right"
+  )
+
+
+ggsave("../hmd/ratio_lc_heatmap.png", width = 10, height = 8, dpi = 300)
+```
+
+## RH
+```{r}
+# Settings
+ages <- 25:65
+fit_years <- 1933:2020
+out_years <- 2003:2020
+max_try <- 15
+
+# Prepare data
+mort_rh <- StMoMoData(US_data, type = "central", series = "total")
+RHnp_mod <- rh(link = "log", cohortAgeFun = "NP")
+
+# Fit RH model multiple times, keep best
+best_loglik <- -Inf
+best_fit <- NULL
+
+for (j in seq_len(max_try)) {
+  cat("\n--- Attempt", j, "of", max_try, "---\n")
+  
+  fitRH_j <- tryCatch(
+    fit(RHnp_mod, data = mort_rh,
+        ages.fit  = ages,
+        years.fit = fit_years,
+        control   = list(maxit = 200)),
+    error = function(e) NULL
+  )
+  
+  # skip if fit failed or did not converge
+  if (is.null(fitRH_j) || isTRUE(fitRH_j$fail)) {
+    cat("Fit failed\n")
+    next
+  }
+  if (!isTRUE(fitRH_j$conv)) {
+    cat("Did not converge\n")
+    next
+  }
+  
+  cat("Converged! loglik:", round(fitRH_j$loglik, 2), "\n")
+  
+  if (fitRH_j$loglik > best_loglik) {
+    best_loglik <- fitRH_j$loglik
+    best_fit    <- fitRH_j
+    cat("*** New best loglik:", round(best_loglik, 2), "***\n")
+  }
+}
+
+cat("\n==========================================\n")
+cat("Best loglik:", round(best_loglik, 2), "\n")
+cat("RH converged:", best_fit$conv, "\n")
+cat("==========================================\n")
+
+
+# Extract fitted rates
+fitted_rates_rh <- fitted(best_fit, type = "rates")
+
+# Subset to ages 25-65 and years 2003-2020
+mx_base_rh <- fitted_rates_rh[as.character(ages), as.character(out_years)]
+
+# Combine and compute ratio
+mxt_rh    <- mx_base_rh + exp(logmxt_opioid)
+ratio_rh  <- mxt_rh / mx_base_rh
+
+# Save ratio matrix
+write.csv(ratio_rh, file = "../hmd/ratio_adjust_mortality_rh.csv",
+          row.names = TRUE, quote = FALSE)
+```
+
+```{r}
+# Convert matrix to long format
+`ratio_rh_long`<- melt(ratio_rh,
+                      varnames   = c("Age", "Year"),
+                      value.name = "Ratio")
+
+# Plot heatmap
+ggplot(ratio_rh_long, aes(x = as.factor(Year), y = as.factor(Age), fill = Ratio)) +
+  geom_tile() +
+  scale_fill_gradient(
+    low    = "white",
+    high   = "red",
+    limits = c(1.0, 1.3),
+    breaks = seq(1.0, 1.3, by = 0.05),
+    labels = seq(1.0, 1.3, by = 0.05),
+    name   = "Ratio"
+  ) +
+  labs(
+    title = "Ratio of Adjusted to Base RH Mortality Rate (2003-2020)",
+    x     = "Year",
+    y     = "Age"
+  ) +
+  theme_bw() +
+  theme(
+    axis.text.x     = element_text(angle = 45, hjust = 1, size = 8),
+    axis.text.y     = element_text(size = 8),
+    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5),
+    legend.position = "right"
+  )
+
+ggsave("../hmd/ratio_rh_heatmap.png", width = 10, height = 8, dpi = 300)
+```
+
+## CBD
+```{r}
+# Settings
+ages      <- 25:65
+fit_years <- 1933:2020
+out_years <- 2003:2020
+
+# Prepare data (CBD uses initial exposure
+mort_cbd_for <- StMoMoData(US_data, type = "initial", series = "total")
+
+# Scale exposures
+N <- 1e6
+mort_cbd_for$Dxt <- round(mort_cbd_for$Dxt * N)
+mort_cbd_for$Ext <- round(mort_cbd_for$Ext * N)
+
+# Fit CBD model
+CBD    <- cbd(link = "logit")
+CBDfit <- fit(CBD, data = mort_cbd_for,
+              ages.fit  = ages,
+              years.fit = fit_years)
+cat("CBD converged:", CBDfit$conv, "\n")
+
+# Extract fitted rates
+# CBD fitted() returns probability (qx) scale
+fitted_qx_cbd <- fitted(CBDfit, type = "rates")
+
+# convert qx to mx
+fitted_rates_cbd <- fitted_qx_cbd / (1 - fitted_qx_cbd)
+
+# ubset to ages 25-65 and years 2003-2020
+mx_base_cbd <- fitted_rates_cbd[as.character(ages), as.character(out_years)]
+
+# Combine and compute ratio
+mxt_cbd   <- mx_base_cbd + exp(logmxt_opioid)
+ratio_cbd <- mxt_cbd / mx_base_cbd
+
+# save ratio matrix
+write.csv(ratio_cbd, file = "../hmd/ratio_adjust_mortality_cbd.csv",
+          row.names = TRUE, quote = FALSE)
+```
+```{r}
+# Convert matrix to long format
+ratio_cbd_long <- melt(ratio_cbd,
+                       varnames   = c("Age", "Year"),
+                       value.name = "Ratio")
+
+# Plot heatmap
+ggplot(ratio_cbd_long, aes(x = as.factor(Year), y = as.factor(Age), fill = Ratio)) +
+  geom_tile() +
+  scale_fill_gradient(
+    low    = "white",
+    high   = "red",
+    limits = c(1.0, 1.3),
+    breaks = seq(1.0, 1.3, by = 0.05),
+    labels = seq(1.0, 1.3, by = 0.05),
+    name   = "Ratio"
+  ) +
+  labs(
+    title = "Ratio of Adjusted to Base CBD Mortality Rate (2003-2020)",
+    x     = "Year",
+    y     = "Age"
+  ) +
+  theme_bw() +
+  theme(
+    axis.text.x     = element_text(angle = 45, hjust = 1, size = 8),
+    axis.text.y     = element_text(size = 8),
+    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5),
+    legend.position = "right"
+  )
+
+ggsave("../hmd/ratio_cbd_heatmap.png", width = 10, height = 8, dpi = 300)
+```
