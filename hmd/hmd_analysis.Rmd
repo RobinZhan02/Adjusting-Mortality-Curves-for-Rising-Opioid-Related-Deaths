@@ -2099,16 +2099,17 @@ dm_hln_test(as.numeric(rh_dev), as.numeric(CBD_dev_0319), h = 1, power = 1)
 # load opioid related mortality rate
 logmxt_opioid <- as.matrix(read.csv("national_opioid_logmxt.csv", 
                                     row.names = 1, check.names = FALSE))
+opioid_mort <- exp(logmxt_opioid)
 ```
 
 ## LC
 ```{r}
 # setting
 ages      <- 25:65
-fit_years <- 1933:2020
+fit_years <- 1933:2023
 out_years <- 2003:2020
 
-# Prepare data
+# Prepare dataX
 mort_F <- StMoMoData(US_data, type = "central", series = "total")
 
 # Fit LC model 
@@ -2122,45 +2123,43 @@ fitted_rates <- fitted(LCfit, type = "rates")
 mx_base_lc <- fitted_rates[as.character(ages), as.character(out_years)]
 
 # combine two mortality
-mxt_lc <- mx_base_lc + exp(logmxt_opioid)
+mxt_lc <- mx_base_lc + opioid_mort
 
 # ratio
-ratio_lc <- mxt_lc / mx_base_lc
+ratio_lc <- opioid_mort / mxt_lc
 write.csv(ratio_lc, file = "../hmd/ratio_adjust_mortality_lc.csv", 
           row.names = TRUE, quote = FALSE)
 ```
 
 ```{r}
-# ── Convert matrix to long format ─────────────────────────────
+# Convert matrix to long format
 ratio_lc_long <- melt(ratio_lc,
                       varnames   = c("Age", "Year"),
                       value.name = "Ratio")
 
-# ── Plot heatmap ──────────────────────────────────────────────
+# Plot heatmap
 ggplot(ratio_lc_long, aes(x = as.factor(Year), y = as.factor(Age), fill = Ratio)) +
   geom_tile() +
   scale_fill_gradient(
     low    = "white",
     high   = "red",
-    limits = c(1.0, 1.3),
-    breaks = seq(1.0, 1.3, by = 0.05),
-    labels = seq(1.0, 1.3, by = 0.05),
-    name   = "Ratio"
+    limits = c(0, 0.25),
+    breaks = seq(0, 0.25, by = 0.05),
+    labels = scales::percent_format(accuracy = 1),
+    name   = "Opioid\nShare"
   ) +
   labs(
-    title    = "Ratio of Adjusted to Base LC Mortality Rate (2003-2020)",
-    x        = "Year",
-    y        = "Age"
+    title = "Opioid Mortality as Share of Total LC Mortality Rate (2003-2020)",
+    x     = "Year",
+    y     = "Age"
   ) +
   theme_bw() +
   theme(
     axis.text.x     = element_text(angle = 45, hjust = 1, size = 8),
     axis.text.y     = element_text(size = 8),
     plot.title      = element_text(size = 13, face = "bold", hjust = 0.5),
-    plot.subtitle   = element_text(size = 10, hjust = 0.5, color = "grey40"),
     legend.position = "right"
   )
-
 
 ggsave("../hmd/ratio_lc_heatmap.png", width = 10, height = 8, dpi = 300)
 ```
@@ -2225,7 +2224,7 @@ mx_base_rh <- fitted_rates_rh[as.character(ages), as.character(out_years)]
 
 # Combine and compute ratio
 mxt_rh    <- mx_base_rh + exp(logmxt_opioid)
-ratio_rh  <- mxt_rh / mx_base_rh
+ratio_rh  <- exp(logmxt_opioid) / mxt_rh
 
 # Save ratio matrix
 write.csv(ratio_rh, file = "../hmd/ratio_adjust_mortality_rh.csv",
@@ -2234,7 +2233,7 @@ write.csv(ratio_rh, file = "../hmd/ratio_adjust_mortality_rh.csv",
 
 ```{r}
 # Convert matrix to long format
-`ratio_rh_long`<- melt(ratio_rh,
+ratio_rh_long<- melt(ratio_rh,
                       varnames   = c("Age", "Year"),
                       value.name = "Ratio")
 
@@ -2244,13 +2243,13 @@ ggplot(ratio_rh_long, aes(x = as.factor(Year), y = as.factor(Age), fill = Ratio)
   scale_fill_gradient(
     low    = "white",
     high   = "red",
-    limits = c(1.0, 1.3),
-    breaks = seq(1.0, 1.3, by = 0.05),
-    labels = seq(1.0, 1.3, by = 0.05),
-    name   = "Ratio"
+    limits = c(0, 0.2),
+    breaks = seq(0, 0.2, by = 0.05),
+    labels = scales::percent_format(accuracy = 1),
+    name   = "Opioid\nShare"
   ) +
   labs(
-    title = "Ratio of Adjusted to Base RH Mortality Rate (2003-2020)",
+    title = "Opioid Mortality as Share of Total RH Mortality Rate (2003-2020)",
     x     = "Year",
     y     = "Age"
   ) +
@@ -2299,12 +2298,13 @@ mx_base_cbd <- fitted_rates_cbd[as.character(ages), as.character(out_years)]
 
 # Combine and compute ratio
 mxt_cbd   <- mx_base_cbd + exp(logmxt_opioid)
-ratio_cbd <- mxt_cbd / mx_base_cbd
+ratio_cbd <- exp(logmxt_opioid) / mxt_cbd
 
 # save ratio matrix
 write.csv(ratio_cbd, file = "../hmd/ratio_adjust_mortality_cbd.csv",
           row.names = TRUE, quote = FALSE)
 ```
+
 ```{r}
 # Convert matrix to long format
 ratio_cbd_long <- melt(ratio_cbd,
@@ -2317,21 +2317,21 @@ ggplot(ratio_cbd_long, aes(x = as.factor(Year), y = as.factor(Age), fill = Ratio
   scale_fill_gradient(
     low    = "white",
     high   = "red",
-    limits = c(1.0, 1.3),
-    breaks = seq(1.0, 1.3, by = 0.05),
-    labels = seq(1.0, 1.3, by = 0.05),
-    name   = "Ratio"
+    limits = c(0, 0.25),
+    breaks = seq(0, 0.25, by = 0.05),
+    labels = scales::percent_format(accuracy = 1),
+    name   = "Opioid\nShare"
   ) +
   labs(
-    title = "Ratio of Adjusted to Base CBD Mortality Rate (2003-2020)",
+    title = "Opioid Mortality as Share of Total CBD Mortality Rate (2003-2020)",
     x     = "Year",
     y     = "Age"
   ) +
   theme_bw() +
   theme(
-    axis.text.x     = element_text(angle = 45, hjust = 1, size = 8),
-    axis.text.y     = element_text(size = 8),
-    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+    axis.text.y = element_text(size = 8),
+    plot.title = element_text(size = 13, face = "bold", hjust = 0.5),
     legend.position = "right"
   )
 
