@@ -455,35 +455,44 @@ plot_lc_components_ci(LCfit_West, "West")
 # RH
 ```{r}
 fit_RH_rr <- function(mort_data){
-  max_try <- 10
+  max_try <- 15
   mort_data2 <- mort_data
   mort_data2$years <- mort_data$years *12
   mort_data2$ages <- mort_data$ages*12
   # --- track best successful attempt ---
   best_logLik <- -Inf
   best_fitRH <- NULL
-  
-  RHnp_mod <- rh(link = "log", cohortAgeFun = "NP")
 
   for (j in seq_len(max_try)) {
+    RHnp_mod <- rh(link = "log", cohortAgeFun = "NP")
     # 1) Try fitting RH 
     fitRH_j <- tryCatch(
       fit(RHnp_mod, data = mort_data2,
-          ages.fit = (25:65)*12, control = list(maxit = 200)),
+          ages.fit = (25:65)*12),
       error = function(e) NULL
     )
-  
-    # 2) if fit error -> move on
-    if (is.null(fitRH_j) || isTRUE(fitRH_j$fail)) next
     
+    # 2) if fit error -> move on
+    if (is.null(fitRH_j) || isTRUE(fitRH_j$fail)) {
+      cat("\n--- Iteration:", j, "Model Fit Fail ---\n")
+      next
+    }
+    
+    conv_j <- isTRUE(fitRH_j$conv)
+    if (!conv_j) {
+    cat("\n--- Iteration:", j, "Does not converged ---\n")
+    next
+  }
+
+    cat("\n--- Iteration:", j, "Converged ---\n")
     ll_j <- fitRH_j$loglik
+
     if (ll_j > best_logLik) {
     best_logLik <- ll_j
     best_fitRH <- fitRH_j
-    }
-    
-    return(best_fitRH) 
+    } 
   }
+  return(best_fitRH)
 }
 ```
 
