@@ -1,0 +1,235 @@
+---
+title: "plotly shiny test"
+author: "Angela Wang"
+date: "2026-02-04"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(MASS)
+library(pracma)
+library(plotly)
+library(shiny)
+library(stats)
+```
+
+
+$$Y_t = f(X) + \epsilon_t, \qquad \epsilon_t \stackrel{iid}{\sim} N(0, \sigma_n^2) \\
+f(t) \sim GP(0, K(X, X')), \qquad K(X, X') = \sigma_f^2 e^{-\frac{1}{2\ell^2}||X - X'||}$$
+```{r}
+# Kernel Function
+kernel <- function(t1, t2, sigma_input, ell_input) {
+  sigma_input^2 * exp(- (t1 - t2)^2 / (2 * ell_input^2))
+}
+
+# Log marginal likelihood
+log_marginal_likelihood <- function(params, X, y) {
+  sigma_f <- params[1]
+  sigma_n <- params[2]
+  ell <- params[3]
+  n <- length(X)
+  
+  K <- outer(X, X, kernel, sigma_f, ell)
+  L <- chol(K + sigma_n^2 * diag(n))
+  alpha <- mldivide(t(L), mldivide(L, y))
+  
+  lml <- (-1/2) * t(y) %*% alpha - sum(log(diag(L))) - (n/2) * log(2 * pi)
+  return(as.numeric(lml))
+}
+```
+
+```{r}
+# UI
+ui <- fluidPage(
+  titlePanel("Gaussian Process Regression - Interactive Hyperparameters"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("sigma_f", 
+                  "Signal Variance (σ_f):",
+                  min = 0.1, max = 3, value = 1.08, step = 0.05),
+      
+      sliderInput("sigma_n", 
+                  "Noise Variance (σ_n):",
+                  min = 0.00001, max = 1, value = 0.00005, step = 0.00001),
+      
+      sliderInput("ell", 
+                  "Length Scale (ℓ):",
+                  min = 5e-10, max = 0.1 , value = 0.3, step = 0.005),
+      
+      hr(),
+      actionButton("resample", "Resample Data"),
+    ),
+    
+    mainPanel(
+      plotOutput("gpPlot", height = "600px")
+    )
+  )
+)
+
+# Server
+server <- function(input, output, session) {
+  
+  # Reactive value to store the data
+  data <- reactiveVal()
+  
+  # Initialize data on startup
+  observe({
+    set.seed(123)
+    n <- 20
+    X <- seq(-6, 6, length.out = n)
+    K <- outer(X, X, kernel, 1.08, 0.3)
+    f <- mvrnorm(1, rep(0, n), K)
+    y <- f + rnorm(n, 0, 0.00005)
+    data(list(X = X, y = y))
+  })
+  
+  # Resample data when button is clicked
+  observeEvent(input$resample, {
+    n <- 20
+    X <- seq(-6, 6, length.out = n)
+    K <- outer(X, X, kernel, input$sigma_f, input$ell)
+    f <- mvrnorm(1, rep(0, n), K)
+    y <- f + rnorm(n, 0, input$sigma_n)
+    data(list(X = X, y = y))
+  })
+  
+  # Compute predictions reactively
+  predictions <- reactive({
+    req(data())
+    
+    X <- data()$X
+    y <- data()$y
+    n <- length(X)
+    
+    # Get hyperparameters from sliders
+    sigma_f <- input$sigma_f
+    sigma_n <- input$sigma_n
+    ell <- input$ell
+    
+    # Prediction for new input X*
+    X_star <- seq(-6, 6, length.out = 200)
+    
+    K <- outer(X, X, kernel, sigma_f, ell)
+    K_star <- outer(X, X_star, kernel, sigma_f, ell)
+    K_starstar <- outer(X_star, X_star, kernel, sigma_f, ell)
+    
+    # Algorithm 2.1 from Rasmussen Textbook
+    L <- chol(K + sigma_n^2 * diag(n))
+    alpha <- mldivide(t(L), mldivide(L, y))
+    v <- mldivide(L, K_star)
+    
+    mean <- t(K_star) %*% alpha          #predictive mean
+    var <- K_starstar - t(v) %*% v       #predictive variance
+    
+    #lower and upper 95% confidence bounds
+    q1 <- mean + qnorm(0.05, 0, sqrt(pmax(diag(var), 1e-10)))
+    q2 <- mean + qnorm(0.95, 0, sqrt(pmax(diag(var), 1e-10)))
+    
+    list(X_star = X_star, mean = mean, q1 = q1, q2 = q2)
+  })
+  
+  # Render plot
+  output$gpPlot <- renderPlot({
+    req(data(), predictions())
+    
+    pred <- predictions()
+    dat <- data()
+    
+    plot(dat$X, dat$y, pch = 4, col = "blue", cex = 1.5,
+         xlab = "input, X", ylab = "output, y",
+         main = paste0("GP Regression (σ_f=", input$sigma_f, 
+                      ", σ_n=", input$sigma_n, 
+                      ", ℓ=", input$ell, ")"),
+         cex.lab = 1.2, cex.main = 1.2)
+    
+    # Add confidence interval
+    polygon(c(pred$X_star, rev(pred$X_star)), 
+            c(pred$q1, rev(pred$q2)),
+            col = rgb(0.7, 0.7, 0.7, 0.3), border = NA)
+    
+    # Add mean line
+    lines(pred$X_star, pred$mean, lwd = 2, col = "blue")
+    
+    # Add confidence bounds
+    lines(pred$X_star, pred$q1, lwd = 1, lty = 2, col = "gray30")
+    lines(pred$X_star, pred$q2, lwd = 1, lty = 2, col = "gray30")
+    
+    # Re-add points on top
+    points(dat$X, dat$y, pch = 4, col = "blue", cex = 1.5, lwd = 2)
+    
+    # Add legend
+    legend("topright", 
+           legend = c("Data", "Mean", "95% CI"),
+           col = c("blue", "blue", "gray30"),
+           lty = c(NA, 1, 2),
+           pch = c(4, NA, NA),
+           lwd = c(2, 2, 1))
+  })
+}
+
+# Run the app
+shinyApp(ui = ui, server = server)
+```
+
+```{r}
+set.seed(123)
+n <- 20
+X <- seq(-6, 6, length.out = n)
+K <- outer(X, X, kernel, 1.08, 0.3)
+f <- mvrnorm(1, rep(0, n), K)
+y <- f + rnorm(n, 0, 0.00005)
+
+# Grid Search
+sigma_f_grid <- seq(0.5, 2, length.out = 15)      # Around the true 1.08
+sigma_n_grid <- seq(0.00001, 0.001, length.out = 15)  # Small noise range
+ell_grid <- seq(0.1, 1.5, length.out = 15)         # Around the true 0.3
+
+best_params = c(NA, NA, NA)
+best_lml = -Inf
+
+for (sigma_f in sigma_f_grid) {
+  for (ell in ell_grid) {
+    for (sigma_n in sigma_n_grid) {
+      lml <- log_marginal_likelihood(c(sigma_f, sigma_n, ell), X, y)
+      if (lml > best_lml) {
+        best_lml <- lml
+        best_params <- c(sigma_f = sigma_f, sigma_n = sigma_n, ell = ell)
+      }
+    }
+  }
+}
+
+sigma_f_opt <- best_params[1]
+sigma_n_opt <- best_params[2]
+ell_opt     <- best_params[3]
+cat("Optimal hyperparameters:\n")
+cat("sigma_f =", sigma_f_opt, "\n")
+cat("sigma_n =", sigma_n_opt, "\n")
+cat("ell     =", ell_opt, "\n")
+
+# Algorithm 2.1 from Rasmussen Textbook
+X_star <- seq(-6, 6, length.out = 200)
+
+K <- outer(X, X, kernel, sigma_f_opt, ell_opt)
+K_star <- outer(X, X_star, kernel, sigma_f_opt, ell_opt)
+K_starstar <- outer(X_star, X_star, kernel, sigma_f_opt, ell_opt)
+
+L <- chol(K + sigma_n_opt^2 * diag(n))
+alpha <- backsolve(t(L), forwardsolve(L, y))
+v <- forwardsolve(L, K_star)
+
+mean_pred <- t(K_star) %*% alpha
+var_pred <- K_starstar - t(v) %*% v
+q1 <- mean_pred + qnorm(0.05, 0, sqrt(pmax(diag(var_pred), 0)))
+q2 <- mean_pred + qnorm(0.95, 0, sqrt(pmax(diag(var_pred), 0)))
+
+plot(X, y, pch=4, col="blue", xlab="input, X", ylab="output, y")
+lines(X_star, mean_pred, lwd=1, col="blue")
+lines(X_star, q1, lwd=1, lty=2, col="gray")
+lines(X_star, q2, lwd=1, lty=2, col="gray")
+```
+
+
+
