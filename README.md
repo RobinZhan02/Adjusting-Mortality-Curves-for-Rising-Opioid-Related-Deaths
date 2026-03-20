@@ -1,18 +1,12 @@
 # Adjusting Mortality Curves for Rising Opioid-Related Deaths Using Isotonic-Regression Frameworks
 
-**PSTAT 296 Group Thesis, UC Santa Barbara, 2025-2026**
-
 Shira Elmaliach, Amanda Huang, Angela Wang, Fan Ye, Zifeng Zhan
 
 Supervised by Professor Gareth W. Peters
 
 ## Overview
 
-This project investigates how opioid-related mortality has altered U.S. mortality patterns. We decompose observed mortality into three components:
-
-$$m_{x,t} = m_{x,t}^{\text{baseline}} + m_{x,t}^{\text{opioid}} + \sum_k \beta_k z_{x,t}$$
-
-where the baseline is estimated via stochastic mortality models, the opioid component captures excess hazard, and covariates (behavioral risk factors, socioeconomic indices) enter through the observation equation.
+This project investigates how opioid-related mortality has altered U.S. mortality patterns. We decompose observed mortality into three components: where the baseline is estimated via stochastic mortality models, the opioid component captures excess hazard, and covariates (behavioral risk factors, socioeconomic indices) enter through the observation equation.
 
 ### Models
 
@@ -51,7 +45,7 @@ Data/
     Five-Year-*.csv / Ten-Year-*.csv   Opioid deaths by age group, region, sex
     Census-Region*.csv                 Regional breakdowns
     allcause_stmomo_*.rds              Pre-formatted StMoMo data objects
-  covariate/                   Covariate data and processing
+  covariate/                   Covariate data and processing (didn't used in estimation due to time constraints)
     Behavioral_Risk_Factor_*.csv       BRFSS survey data
     covariate_combine_*.csv            Merged covariate panels (region/division)
     *_pre_whitening.csv                Pre-whitened covariate series
