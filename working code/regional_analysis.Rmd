@@ -910,7 +910,6 @@ RH1021_Midwest <- readRDS("rh_monthly_Midwest1021.rds")
 RH1021_West <- readRDS("rh_monthly_West1021.rds") 
 # South
 RH1021_South <- readRDS("rh_monthly_South1021.rds") 
-RH1021_South2 <- readRDS("rh_monthly_South1021_recreate.rds") 
 # Northeast
 RH1021_Northeast <- readRDS("rh_monthly_Northeast1021.rds") 
 ```
