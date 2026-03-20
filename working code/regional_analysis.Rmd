@@ -190,57 +190,78 @@ kappa_ci_df_CBD <- function(CBDfit, alpha = 0.05, show_plot = TRUE) {
 ```
 
 # Parameter Plot for LC
-```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=10}
+```{r}
 # Plot LC ax, bx, kt with (per-year) kappa CI lines
-# - Input: LCfit
-# - Output: graphs (side effect)
+# - Input: LCfit, model name, region name
+# - Output: saves PNG image named by model and region
 # - Internally calls kappa_ci_df(LCfit, show_plot = FALSE) to get kt_df
-plot_lc_components_ci <- function(LCfit){
+
+plot_lc_components_ci <- function(LCfit, region) {
+
   # get CI df without plotting
   kt_df <- kappa_ci_df(LCfit, show_plot = FALSE)
-  
-  # robust year vector for kt plot (your original code uses colnames(LCfit$kt))
+
+  # robust year vector for kt plot
   kt_years <- as.numeric(colnames(LCfit$kt))
   if (anyNA(kt_years)) {
-    # fallback if colnames are missing/non-numeric
     kt_years <- LCfit$years
   }
-  
+
+  # Build file name from model and region
+  file_name <- paste0(region, "_LC_parameters.png")
+
+  # Open PNG device - adjusted height to remove whitespace
+  png(file_name, width = 1300, height = 500, res = 120)
+
   oldpar <- par(no.readonly = TRUE)
-  on.exit(par(oldpar), add = TRUE)
-  
-  par(mfrow = c(3, 1), mar = c(5, 6, 3, 1))
-  
+  on.exit({
+    par(oldpar)
+    dev.off()
+  }, add = TRUE)
+
+  # Fixed to c(1, 3) since we only have 3 plots
+  par(mfrow = c(1, 3), mar = c(4, 6, 3, 1), oma = c(0, 0, 3, 0))
+
   # ax
   plot(25:65, LCfit$ax, type = "l", lwd = 2, col = "black",
        main = expression(a[x] ~ "vs." ~ x),
        xlab = "Age", ylab = expression(a[x]),
-       cex.main = 2, cex.lab = 2, cex.axis = 1.3)
-  axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis = 1.3)
-  
+       cex.main = 1.5, cex.lab = 1.3, cex.axis = 1.1)
+  axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis = 1.1)
+
   # bx
   plot(25:65, LCfit$bx, type = "l", lwd = 2, col = "black",
        main = expression(beta[x]^{(1)} ~ "vs." ~ x),
        xlab = "Age", ylab = expression(beta[x]^{(1)}),
-       cex.main = 2, cex.lab = 2, cex.axis = 1.3)
-  axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis = 1.3)
-  
+       cex.main = 1.5, cex.lab = 1.3, cex.axis = 1.1)
+  axis(1, at = seq(25, 65, by = 5), labels = seq(25, 65, by = 5), cex.axis = 1.1)
+
   # kt with CI
   plot(kt_years, LCfit$kt[1, ], type = "l", lwd = 2, col = "black",
        main = expression(kappa[t]^{(1)} ~ "vs." ~ t),
        ylim = c(min(kt_df$lower), max(kt_df$upper)),
        xlab = "Year", ylab = expression(kappa[t]^{(1)}),
-       cex.main = 2, cex.lab = 2, cex.axis = 1.3)
-  
+       cex.main = 1.5, cex.lab = 1.3, cex.axis = 1.1)
+
   lines(kt_df$year, kt_df$lower, col = "gray40", lty = 2, lwd = 2)
   lines(kt_df$year, kt_df$upper, col = "gray40", lty = 2, lwd = 2)
-  
+
   legend("topright",
          legend = c("kappa(t)", "95% CI"),
-         col = c("black", "gray40"),
-         lty = c(1, 2),
-         lwd = 2,
-         bty = "n")
+         col    = c("black", "gray40"),
+         lty    = c(1, 2),
+         lwd    = 2,
+         bty    = "n")
+  
+  # Overall title spanning all panels
+  mtext(
+    paste0("Lee-Carter Model Parameter Estimates — ", region),
+    outer = TRUE,
+    side  = 3,
+    line  = 1,
+    cex   = 1.4,
+    font  = 2
+  )
   
   invisible(NULL)
 }
@@ -248,83 +269,91 @@ plot_lc_components_ci <- function(LCfit){
 
 # Parameter Plot for RH
 ```{r}
-# Plot RHnp fit components + kappa CI band (base R)
-# - Input: RHnp_fit (a fitted StMoMo RHnp object)
-# - Uses:  kappa_ci_df(LCfit, alpha=0.05, show_plot=FALSE) that you already defined
-# - Output: produces the plots (returns invisibly a list with kt_df + layout info)
+plot_RHnp_with_kappa_CI <- function(RHnp_fit, region, alpha = 0.05) {
 
-plot_RHnp_with_kappa_CI <- function(RHnp_fit, alpha = 0.05) {
   # --- get kappa CI df (no ggplot shown) ---
   kt_df <- kappa_ci_df(RHnp_fit, alpha = alpha, show_plot = FALSE)
 
-  # --- layout (same as your code) ---
-  layout_mat <- matrix(c(1, 0,
-                         2, 3,
-                         4, 5),
-                       nrow = 3, byrow = TRUE)
+  # --- prepare variables ---
+  ages    <- RHnp_fit$ages / 12
+  t_years <- as.numeric(colnames(RHnp_fit$kt)) / 12
+  kappa1  <- as.numeric(RHnp_fit$kt[1, ])
+  cohorts <- as.numeric(names(RHnp_fit$gc)) / 12
 
-  # keep old par settings so we can restore
+  # Build file name from region
+  file_name <- paste0(region, "_RH_parameters.png")
+
+  # Open PNG device
+  png(file_name, width = 2000, height = 900, res = 120)
+
   old_par <- par(no.readonly = TRUE)
   on.exit({
-    layout(1)
+    graphics::layout(1)
     par(old_par)
+    dev.off()
   }, add = TRUE)
 
-  layout(layout_mat)
-  par(mar = c(5, 6, 3, 1))
-
-  ages <- RHnp_fit$ages/12
+  # 5 plots: row 1 = 3 plots, row 2 = 2 plots centered
+  layout_mat <- matrix(c(1, 2, 3,
+                         0, 4, 5),
+                       nrow = 2, byrow = TRUE)
+  graphics::layout(layout_mat)
+  par(mar = c(5, 6, 3, 1), oma = c(0, 0, 4, 0))
 
   # 1) ax
   plot(ages, RHnp_fit$ax, type = "l", lwd = 2, col = "black",
        main = expression(a[x] ~ "vs." ~ x),
-       xlab = "Age", ylab = expression(a[x]), cex.main = 2,
-       cex.lab = 2, cex.axis = 1.3)
-  axis(1, at = seq(min(ages), max(ages), by = 5), 
-       labels = seq(min(ages), max(ages), by = 5), cex.axis = 1.3)
+       xlab = "Age", ylab = expression(a[x]),
+       cex.main = 1.5, cex.lab = 1.3, cex.axis = 1.1)
+  axis(1, at     = seq(min(ages), max(ages), by = 5),
+           labels = seq(min(ages), max(ages), by = 5), cex.axis = 1.1)
 
   # 2) bx (beta^(1)_x)
   plot(ages, RHnp_fit$bx, type = "l", lwd = 2, col = "black",
        main = expression(beta[x]^{(1)} ~ "vs." ~ x),
-       xlab = "Age", ylab = expression(beta[x]^{(1)}), cex.main = 2,
-       cex.lab = 2, cex.axis = 1.3)
-  axis(1, at = seq(min(ages), max(ages), by = 5), 
-       labels = seq(min(ages), max(ages), by = 5), cex.axis = 1.3)
+       xlab = "Age", ylab = expression(beta[x]^{(1)}),
+       cex.main = 1.5, cex.lab = 1.3, cex.axis = 1.1)
+  axis(1, at     = seq(min(ages), max(ages), by = 5),
+           labels = seq(min(ages), max(ages), by = 5), cex.axis = 1.1)
 
   # 3) kt (kappa^(1)_t) with CI
-  t_years <- as.numeric(colnames(RHnp_fit$kt))/12
-  kappa1  <- as.numeric(RHnp_fit$kt[1, ])
-
   plot(t_years, kappa1, type = "l", lwd = 2, col = "black",
        main = expression(kappa[t]^{(1)} ~ "vs." ~ t),
        ylim = c(min(kt_df$lower), max(kt_df$upper)),
-       xlab = "Year", ylab = expression(kappa[t]^{(1)}), cex.main = 2,
-       cex.lab = 2, cex.axis = 1.3)
-
+       xlab = "Year", ylab = expression(kappa[t]^{(1)}),
+       cex.main = 1.5, cex.lab = 1.3, cex.axis = 1.1)
   lines(t_years, kt_df$lower, col = "gray40", lty = 2, lwd = 2)
   lines(t_years, kt_df$upper, col = "gray40", lty = 2, lwd = 2)
-
   legend("topright",
          legend = c("kappa(t)", "95% CI"),
-         col = c("black", "gray40"),
-         lty = c(1, 3),
-         lwd = 2,
-         bty = "n")
+         col    = c("black", "gray40"),
+         lty    = c(1, 3),
+         lwd    = 2,
+         bty    = "n")
 
-  # 4) b0x (beta^(2)_x in RH notation in your code)
+  # 4) b0x (beta^(2)_x)
   plot(ages, RHnp_fit$b0x, type = "l", lwd = 2, col = "black",
        main = expression(beta[x]^{(2)} ~ "vs." ~ x),
-       xlab = "Age", ylab = expression(beta[x]^{(2)}), cex.main = 2,
-       cex.lab = 2, cex.axis = 1.3)
-  axis(1, at = seq(min(ages), max(ages), by = 5), 
-       labels = seq(min(ages), max(ages), by = 5), cex.axis = 1.3)
+       xlab = "Age", ylab = expression(beta[x]^{(2)}),
+       cex.main = 1.5, cex.lab = 1.3, cex.axis = 1.1)
+  axis(1, at     = seq(min(ages), max(ages), by = 5),
+           labels = seq(min(ages), max(ages), by = 5), cex.axis = 1.1)
 
   # 5) gc (gamma_{t-x} vs cohort)
-  cohorts <- as.numeric(names(RHnp_fit$gc))/12
   plot(cohorts, RHnp_fit$gc, type = "l", lwd = 2, col = "black",
        main = expression(gamma[t-x] ~ "vs." ~ t-x),
-       xlab = "Cohort", ylab = expression(gamma[t-x]), cex.main = 2,
-       cex.lab = 2, cex.axis = 1.3)
+       xlab = "Cohort", ylab = expression(gamma[t-x]),
+       cex.main = 1.5, cex.lab = 1.3, cex.axis = 1.1)
+
+  # Overall title spanning all panels
+  mtext(
+    paste0("Renshaw-Haberman Model Parameter Estimates — ", region),
+    outer = TRUE,
+    side  = 3,
+    line  = 1.5,
+    cex   = 1.4,
+    font  = 2
+  )
 
   invisible(list(kt_df = kt_df))
 }
@@ -334,9 +363,9 @@ plot_RHnp_with_kappa_CI <- function(RHnp_fit, alpha = 0.05) {
 ```{r}
 # Plot CBD kappa^(1) and kappa^(2) with CI (ggplot), with x-breaks built from data range
 # - x_break_by controls the spacing of breaks (e.g., 5, 10, 20)
-plot_CBD_kappa_CI_gg <- function(CBDfit, alpha = 0.05,
-                                 x_break_by = 5,
-                                 base_size = 12) {
+plot_CBD_kappa_CI_gg <- function(CBDfit, region, alpha = 0.05,
+                                  x_break_by = 5,
+                                  base_size   = 12) {
   CBDfit$years <- CBDfit$years/12
   out <- kappa_ci_df_CBD(CBDfit, alpha = alpha, show_plot = FALSE)
   kt_df1 <- out$kt_df1
@@ -383,8 +412,24 @@ plot_CBD_kappa_CI_gg <- function(CBDfit, alpha = 0.05,
       axis.text    = element_text(size = 10)
     )
 
-  gridExtra::grid.arrange(p1, p2, ncol = 1)
+  # ── Combine: 2 columns, 1 row with overall title ───────────────────────────
+  combined <- gridExtra::grid.arrange(
+    p1, p2,
+    ncol = 2,
+    top  = grid::textGrob(
+      paste0("CBD Model Parameters Estimates — ", region),
+      gp = grid::gpar(fontsize = 15, fontface = "bold")
+    )
+  )
 
+  # ── Save ───────────────────────────────────────────────────────────────────
+  ggsave(
+    filename = paste0(region, "_CBD_kappa.png"),
+    plot     = combined,
+    width    = 12,
+    height   = 5,
+    dpi      = 300
+  )
   invisible(list(p1 = p1, p2 = p2, kt_df1 = kt_df1, kt_df2 = kt_df2, x_breaks = x_breaks))
 }
 ```
@@ -401,10 +446,10 @@ LCfit_West <- fit(LC, data = West_data, ages.fit = 25:65)
 
 ## Plot LCfit
 ```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=10}
-plot_lc_components_ci(LCfit_Midwest)
-plot_lc_components_ci(LCfit_Northeast)
-plot_lc_components_ci(LCfit_South)
-plot_lc_components_ci(LCfit_West)
+plot_lc_components_ci(LCfit_Midwest, "Midwest")
+plot_lc_components_ci(LCfit_Northeast, "Northeast")
+plot_lc_components_ci(LCfit_South, "South")
+plot_lc_components_ci(LCfit_West, "West")
 ```
 
 # RH
@@ -443,50 +488,6 @@ fit_RH_rr <- function(mort_data){
 ```
 
 ```{r}
-  mort_data2 <- Midwest_data
-  mort_data2$years <- Midwest_data$years *12
-  mort_data2$ages <- Midwest_data$ages*12
-```
-
-```{r}
-fit_RH_rr2 <- function(mort_data){
-  max_try <- 10
-  mort_data2 <- Midwest_data
-  mort_data2$years <- mort_data$years *12
-  mort_data2$ages <- mort_data$ages*12
-  # --- track best successful attempt ---
-  best_logLik <- -Inf
-  best_fitRH <- NULL
-  
-  RHnp_mod <- rh(link = "log", cohortAgeFun = "NP")
-
-  for (j in seq_len(max_try)) {
-    # 1) Try fitting RH 
-    fitRH_j <- tryCatch(
-      fit(RHnp_mod, data = mort_data2,
-          ages.fit = (25:65)*12, years.fit = mort_data2$years[1:48],control = list(maxit = 200)),
-      error = function(e) NULL
-    )
-  
-    # 2) if fit error -> move on
-    if (is.null(fitRH_j) || isTRUE(fitRH_j$fail)) next
-    
-    ll_j <- fitRH_j$loglik
-    if (ll_j > best_logLik) {
-    best_logLik <- ll_j
-    best_fitRH <- fitRH_j
-    }
-    
-    return(best_fitRH) 
-  }
-}
-```
-
-```{r}
-fit_RH_rr2(Midwest_data)
-```
-
-```{r}
 library(parallel)
 
 data_list <- list(
@@ -512,15 +513,37 @@ RH_Northeast <- results$Northeast
 RH_South     <- results$South
 RH_West      <- results$West
 ```
+
+```{r}
+RH_Midwest   <- fit_RH_rr(Midwest_data)
+RH_Northeast <- fit_RH_rr(Northeast_data)
+RH_South     <- fit_RH_rr(South_data)
+RH_West      <- fit_RH_rr(West_data)
+```
+
+## Save Result
+```{r}
+saveRDS(RH_Midwest,   file = "RH_Midwest.rds")
+saveRDS(RH_Northeast, file = "RH_Northeast.rds")
+saveRDS(RH_South,     file = "RH_South.rds")
+saveRDS(RH_West,      file = "RH_West.rds")
+
+# Load
+RH_Northeast <- readRDS("RH_Northeast.rds")
+RH_South <- readRDS("RH_South.rds")
+RH_Midwest <- readRDS("RH_Midwest.rds")
+RH_West <- readRDS("RH_West.rds")
+```
+
 ## Plot RHfit 
 ```{r warning=FALSE, message=FALSE, fig.width=10, fig.height=13}
-plot_RHnp_with_kappa_CI(RH_Midwest)
+plot_RHnp_with_kappa_CI(RH_Midwest, "Midwest")
+ 
+plot_RHnp_with_kappa_CI(RH_Northeast, "Northeast")
 
-plot_RHnp_with_kappa_CI(RH_Northeast)
+plot_RHnp_with_kappa_CI(RH_South, "South")
 
-plot_RHnp_with_kappa_CI(RH_South)
-
-plot_RHnp_with_kappa_CI(RH_West)
+plot_RHnp_with_kappa_CI(RH_West, "West")
 ```
 
 # CBD
@@ -549,7 +572,10 @@ CBDfit_West <- fit_CBD(West_data)
 
 ## Plot CBD
 ```{r}
-plot_CBD_kappa_CI_gg(CBDfit_Midwest)
+plot_CBD_kappa_CI_gg(CBDfit_Midwest, "Midwest")
+plot_CBD_kappa_CI_gg(CBDfit_Northeast, "Northeast")
+plot_CBD_kappa_CI_gg(CBDfit_South, "South")
+plot_CBD_kappa_CI_gg(CBDfit_West, "West")
 ```
 
 # Forecast 
@@ -578,8 +604,7 @@ get_fc_rates_vec <- function(fc, ages) {
 ### one month ahead
 ```{r}
 ## LC
-
-lc_roll_1mo_forecast <- function(mort_data, start_year=2003, end_year=2021) {
+lc_roll_1mo_forecast <- function(mort_data, start_year=2008, end_year=2021) {
   # fixed settings (same as your yearly code)
   ages_fit <- 25:65
   LC <- lc(link = "log", const = "sum")
@@ -596,15 +621,46 @@ lc_roll_1mo_forecast <- function(mort_data, start_year=2003, end_year=2021) {
   eval_time   <- time_num[eval_idx]
   origin_time <- time_num[origin_idx]
   
+  # — LC CI extraction function (mirrors yearly code) ————————————————
+  extract_lc_ci <- function(fitLC, fcLC, ages) {
+    ax <- as.numeric(fitLC$ax[as.character(ages)])
+    bx <- as.numeric(fitLC$bx[as.character(ages), 1])
+
+    kt_mean  <- as.numeric(fcLC$kt.f$mean)
+    kt_lower <- as.numeric(fcLC$kt.f$lower)
+    kt_upper <- as.numeric(fcLC$kt.f$upper)
+
+    log_mx_mean  <- ax + bx * kt_mean
+    log_mx_upper <- ax + bx * ifelse(bx >= 0, kt_upper, kt_lower)
+    log_mx_lower <- ax + bx * ifelse(bx >= 0, kt_lower, kt_upper)
+
+    data.frame(
+      age      = ages,
+      mx_mean  = exp(log_mx_mean),
+      mx_lower = exp(log_mx_lower),
+      mx_upper = exp(log_mx_upper)
+    )
+  }
+  
   # forecast rate, output matrices
   mx_hat_lc_rw <- matrix(NA_real_, nrow = length(ages_fit), ncol = length(eval_idx),
                        dimnames = list(as.character(ages_fit), as.character(eval_time)))
   
   mx_hat_lc_ar <- matrix(NA_real_, nrow = length(ages_fit), ncol = length(eval_idx),
                        dimnames = list(as.character(ages_fit), as.character(eval_time)))
-
+  
+  # CI matrices
+  mx_hat_lc_rw_lower <- matrix(NA_real_, nrow = length(ages_fit), ncol = length(eval_idx),
+                                dimnames = list(as.character(ages_fit), as.character(eval_time)))
+  mx_hat_lc_rw_upper <- matrix(NA_real_, nrow = length(ages_fit), ncol = length(eval_idx),
+                                dimnames = list(as.character(ages_fit), as.character(eval_time)))
+  mx_hat_lc_ar_lower <- matrix(NA_real_, nrow = length(ages_fit), ncol = length(eval_idx),
+                                dimnames = list(as.character(ages_fit), as.character(eval_time)))
+  mx_hat_lc_ar_upper <- matrix(NA_real_, nrow = length(ages_fit), ncol = length(eval_idx),
+                                dimnames = list(as.character(ages_fit), as.character(eval_time)))
+  
   for (i in seq_along(eval_idx)) {
-    T <- origin_time[i]
+    T <- eval_time[i]
     # fit LC with design experience year
     fitLC_f <- fit(LC, data = mort_data, ages.fit = ages_fit, years.fit = time_num[1:origin_idx[i]])
     # check convergence
@@ -616,12 +672,26 @@ lc_roll_1mo_forecast <- function(mort_data, start_year=2003, end_year=2021) {
     # extract forecast rate
     mx_hat_lc_rw[, as.character(eval_time[i])] <- get_fc_rates_vec(fcLC_rw, ages_fit)
     mx_hat_lc_ar[, as.character(eval_time[i])] <- get_fc_rates_vec(fcLC_ar, ages_fit)
+    
+    # extract CI rates (mirrors yearly code)
+    ci_rw <- extract_lc_ci(fitLC_f, fcLC_rw, ages_fit)
+    ci_ar <- extract_lc_ci(fitLC_f, fcLC_ar, ages_fit)
+
+    mx_hat_lc_rw_lower[, as.character(eval_time[i])] <- ci_rw$mx_lower
+    mx_hat_lc_rw_upper[, as.character(eval_time[i])] <- ci_rw$mx_upper
+    mx_hat_lc_ar_lower[, as.character(eval_time[i])] <- ci_ar$mx_lower
+    mx_hat_lc_ar_upper[, as.character(eval_time[i])] <- ci_ar$mx_upper
   }
-  return(list(
-  mx_hat_lc_rw = mx_hat_lc_rw,
-  mx_hat_lc_ar = mx_hat_lc_ar,
-  eval_time = eval_time,
-  origin_time = origin_time
+  
+ return(list(
+    mx_hat_lc_rw       = mx_hat_lc_rw,
+    mx_hat_lc_ar       = mx_hat_lc_ar,
+    mx_hat_lc_rw_lower = mx_hat_lc_rw_lower,
+    mx_hat_lc_rw_upper = mx_hat_lc_rw_upper,
+    mx_hat_lc_ar_lower = mx_hat_lc_ar_lower,
+    mx_hat_lc_ar_upper = mx_hat_lc_ar_upper,
+    eval_time          = eval_time,
+    origin_time        = origin_time
   ))
 }
 ```
@@ -677,8 +747,8 @@ LCfor_West      <- readRDS("LC_monthly_West.rds")
 ### One month ahead
 ```{r}
 ## CBD
-CBD_roll_1mo_forecast <- function(mort_data, start_year=2003, end_year=2021) {
-  # fixed settings (same as your yearly code)
+CBD_roll_1mo_forecast <- function(mort_data, start_year=2008, end_year=2021) {
+  # fixed settings
   ages_fit <- 25:65
   CBD <- cbd(link = "logit")
   N <- 1e6
@@ -692,34 +762,96 @@ CBD_roll_1mo_forecast <- function(mort_data, start_year=2003, end_year=2021) {
   # evaluation months
   time_num <- mort_data$years
   eval_idx <- which(time_num >= start_year*12 & time_num < end_year*12)
-  # for 1-step ahead forecast, origin is previous month (index-based, robust)
+  # origin is previous month
   origin_idx <- eval_idx - 1
   
   eval_time   <- time_num[eval_idx]
   origin_time <- time_num[origin_idx]
   
+  # ── CBD CI extraction function ─────────
+  extract_cbd_ci <- function(fitCBD, fcCBD, ages) {
+    xbar <- mean(ages)
+
+    kt_mean  <- fcCBD$kt.f$mean
+    kt_lower <- fcCBD$kt.f$lower
+    kt_upper <- fcCBD$kt.f$upper
+
+    k1_mean  <- as.numeric(kt_mean[1,  ])
+    k2_mean  <- as.numeric(kt_mean[2,  ])
+    k1_lower <- as.numeric(kt_lower[1, ,])
+    k2_lower <- as.numeric(kt_lower[2, ,])
+    k1_upper <- as.numeric(kt_upper[1, ,])
+    k2_upper <- as.numeric(kt_upper[2, ,])
+
+    logit_mean  <- numeric(length(ages))
+    logit_lower <- numeric(length(ages))
+    logit_upper <- numeric(length(ages))
+
+    for (idx in seq_along(ages)) {
+      x    <- ages[idx]
+      coef <- x - xbar   # coefficient for k2
+
+      logit_mean[idx]  <- k1_mean  + coef * k2_mean
+      logit_upper[idx] <- k1_upper + coef * ifelse(coef >= 0, k2_upper, k2_lower)
+      logit_lower[idx] <- k1_lower + coef * ifelse(coef >= 0, k2_lower, k2_upper)
+    }
+
+    inv_logit <- function(x) exp(x) / (1 + exp(x))
+
+    data.frame(
+      age      = ages,
+      qx_mean  = inv_logit(logit_mean),
+      qx_lower = inv_logit(logit_lower),
+      qx_upper = inv_logit(logit_upper)
+    )
+  }
+
   # forecast rate, output matrices
   qx_hat_CBD <- matrix(NA_real_, nrow = length(ages_fit), ncol = length(eval_idx),
                      dimnames = list(as.character(ages_fit), as.character(eval_time/12)))
+  
+  qx_hat_CBD_lower <- matrix(NA_real_, nrow = length(ages_fit), ncol = length(eval_idx),
+                              dimnames = list(as.character(ages_fit),
+                                              as.character(eval_time / 12)))
 
+  qx_hat_CBD_upper <- matrix(NA_real_, nrow = length(ages_fit), ncol = length(eval_idx),
+                              dimnames = list(as.character(ages_fit),
+                                              as.character(eval_time / 12)))
+  # ── Forecast loop 
   for (i in seq_along(eval_idx)) {
     T <- origin_time[i]
+    
     # fit LC with design experience year
     fitCBD_f <- fit(CBD, data = central2initial(mort_data), ages.fit = ages_fit, years.fit = time_num[1:origin_idx[i]])
+    
     # check convergence
     print(paste("Year:", T/12, fitCBD_f$conv))
+    
     # one step ahead forecast
     fcCBD <- forecast(fitCBD_f, h=1, level=95)
   
     # extract forecast rate
     qx_hat_CBD[, as.character(eval_time[i]/12)] <- get_fc_rates_vec(fcCBD, ages_fit)
+    
+    # CI
+    ci_cbd <- extract_cbd_ci(fitCBD_f, fcCBD, ages_fit)
+
+    qx_hat_CBD_lower[, as.character(eval_time[i] / 12)] <- ci_cbd$qx_lower
+    qx_hat_CBD_upper[, as.character(eval_time[i] / 12)] <- ci_cbd$qx_upper
   }
+  
   return(list(
-  qx_hat_CBD = qx_hat_CBD,
-  eval_time = eval_time/12,
-  origin_time = origin_time/12
+    qx_hat_CBD       = qx_hat_CBD,
+    qx_hat_CBD_lower = qx_hat_CBD_lower,
+    qx_hat_CBD_upper = qx_hat_CBD_upper,
+    eval_time        = eval_time / 12,
+    origin_time      = origin_time / 12
   ))
 }
+```
+
+```{r}
+CBDfor_Midwest   <- CBD_roll_1mo_forecast(Midwest_data)
 ```
 
 ```{r}
@@ -771,245 +903,1016 @@ CBDfor_West      <- readRDS("CBD_monthly_West.rds")
 
 ## RH
 ```{r}
-rh_roll_1mo_forecast <- function(mort_data, start_year = 2003, end_year = 2021) {
-  
-  # ---- fixed settings ----
-  ages_fit <- 25:65
-  max_try  <- 10
-  
-  # scale to monthly units (same as fit_RH_rr)
-  mort_data$years <- mort_data$years * 12
-  mort_data$ages  <- mort_data$ages  * 12
-  
-  # update row names (ages) and column names (years) of Dxt and Ext
-  rownames(mort_data$Dxt) <- as.character(mort_data$ages)
-  colnames(mort_data$Dxt) <- as.character(mort_data$years)
-  rownames(mort_data$Ext) <- as.character(mort_data$ages)
-  colnames(mort_data$Ext) <- as.character(mort_data$years)
+# Load RH forecast result
+# Midwest
+RH1021_Midwest <- readRDS("rh_monthly_Midwest1021.rds") 
+# West
+RH1021_West <- readRDS("rh_monthly_West1021.rds") 
+# South
+RH1021_South <- readRDS("rh_monthly_South1021.rds") 
+RH1021_South2 <- readRDS("rh_monthly_South1021_recreate.rds") 
+# Northeast
+RH1021_Northeast <- readRDS("rh_monthly_Northeast1021.rds") 
+```
 
-  # now subset to ages of interest
-  ages_fit_mo <- ages_fit * 12
-  mort_data$Dxt <- mort_data$Dxt[as.character(ages_fit_mo), ]
-  mort_data$Ext <- mort_data$Ext[as.character(ages_fit_mo), ]
-  # change the mort_data$ages
-  mort_data$ages <- ages_fit*12
-  
-  # RH model definition
-  RHnp_mod <- rh(link = "log", cohortAgeFun = "NP")
-  
-  # ---- evaluation months ----
-  time_num   <- mort_data$years   # in monthly units now
-  eval_idx   <- which(time_num >= start_year * 12 & time_num < end_year * 12)
-  origin_idx <- eval_idx - 1
-  
-  eval_time   <- time_num[eval_idx]
-  origin_time <- time_num[origin_idx]
-  
-  # yearly versions for output naming only
-  eval_time_yr   <- eval_time   / 12
-  origin_time_yr <- origin_time / 12
-  
-  # ---- initialize storage lists ----
-  sum_list      <- vector("list", length(origin_time))
-  names(sum_list) <- as.character(origin_time_yr)
-  
-  sum_list_best <- vector("list", length(origin_time))
-  names(sum_list_best) <- as.character(origin_time_yr)
-  
-  # ---- output matrix ----
-  mx_hat_rh_ar <- matrix(NA_real_,
-                         nrow = length(ages_fit),
-                         ncol = length(eval_idx),
-                         dimnames = list(as.character(ages_fit),
-                                         as.character(eval_time_yr)))
-  
-  # ---- rolling forecast loop ----
-  for (i in seq_along(eval_idx)) {
-    
-    T_mo <- origin_time[i]       # origin in monthly units (for StMoMo)
-    T_yr <- origin_time_yr[i]    # origin in yearly units (for naming)
-    set.seed(296 + T_mo) 
-    
-    cat("\n--- Origin Year:", T_yr, "| Forecast Year:", eval_time_yr[i], "---\n")
-    
-    # data up to origin
-    years_fit_mo <- time_num[1:origin_idx[i]]
-    
-    # yearly versions for naming
-    years_fit_yr <- years_fit_mo / 12
-    
-    # cohorts for this origin (monthly units for computation, yearly for naming)
-    cohorts_fit_mo <- (min(years_fit_mo) - max(ages_fit_mo)):(max(years_fit_mo) - min(ages_fit_mo))
-    cohorts_fit_yr <- cohorts_fit_mo / 12
-    
-    # ---- column names in yearly units ----
-    cn_i <- c(
-      "conv", "fc_ok",
-      paste0("ax_",    ages_fit),        # yearly ages 25:65
-      paste0("bx1_",   ages_fit),
-      paste0("bx2_",   ages_fit),
-      paste0("kt_",    years_fit_yr),    # yearly kt
-      paste0("gc_",    cohorts_fit_yr),  # yearly gc
-      paste0("mx_fc_", ages_fit)         # yearly ages
-    )
-    
-    # ---- initialize summary matrices for this origin ----
-    sum_mat <- matrix(NA_real_,
-                      nrow = max_try,
-                      ncol = length(cn_i),
-                      dimnames = list(paste0("iter_", 1:max_try), cn_i))
-    
-    sum_mat_best <- matrix(NA_real_,
-                           nrow = 1,
-                           ncol = length(cn_i),
-                           dimnames = list("iter_1", cn_i))
-    
-    # ---- random restart ----
-    best_loglik <- -Inf
-    best_fc     <- NULL
-    
-    for (j in seq_len(max_try)) {
-      # 1) try fitting
-      fitRH_j <- tryCatch(
-        fit(RHnp_mod,
-            data      = mort_data,
-            ages.fit  = ages_fit_mo,
-            years.fit = years_fit_mo,
-            control   = list(maxit = 200)),
-        error = function(e) NULL
-      )
-      
-      # 2) skip if failed
-      if (is.null(fitRH_j) || isTRUE(fitRH_j$fail)) {
-        sum_mat[j, "conv"]  <- 0
-        sum_mat[j, "fc_ok"] <- 0
-        next
-      }
-      
-      # 3) fill parameters (index using monthly, name using yearly)
-      # ax
-      sum_mat[j, paste0("ax_", ages_fit)] <-
-        as.numeric(fitRH_j$ax[as.character(ages_fit_mo)])
-      
-      # bx
-      bx1 <- fitRH_j$bx
-      bx2 <- fitRH_j$b0x
-      sum_mat[j, paste0("bx1_", ages_fit)] <-
-        as.numeric(bx1[as.character(ages_fit_mo), 1])
-      sum_mat[j, paste0("bx2_", ages_fit)] <-
-        as.numeric(bx2[as.character(ages_fit_mo)])
-      
-      # kt (convert column names from monthly to yearly)
-      ky_mo <- as.integer(colnames(fitRH_j$kt))
-      ky_yr <- ky_mo / 12
-      sum_mat[j, paste0("kt_", ky_yr)] <- as.numeric(fitRH_j$kt[1, ])
-      
-      # gc (convert names from monthly to yearly)
-      gc       <- fitRH_j$gc
-      gc_names_yr <- as.integer(names(gc)) / 12
-      sum_mat[j, paste0("gc_", gc_names_yr)] <- as.numeric(gc)
-      
-      # 4) check convergence
-      conv_j <- isTRUE(fitRH_j$conv)
-      sum_mat[j, "conv"] <- as.numeric(conv_j)
-      if (!conv_j) {
-        sum_mat[j, "fc_ok"] <- 0
-        next
-      }
-      
-      # 5) try forecasting
-      fcRH_j <- tryCatch(
-        forecast(fitRH_j, h = 1, kt.method = "mrwd", gc.order = c(1, 1, 0)),
-        error = function(e) NULL
-      )
-      
-      if (is.null(fcRH_j)) {
-        sum_mat[j, "fc_ok"] <- 0
-        next
-      }
-      
-      # 6) record forecast status and rates (index monthly, name yearly)
-      sum_mat[j, "fc_ok"] <- 1
-      sum_mat[j, paste0("mx_fc_", ages_fit)] <-
-        as.numeric(fcRH_j$rates[as.character(ages_fit_mo)])
-      
-      # 7) update best
-      ll_j <- fitRH_j$loglik
-      if (ll_j > best_loglik & !is.null(fcRH_j)) {
-        best_loglik  <- ll_j
-        best_fc      <- fcRH_j
-        sum_mat_best[1, ] <- sum_mat[j, ]
-        
-        # store forecast rates with yearly column name
-        mx_hat_rh_ar[, as.character(eval_time_yr[i])] <-
-          get_fc_rates_vec(best_fc, ages_fit)
-      }
-    }
-    
-    # store summary matrices using yearly origin as key
-    sum_list[[as.character(T_yr)]]      <- sum_mat
-    sum_list_best[[as.character(T_yr)]] <- sum_mat_best
-  }
-  
-  # ---- return ----
-  return(list(
-    mx_hat_rh_ar  = mx_hat_rh_ar,
-    eval_time     = eval_time_yr,
-    origin_time   = origin_time_yr,
-    sum_list      = sum_list,
-    sum_list_best = sum_list_best
-  ))
+# Forecast Result
+## West
+```{r}
+# ── Choose region ─────────────────────────────────────────────────────
+reg      <- "West"   # change to "Northeast", "South", or "West"
+LC_res   <- LCfor_West    # change accordingly
+RH_res   <- RH1021_West    # change accordingly
+CBD_res  <- CBDfor_West   # change accordingly
+reg_data <- region_data[["West"]]   # change accordingly
+
+# ── Convert CBD qx to mx ──────────────────────────────────────────────
+CBD_res$mx_hat_CBD       <- CBD_res$qx_hat_CBD       / (1 - CBD_res$qx_hat_CBD)
+CBD_res$mx_hat_CBD_lower <- CBD_res$qx_hat_CBD_lower / (1 - CBD_res$qx_hat_CBD_lower)
+CBD_res$mx_hat_CBD_upper <- CBD_res$qx_hat_CBD_upper / (1 - CBD_res$qx_hat_CBD_upper)
+
+# ── Settings ──────────────────────────────────────────────────────────
+rep_ages   <- c(30, 40, 50, 60)
+all_evalMonths <- LC_res$eval_time
+evalMonths     <- all_evalMonths[all_evalMonths >= 2010 & all_evalMonths < 2020]
+
+# ── Extract observed mx ───────────────────────────────────────────────
+yr_char   <- as.character(evalMonths)
+obs_death <- reg_data$Dxt[as.character(rep_ages), yr_char, drop = FALSE]
+obs_exp   <- reg_data$Ext[as.character(rep_ages), yr_char, drop = FALSE]
+obs_mx    <- obs_death / obs_exp
+
+# ── Helpers ───────────────────────────────────────────────────────────
+extract_age_series <- function(mat, age, years) {
+  data.frame(
+    year = years,
+    rate = as.numeric(mat[as.character(age), as.character(years)])
+  )
+}
+
+extract_age_ci <- function(mat_lower, mat_upper, age, years) {
+  data.frame(
+    year  = years,
+    lower = as.numeric(mat_lower[as.character(age), as.character(years)]),
+    upper = as.numeric(mat_upper[as.character(age), as.character(years)])
+  )
+}
+
+# ── Build plot_data (mean lines) ──────────────────────────────────────
+plot_data <- lapply(rep_ages, function(age) {
+  bind_rows(
+    extract_age_series(obs_mx,               age, evalMonths) %>% mutate(model = "Actual"),
+    extract_age_series(LC_res$mx_hat_lc_rw,  age, evalMonths) %>% mutate(model = "Lee-Carter"),
+    extract_age_series(RH_res$mx_hat_rh_ar,  age, evalMonths) %>% mutate(model = "Renshaw-Haberman"),
+    extract_age_series(CBD_res$mx_hat_CBD,   age, evalMonths) %>% mutate(model = "CBD")
+  ) %>% mutate(age = paste0("Age ", age))
+}) %>% bind_rows()
+
+# ── Build ci_data (ribbons) ───────────────────────────────────────────
+ci_data <- lapply(rep_ages, function(age) {
+  bind_rows(
+    extract_age_ci(LC_res$mx_hat_lc_rw_lower,  LC_res$mx_hat_lc_rw_upper,
+                   age, evalMonths) %>% mutate(model = "Lee-Carter"),
+    extract_age_ci(RH_res$mx_hat_rh_ar_lower,  RH_res$mx_hat_rh_ar_upper,
+                   age, evalMonths) %>% mutate(model = "Renshaw-Haberman"),
+    extract_age_ci(CBD_res$mx_hat_CBD_lower,    CBD_res$mx_hat_CBD_upper,
+                   age, evalMonths) %>% mutate(model = "CBD")
+  ) %>% mutate(age = paste0("Age ", age))
+}) %>% bind_rows()
+
+# ── Plot ──────────────────────────────────────────────────────────────
+ggplot() +
+  # CI ribbons (behind lines)
+  geom_ribbon(data = ci_data,
+              aes(x = year, ymin = log(lower), ymax = log(upper), fill = model),
+              alpha = 0.2) +
+  # Forecast lines
+  geom_line(data = filter(plot_data, model != "Actual"),
+            aes(x = year, y = log(rate), color = model, linetype = model),
+            linewidth = 0.8) +
+  # Actual line
+  geom_line(data = filter(plot_data, model == "Actual"),
+            aes(x = year, y = log(rate), color = model, linetype = model),
+            linewidth = 0.9) +
+  facet_wrap(~ age, ncol = 2, scales = "free_y") +
+  scale_color_manual(values = c(
+    "Actual"           = "black",
+    "Lee-Carter"       = "#E41A1C",
+    "Renshaw-Haberman" = "#377EB8",
+    "CBD"              = "#FF7F00"
+  )) +
+  scale_fill_manual(values = c(
+    "Actual"           = "black",
+    "Lee-Carter"       = "#E41A1C",
+    "Renshaw-Haberman" = "#377EB8",
+    "CBD"              = "#FF7F00"
+  )) +
+  scale_linetype_manual(values = c(
+    "Actual"           = "solid",
+    "Lee-Carter"       = "dashed",
+    "Renshaw-Haberman" = "dotdash",
+    "CBD"              = "dotted"
+  )) +
+  labs(
+    title    = paste0("One-Month Ahead Forecast vs Actual Mortality Rate — ", reg),
+    x        = "Month (decimal year)",
+    y        = "Log Mortality Rate",
+    color    = "Model", linetype = "Model", fill = "Model"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom",
+    strip.text      = element_text(size = 12, face = "bold"),
+    axis.text.x     = element_text(angle = 45, hjust = 1),
+    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5)
+  )
+
+ggsave(paste0("monthly_forecast_vs_actual_", reg, ".png"),
+       width = 12, height = 8, dpi = 300)
+```
+
+## Midwest
+```{r}
+# ── Choose region ─────────────────────────────────────────────────────
+reg      <- "Midwest"   # change to "Northeast", "South", or "West"
+LC_res   <- LCfor_Midwest    # change accordingly
+RH_res   <- RH1021_Midwest    # change accordingly
+CBD_res  <- CBDfor_Midwest   # change accordingly
+reg_data <- region_data[["Midwest"]]   # change accordingly
+
+# ── Convert CBD qx to mx ──────────────────────────────────────────────
+CBD_res$mx_hat_CBD       <- CBD_res$qx_hat_CBD       / (1 - CBD_res$qx_hat_CBD)
+CBD_res$mx_hat_CBD_lower <- CBD_res$qx_hat_CBD_lower / (1 - CBD_res$qx_hat_CBD_lower)
+CBD_res$mx_hat_CBD_upper <- CBD_res$qx_hat_CBD_upper / (1 - CBD_res$qx_hat_CBD_upper)
+
+# ── Settings ──────────────────────────────────────────────────────────
+rep_ages   <- c(30, 40, 50, 60)
+all_evalMonths <- LC_res$eval_time
+evalMonths     <- all_evalMonths[all_evalMonths >= 2010 & all_evalMonths < 2020]
+
+# ── Extract observed mx ───────────────────────────────────────────────
+yr_char   <- as.character(evalMonths)
+obs_death <- reg_data$Dxt[as.character(rep_ages), yr_char, drop = FALSE]
+obs_exp   <- reg_data$Ext[as.character(rep_ages), yr_char, drop = FALSE]
+obs_mx    <- obs_death / obs_exp
+
+# ── Helpers ───────────────────────────────────────────────────────────
+extract_age_series <- function(mat, age, years) {
+  data.frame(
+    year = years,
+    rate = as.numeric(mat[as.character(age), as.character(years)])
+  )
+}
+
+extract_age_ci <- function(mat_lower, mat_upper, age, years) {
+  data.frame(
+    year  = years,
+    lower = as.numeric(mat_lower[as.character(age), as.character(years)]),
+    upper = as.numeric(mat_upper[as.character(age), as.character(years)])
+  )
+}
+
+# ── Build plot_data (mean lines) ──────────────────────────────────────
+plot_data <- lapply(rep_ages, function(age) {
+  bind_rows(
+    extract_age_series(obs_mx,               age, evalMonths) %>% mutate(model = "Actual"),
+    extract_age_series(LC_res$mx_hat_lc_rw,  age, evalMonths) %>% mutate(model = "Lee-Carter"),
+    extract_age_series(RH_res$mx_hat_rh_ar,  age, evalMonths) %>% mutate(model = "Renshaw-Haberman"),
+    extract_age_series(CBD_res$mx_hat_CBD,   age, evalMonths) %>% mutate(model = "CBD")
+  ) %>% mutate(age = paste0("Age ", age))
+}) %>% bind_rows()
+
+# ── Build ci_data (ribbons) ───────────────────────────────────────────
+ci_data <- lapply(rep_ages, function(age) {
+  bind_rows(
+    extract_age_ci(LC_res$mx_hat_lc_rw_lower,  LC_res$mx_hat_lc_rw_upper,
+                   age, evalMonths) %>% mutate(model = "Lee-Carter"),
+    extract_age_ci(RH_res$mx_hat_rh_ar_lower,  RH_res$mx_hat_rh_ar_upper,
+                   age, evalMonths) %>% mutate(model = "Renshaw-Haberman"),
+    extract_age_ci(CBD_res$mx_hat_CBD_lower,    CBD_res$mx_hat_CBD_upper,
+                   age, evalMonths) %>% mutate(model = "CBD")
+  ) %>% mutate(age = paste0("Age ", age))
+}) %>% bind_rows()
+
+# ── Plot ──────────────────────────────────────────────────────────────
+ggplot() +
+  # CI ribbons (behind lines)
+  geom_ribbon(data = ci_data,
+              aes(x = year, ymin = log(lower), ymax = log(upper), fill = model),
+              alpha = 0.2) +
+  # Forecast lines
+  geom_line(data = filter(plot_data, model != "Actual"),
+            aes(x = year, y = log(rate), color = model, linetype = model),
+            linewidth = 0.8) +
+  # Actual line
+  geom_line(data = filter(plot_data, model == "Actual"),
+            aes(x = year, y = log(rate), color = model, linetype = model),
+            linewidth = 0.9) +
+  facet_wrap(~ age, ncol = 2, scales = "free_y") +
+  scale_color_manual(values = c(
+    "Actual"           = "black",
+    "Lee-Carter"       = "#E41A1C",
+    "Renshaw-Haberman" = "#377EB8",
+    "CBD"              = "#FF7F00"
+  )) +
+  scale_fill_manual(values = c(
+    "Actual"           = "black",
+    "Lee-Carter"       = "#E41A1C",
+    "Renshaw-Haberman" = "#377EB8",
+    "CBD"              = "#FF7F00"
+  )) +
+  scale_linetype_manual(values = c(
+    "Actual"           = "solid",
+    "Lee-Carter"       = "dashed",
+    "Renshaw-Haberman" = "dotdash",
+    "CBD"              = "dotted"
+  )) +
+  labs(
+    title    = paste0("One-Month Ahead Forecast vs Actual Mortality Rate — ", reg),
+    x        = "Month (decimal year)",
+    y        = "Log Mortality Rate",
+    color    = "Model", linetype = "Model", fill = "Model"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom",
+    strip.text      = element_text(size = 12, face = "bold"),
+    axis.text.x     = element_text(angle = 45, hjust = 1),
+    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5)
+  )
+
+ggsave(paste0("monthly_forecast_vs_actual_", reg, ".png"),
+       width = 12, height = 8, dpi = 300)
+```
+
+## Northeast
+```{r}
+# ── Choose region ─────────────────────────────────────────────────────
+reg      <- "Northeast"   # change to "Northeast", "South", or "West"
+LC_res   <- LCfor_Northeast    # change accordingly
+RH_res   <- RH1021_Northeast    # change accordingly
+CBD_res  <- CBDfor_Northeast   # change accordingly
+reg_data <- region_data[["Northeast"]]   # change accordingly
+
+# ── Convert CBD qx to mx ──────────────────────────────────────────────
+CBD_res$mx_hat_CBD       <- CBD_res$qx_hat_CBD       / (1 - CBD_res$qx_hat_CBD)
+CBD_res$mx_hat_CBD_lower <- CBD_res$qx_hat_CBD_lower / (1 - CBD_res$qx_hat_CBD_lower)
+CBD_res$mx_hat_CBD_upper <- CBD_res$qx_hat_CBD_upper / (1 - CBD_res$qx_hat_CBD_upper)
+
+# ── Settings ──────────────────────────────────────────────────────────
+rep_ages   <- c(30, 40, 50, 60)
+all_evalMonths <- LC_res$eval_time
+evalMonths     <- all_evalMonths[all_evalMonths >= 2010 & all_evalMonths < 2020]
+
+# ── Extract observed mx ───────────────────────────────────────────────
+yr_char   <- as.character(evalMonths)
+obs_death <- reg_data$Dxt[as.character(rep_ages), yr_char, drop = FALSE]
+obs_exp   <- reg_data$Ext[as.character(rep_ages), yr_char, drop = FALSE]
+obs_mx    <- obs_death / obs_exp
+
+# ── Helpers ───────────────────────────────────────────────────────────
+extract_age_series <- function(mat, age, years) {
+  data.frame(
+    year = years,
+    rate = as.numeric(mat[as.character(age), as.character(years)])
+  )
+}
+
+extract_age_ci <- function(mat_lower, mat_upper, age, years) {
+  data.frame(
+    year  = years,
+    lower = as.numeric(mat_lower[as.character(age), as.character(years)]),
+    upper = as.numeric(mat_upper[as.character(age), as.character(years)])
+  )
+}
+
+# ── Build plot_data (mean lines) ──────────────────────────────────────
+plot_data <- lapply(rep_ages, function(age) {
+  bind_rows(
+    extract_age_series(obs_mx,               age, evalMonths) %>% mutate(model = "Actual"),
+    extract_age_series(LC_res$mx_hat_lc_rw,  age, evalMonths) %>% mutate(model = "Lee-Carter"),
+    extract_age_series(RH_res$mx_hat_rh_ar,  age, evalMonths) %>% mutate(model = "Renshaw-Haberman"),
+    extract_age_series(CBD_res$mx_hat_CBD,   age, evalMonths) %>% mutate(model = "CBD")
+  ) %>% mutate(age = paste0("Age ", age))
+}) %>% bind_rows()
+
+# ── Build ci_data (ribbons) ───────────────────────────────────────────
+ci_data <- lapply(rep_ages, function(age) {
+  bind_rows(
+    extract_age_ci(LC_res$mx_hat_lc_rw_lower,  LC_res$mx_hat_lc_rw_upper,
+                   age, evalMonths) %>% mutate(model = "Lee-Carter"),
+    extract_age_ci(RH_res$mx_hat_rh_ar_lower,  RH_res$mx_hat_rh_ar_upper,
+                   age, evalMonths) %>% mutate(model = "Renshaw-Haberman"),
+    extract_age_ci(CBD_res$mx_hat_CBD_lower,    CBD_res$mx_hat_CBD_upper,
+                   age, evalMonths) %>% mutate(model = "CBD")
+  ) %>% mutate(age = paste0("Age ", age))
+}) %>% bind_rows()
+
+# ── Plot ──────────────────────────────────────────────────────────────
+ggplot() +
+  # CI ribbons (behind lines)
+  geom_ribbon(data = ci_data,
+              aes(x = year, ymin = log(lower), ymax = log(upper), fill = model),
+              alpha = 0.2) +
+  # Forecast lines
+  geom_line(data = filter(plot_data, model != "Actual"),
+            aes(x = year, y = log(rate), color = model, linetype = model),
+            linewidth = 0.8) +
+  # Actual line
+  geom_line(data = filter(plot_data, model == "Actual"),
+            aes(x = year, y = log(rate), color = model, linetype = model),
+            linewidth = 0.9) +
+  facet_wrap(~ age, ncol = 2, scales = "free_y") +
+  scale_color_manual(values = c(
+    "Actual"           = "black",
+    "Lee-Carter"       = "#E41A1C",
+    "Renshaw-Haberman" = "#377EB8",
+    "CBD"              = "#FF7F00"
+  )) +
+  scale_fill_manual(values = c(
+    "Actual"           = "black",
+    "Lee-Carter"       = "#E41A1C",
+    "Renshaw-Haberman" = "#377EB8",
+    "CBD"              = "#FF7F00"
+  )) +
+  scale_linetype_manual(values = c(
+    "Actual"           = "solid",
+    "Lee-Carter"       = "dashed",
+    "Renshaw-Haberman" = "dotdash",
+    "CBD"              = "dotted"
+  )) +
+  labs(
+    title    = paste0("One-Month Ahead Forecast vs Actual Mortality Rate — ", reg),
+    x        = "Month (decimal year)",
+    y        = "Log Mortality Rate",
+    color    = "Model", linetype = "Model", fill = "Model"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom",
+    strip.text      = element_text(size = 12, face = "bold"),
+    axis.text.x     = element_text(angle = 45, hjust = 1),
+    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5)
+  )
+
+ggsave(paste0("monthly_forecast_vs_actual_", reg, ".png"),
+       width = 12, height = 8, dpi = 300)
+```
+
+## South
+```{r}
+# ── Choose region ─────────────────────────────────────────────────────
+reg      <- "South"   # change to "Northeast", "South", or "West"
+LC_res   <- LCfor_South    # change accordingly
+RH_res   <- RH1021_South2    # change accordingly
+CBD_res  <- CBDfor_South   # change accordingly
+reg_data <- region_data[["South"]]   # change accordingly
+
+# ── Convert CBD qx to mx ──────────────────────────────────────────────
+CBD_res$mx_hat_CBD       <- CBD_res$qx_hat_CBD       / (1 - CBD_res$qx_hat_CBD)
+CBD_res$mx_hat_CBD_lower <- CBD_res$qx_hat_CBD_lower / (1 - CBD_res$qx_hat_CBD_lower)
+CBD_res$mx_hat_CBD_upper <- CBD_res$qx_hat_CBD_upper / (1 - CBD_res$qx_hat_CBD_upper)
+
+# ── Settings ──────────────────────────────────────────────────────────
+rep_ages   <- c(30, 40, 50, 60)
+all_evalMonths <- LC_res$eval_time
+evalMonths     <- all_evalMonths[all_evalMonths >= 2010 & all_evalMonths < 2020]
+
+# ── Extract observed mx ───────────────────────────────────────────────
+yr_char   <- as.character(evalMonths)
+obs_death <- reg_data$Dxt[as.character(rep_ages), yr_char, drop = FALSE]
+obs_exp   <- reg_data$Ext[as.character(rep_ages), yr_char, drop = FALSE]
+obs_mx    <- obs_death / obs_exp
+
+# ── Helpers ───────────────────────────────────────────────────────────
+extract_age_series <- function(mat, age, years) {
+  data.frame(
+    year = years,
+    rate = as.numeric(mat[as.character(age), as.character(years)])
+  )
+}
+
+extract_age_ci <- function(mat_lower, mat_upper, age, years) {
+  data.frame(
+    year  = years,
+    lower = as.numeric(mat_lower[as.character(age), as.character(years)]),
+    upper = as.numeric(mat_upper[as.character(age), as.character(years)])
+  )
+}
+
+# ── Build plot_data (mean lines) ──────────────────────────────────────
+plot_data <- lapply(rep_ages, function(age) {
+  bind_rows(
+    extract_age_series(obs_mx,               age, evalMonths) %>% mutate(model = "Actual"),
+    extract_age_series(LC_res$mx_hat_lc_rw,  age, evalMonths) %>% mutate(model = "Lee-Carter"),
+    extract_age_series(RH_res$mx_hat_rh_ar,  age, evalMonths) %>% mutate(model = "Renshaw-Haberman"),
+    extract_age_series(CBD_res$mx_hat_CBD,   age, evalMonths) %>% mutate(model = "CBD")
+  ) %>% mutate(age = paste0("Age ", age))
+}) %>% bind_rows()
+
+# ── Build ci_data (ribbons) ───────────────────────────────────────────
+ci_data <- lapply(rep_ages, function(age) {
+  bind_rows(
+    extract_age_ci(LC_res$mx_hat_lc_rw_lower,  LC_res$mx_hat_lc_rw_upper,
+                   age, evalMonths) %>% mutate(model = "Lee-Carter"),
+    extract_age_ci(RH_res$mx_hat_rh_ar_lower,  RH_res$mx_hat_rh_ar_upper,
+                   age, evalMonths) %>% mutate(model = "Renshaw-Haberman"),
+    extract_age_ci(CBD_res$mx_hat_CBD_lower,    CBD_res$mx_hat_CBD_upper,
+                   age, evalMonths) %>% mutate(model = "CBD")
+  ) %>% mutate(age = paste0("Age ", age))
+}) %>% bind_rows()
+
+# ── Plot ──────────────────────────────────────────────────────────────
+ggplot() +
+  # CI ribbons (behind lines)
+  geom_ribbon(data = ci_data,
+              aes(x = year, ymin = log(lower), ymax = log(upper), fill = model),
+              alpha = 0.2) +
+  # Forecast lines
+  geom_line(data = filter(plot_data, model != "Actual"),
+            aes(x = year, y = log(rate), color = model, linetype = model),
+            linewidth = 0.8) +
+  # Actual line
+  geom_line(data = filter(plot_data, model == "Actual"),
+            aes(x = year, y = log(rate), color = model, linetype = model),
+            linewidth = 0.9) +
+  facet_wrap(~ age, ncol = 2, scales = "free_y") +
+  scale_color_manual(values = c(
+    "Actual"           = "black",
+    "Lee-Carter"       = "#E41A1C",
+    "Renshaw-Haberman" = "#377EB8",
+    "CBD"              = "#FF7F00"
+  )) +
+  scale_fill_manual(values = c(
+    "Actual"           = "black",
+    "Lee-Carter"       = "#E41A1C",
+    "Renshaw-Haberman" = "#377EB8",
+    "CBD"              = "#FF7F00"
+  )) +
+  scale_linetype_manual(values = c(
+    "Actual"           = "solid",
+    "Lee-Carter"       = "dashed",
+    "Renshaw-Haberman" = "dotdash",
+    "CBD"              = "dotted"
+  )) +
+  labs(
+    title    = paste0("One-Month Ahead Forecast vs Actual Mortality Rate — ", reg),
+    x        = "Month (decimal year)",
+    y        = "Log Mortality Rate",
+    color    = "Model", linetype = "Model", fill = "Model"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom",
+    strip.text      = element_text(size = 12, face = "bold"),
+    axis.text.x     = element_text(angle = 45, hjust = 1),
+    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5)
+  )
+
+ggsave(paste0("monthly_forecast_vs_actual_", reg, ".png"),
+       width = 12, height = 8, dpi = 300)
+```
+# DM Test
+```{r}
+# Define loss function 
+# Poisson Deviance
+poisson_deviance_cell <- function(D, Dhat) {
+  # D, Dhat numeric vectors/matrices; returns same shape
+  Dhat <- pmax(Dhat, 1e-12)  # avoid division by 0
+  out <- 2 * (D * ifelse(D == 0, 0, log(D / Dhat)) - (D - Dhat))
+  out
+}
+
+# average
+loss_per_year_poisson_dev_avg <- function(D_obs, D_hat) {
+  dev_mat <- poisson_deviance_cell(D_obs, D_hat)  # age x year
+  colMeans(dev_mat, na.rm = TRUE)                  # length T vector (years)
 }
 ```
 
 ```{r}
-rh_roll_1mo_forecast(Midwest_data)
+# Define loss function 
+# Binomial Deviance
+binom_deviance_cell <- function(D, E, qhat) {
+  qhat <- pmin(pmax(qhat, 1e-12), 1 - 1e-12)
+  mu <- E * qhat
+
+  term1 <- ifelse(D == 0, 0, D * log(D / mu))
+  term2 <- ifelse(D == E, 0, (E - D) * log((E - D) / (E - mu)))
+
+  2 * (term1 + term2)
+}
+
+# average
+loss_per_year_binom_dev_avg <- function(D_obs, E_obs, q_hat) {
+  dev_mat <- binom_deviance_cell(D_obs, E_obs, q_hat)
+  colMeans(dev_mat, na.rm = TRUE)
+}
 ```
 
+## West
 ```{r}
-library(parallel)
+# ── Set region here ──────────────────────────────────────────────────────────
+reg      <- "West"   # change to "Midwest", "Northeast", or "South"
 
-# ---- four datasets in a named list ----
-data_list <- list(
-  Midwest   = Midwest_data,
-  Northeast = Northeast_data,
-  South     = South_data,
-  West      = West_data
+lc_res   <- LCfor_West       # change accordingly
+rh_res   <- RH1021_West      # change accordingly
+cbd_res  <- CBDfor_West      # change accordingly
+reg_data <- region_data[["West"]]  # change accordingly
+reg_data_CBD <- central2initial(region_data[["West"]])  # change accordingly
+
+# ── Evaluation period ────────────────────────────────────────────────────────
+all_evalMonths <- lc_res$eval_time
+evalMonths     <- all_evalMonths[all_evalMonths >= 2010 & all_evalMonths < 2020]
+yr_char        <- as.character(evalMonths)
+
+# ── Observed deaths and exposure ─────────────────────────────────────────────
+ages_char <- as.character(25:65)
+obs_death <- reg_data$Dxt[ages_char, yr_char, drop = FALSE]
+obs_exp   <- reg_data$Ext[ages_char, yr_char, drop = FALSE]
+obs_exp_CBD <- reg_data_CBD$Ext[ages_char, yr_char, drop = FALSE]
+
+# ── Extract forecast mx ───────────────────────────────────────────────────────
+
+# LC
+mx_hat_lc <- lc_res$mx_hat_lc_rw[ages_char, yr_char, drop = FALSE]
+# RH
+mx_hat_rh <- rh_res$mx_hat_rh_ar[ages_char, yr_char, drop = FALSE]
+# CBD
+qx_hat_cbd <- cbd_res$qx_hat_CBD[ages_char, yr_char, drop = FALSE]
+
+# ── Poisson deviance loss per year ────────────────────────────────────────────
+L_lc  <- ts(as.numeric(loss_per_year_poisson_dev_avg(obs_death, obs_exp * mx_hat_lc)),
+            start = min(evalMonths), frequency = 1)
+L_rh  <- ts(as.numeric(loss_per_year_poisson_dev_avg(obs_death, obs_exp * mx_hat_rh)),
+            start = min(evalMonths), frequency = 1)
+L_cbd <- ts(as.numeric(loss_per_year_binom_dev_avg(obs_death, obs_exp_CBD, qx_hat_cbd)),
+            start = min(evalMonths), frequency = 1)
+
+# ── DM Tests ──────────────────────────────────────────────────────────────────
+cat("Region:", reg, "\n\n")
+
+cat("-- LC vs RH --\n")
+dm.test(as.numeric(L_lc), as.numeric(L_rh),
+        alternative = "two.sided", h = 1, power = 1)
+
+cat("-- LC vs CBD --\n")
+dm.test(as.numeric(L_lc), as.numeric(L_cbd),
+        alternative = "two.sided", h = 1, power = 1)
+
+cat("-- RH vs CBD --\n")
+dm.test(as.numeric(L_rh), as.numeric(L_cbd),
+        alternative = "two.sided", h = 1, power = 1)
+```
+
+## Midwest
+```{r}
+# ── Set region here ──────────────────────────────────────────────────────────
+reg      <- "Midwest"
+lc_res   <- LCfor_Midwest
+rh_res   <- RH1021_Midwest
+cbd_res  <- CBDfor_Midwest
+reg_data <- region_data[["Midwest"]]
+reg_data_CBD <- central2initial(region_data[["Midwest"]])
+
+# ── Evaluation period ────────────────────────────────────────────────────────
+all_evalMonths <- lc_res$eval_time
+evalMonths     <- all_evalMonths[all_evalMonths >= 2010 & all_evalMonths < 2020]
+yr_char        <- as.character(evalMonths)
+
+# ── Observed deaths and exposure ─────────────────────────────────────────────
+ages_char   <- as.character(25:65)
+obs_death   <- reg_data$Dxt[ages_char, yr_char, drop = FALSE]
+obs_exp     <- reg_data$Ext[ages_char, yr_char, drop = FALSE]
+obs_exp_CBD <- reg_data_CBD$Ext[ages_char, yr_char, drop = FALSE]
+
+# ── Extract forecast mx ───────────────────────────────────────────────────────
+mx_hat_lc  <- lc_res$mx_hat_lc_rw[ages_char, yr_char, drop = FALSE]
+mx_hat_rh  <- rh_res$mx_hat_rh_ar[ages_char, yr_char, drop = FALSE]
+qx_hat_cbd <- cbd_res$qx_hat_CBD[ages_char, yr_char, drop = FALSE]
+
+# ── Loss per year ─────────────────────────────────────────────────────────────
+L_lc  <- ts(as.numeric(loss_per_year_poisson_dev_avg(obs_death, obs_exp * mx_hat_lc)),
+            start = min(evalMonths), frequency = 1)
+L_rh  <- ts(as.numeric(loss_per_year_poisson_dev_avg(obs_death, obs_exp * mx_hat_rh)),
+            start = min(evalMonths), frequency = 1)
+L_cbd <- ts(as.numeric(loss_per_year_binom_dev_avg(obs_death, obs_exp_CBD, qx_hat_cbd)),
+            start = min(evalMonths), frequency = 1)
+
+# ── DM Tests ──────────────────────────────────────────────────────────────────
+cat("Region:", reg, "\n\n")
+
+cat("-- LC vs RH --\n")
+dm.test(as.numeric(L_lc), as.numeric(L_rh),
+        alternative = "two.sided", h = 1, power = 1)
+
+cat("-- LC vs CBD --\n")
+dm.test(as.numeric(L_lc), as.numeric(L_cbd),
+        alternative = "two.sided", h = 1, power = 1)
+
+cat("-- RH vs CBD --\n")
+dm.test(as.numeric(L_rh), as.numeric(L_cbd),
+        alternative = "two.sided", h = 1, power = 1)
+```
+
+## Northeast
+```{r}
+# ── Set region here ──────────────────────────────────────────────────────────
+reg      <- "Northeast"
+lc_res   <- LCfor_Northeast
+rh_res   <- RH1021_Northeast
+cbd_res  <- CBDfor_Northeast
+reg_data <- region_data[["Northeast"]]
+reg_data_CBD <- central2initial(region_data[["Northeast"]])
+
+# ── Evaluation period ────────────────────────────────────────────────────────
+all_evalMonths <- lc_res$eval_time
+evalMonths     <- all_evalMonths[all_evalMonths >= 2010 & all_evalMonths < 2020]
+yr_char        <- as.character(evalMonths)
+
+# ── Observed deaths and exposure ─────────────────────────────────────────────
+ages_char   <- as.character(25:65)
+obs_death   <- reg_data$Dxt[ages_char, yr_char, drop = FALSE]
+obs_exp     <- reg_data$Ext[ages_char, yr_char, drop = FALSE]
+obs_exp_CBD <- reg_data_CBD$Ext[ages_char, yr_char, drop = FALSE]
+
+# ── Extract forecast mx ───────────────────────────────────────────────────────
+mx_hat_lc  <- lc_res$mx_hat_lc_rw[ages_char, yr_char, drop = FALSE]
+mx_hat_rh  <- rh_res$mx_hat_rh_ar[ages_char, yr_char, drop = FALSE]
+qx_hat_cbd <- cbd_res$qx_hat_CBD[ages_char, yr_char, drop = FALSE]
+
+# ── Loss per year ─────────────────────────────────────────────────────────────
+L_lc  <- ts(as.numeric(loss_per_year_poisson_dev_avg(obs_death, obs_exp * mx_hat_lc)),
+            start = min(evalMonths), frequency = 1)
+L_rh  <- ts(as.numeric(loss_per_year_poisson_dev_avg(obs_death, obs_exp * mx_hat_rh)),
+            start = min(evalMonths), frequency = 1)
+L_cbd <- ts(as.numeric(loss_per_year_binom_dev_avg(obs_death, obs_exp_CBD, qx_hat_cbd)),
+            start = min(evalMonths), frequency = 1)
+
+# ── DM Tests ──────────────────────────────────────────────────────────────────
+cat("Region:", reg, "\n\n")
+
+cat("-- LC vs RH --\n")
+dm.test(as.numeric(L_lc), as.numeric(L_rh),
+        alternative = "two.sided", h = 1, power = 1)
+
+cat("-- LC vs CBD --\n")
+dm.test(as.numeric(L_lc), as.numeric(L_cbd),
+        alternative = "two.sided", h = 1, power = 1)
+
+cat("-- RH vs CBD --\n")
+dm.test(as.numeric(L_rh), as.numeric(L_cbd),
+        alternative = "two.sided", h = 1, power = 1)
+```
+
+## South
+```{r}
+# ── Set region here ──────────────────────────────────────────────────────────
+reg      <- "South"
+lc_res   <- LCfor_South
+rh_res   <- RH1021_South
+cbd_res  <- CBDfor_South
+reg_data <- region_data[["South"]]
+reg_data_CBD <- central2initial(region_data[["Northeast"]])
+
+# ── Evaluation period ────────────────────────────────────────────────────────
+all_evalMonths <- lc_res$eval_time
+evalMonths     <- all_evalMonths[all_evalMonths >= 2010 & all_evalMonths < 2020]
+yr_char        <- as.character(evalMonths)
+
+# ── Observed deaths and exposure ─────────────────────────────────────────────
+ages_char   <- as.character(25:65)
+obs_death   <- reg_data$Dxt[ages_char, yr_char, drop = FALSE]
+obs_exp     <- reg_data$Ext[ages_char, yr_char, drop = FALSE]
+obs_exp_CBD <- reg_data_CBD$Ext[ages_char, yr_char, drop = FALSE]
+
+# ── Extract forecast mx ───────────────────────────────────────────────────────
+mx_hat_lc  <- lc_res$mx_hat_lc_rw[ages_char, yr_char, drop = FALSE]
+mx_hat_rh  <- rh_res$mx_hat_rh_ar[ages_char, yr_char, drop = FALSE]
+qx_hat_cbd <- cbd_res$qx_hat_CBD[ages_char, yr_char, drop = FALSE]
+
+# ── Loss per year ─────────────────────────────────────────────────────────────
+L_lc  <- ts(as.numeric(loss_per_year_poisson_dev_avg(obs_death, obs_exp * mx_hat_lc)),
+            start = min(evalMonths), frequency = 1)
+L_rh  <- ts(as.numeric(loss_per_year_poisson_dev_avg(obs_death, obs_exp * mx_hat_rh)),
+            start = min(evalMonths), frequency = 1)
+L_cbd <- ts(as.numeric(loss_per_year_binom_dev_avg(obs_death, obs_exp_CBD, qx_hat_cbd)),
+            start = min(evalMonths), frequency = 1)
+
+# ── DM Tests ──────────────────────────────────────────────────────────────────
+cat("Region:", reg, "\n\n")
+
+cat("-- LC vs RH --\n")
+dm.test(as.numeric(L_lc), as.numeric(L_rh),
+        alternative = "two.sided", h = 1, power = 1)
+
+cat("-- LC vs CBD --\n")
+dm.test(as.numeric(L_lc), as.numeric(L_cbd),
+        alternative = "two.sided", h = 1, power = 1)
+
+cat("-- RH vs CBD --\n")
+dm.test(as.numeric(L_rh), as.numeric(L_cbd),
+        alternative = "two.sided", h = 1, power = 1)
+```
+
+# Combine Model
+```{r}
+# load opioid related mortality rate
+west_opioid_log <- as.matrix(read.csv("West_opioid_logmxt.csv", 
+                                    row.names = 1, check.names = FALSE))
+northeast_opioid_log <- as.matrix(read.csv("Northeast_opioid_logmxt.csv", 
+                                    row.names = 1, check.names = FALSE))
+midwest_opioid_log <- as.matrix(read.csv("Midwest_opioid_logmxt.csv", 
+                                    row.names = 1, check.names = FALSE))
+south_opioid_log <- as.matrix(read.csv("South_opioid_logmxt.csv", 
+                                    row.names = 1, check.names = FALSE))
+west_opioid <- exp(west_opioid_log)
+northeast_opioid <- exp(northeast_opioid_log)
+midwest_opioid <- exp(midwest_opioid_log)
+south_opioid <- exp(south_opioid_log)
+
+```
+
+## LC
+```{r}
+# setting
+ages      <- 25:65
+out_years <- colnames(west_opioid)
+
+# Extract Fitted Rate
+fitted_lc_Midwest <- fitted(LCfit_Midwest, type = "rates")
+fitted_lc_Northeast <- fitted(LCfit_Northeast, type = "rates")
+fitted_lc_South <- fitted(LCfit_South, type = "rates")
+fitted_lc_West <- fitted(LCfit_West, type = "rates")
+
+# Subset to ages 25-65 and years 2003-2020 (monthly)
+mx_base_lc_Midwest <- fitted_lc_Midwest[as.character(ages), as.character(out_years)]
+mx_base_lc_Northeast <- fitted_lc_Northeast[as.character(ages), as.character(out_years)]
+mx_base_lc_South <- fitted_lc_South[as.character(ages), as.character(out_years)]
+mx_base_lc_West <- fitted_lc_West[as.character(ages), as.character(out_years)]
+
+
+# combine two mortality
+mxt_lc_Midwest <- mx_base_lc_Midwest + midwest_opioid
+mxt_lc_Northeast <- mx_base_lc_Northeast + northeast_opioid
+mxt_lc_South <- mx_base_lc_South + south_opioid
+mxt_lc_West <- mx_base_lc_West + west_opioid
+
+# ratio
+ratio_lc_Midwest <- midwest_opioid / mxt_lc_Midwest
+ratio_lc_Northeast <- northeast_opioid / mxt_lc_Northeast
+ratio_lc_South <- south_opioid / mxt_lc_South
+ratio_lc_West <- west_opioid / mxt_lc_West
+```
+
+
+```{r}
+# ── Data ──────────────────────────────────────────────────────────────────────
+regions <- c("Midwest", "Northeast", "South", "West")
+
+ratio_list <- list(
+  Midwest   = ratio_lc_Midwest,
+  Northeast = ratio_lc_Northeast,
+  South     = ratio_lc_South,
+  West      = ratio_lc_West
 )
 
-# ---- set up cluster ----
-cl <- makeCluster(4)
+# ── Build combined long format ────────────────────────────────────────────────
+ratio_long_all <- lapply(regions, function(reg) {
+  melt(ratio_list[[reg]],
+       varnames   = c("Age", "Year"),
+       value.name = "Ratio") %>%
+    mutate(Region = reg)
+}) %>% bind_rows()
 
-# ---- export everything workers need ----
-clusterExport(cl, varlist = c(
-  "rh_roll_1mo_forecast",  # main function
-  "get_fc_rates_vec"       # helper function called inside
-))
+# ── Compute global max so all regions share the same scale ───────────────────
+ratio_max   <- ceiling(max(ratio_long_all$Ratio, na.rm = TRUE) * 100) / 100
+year_breaks <- unique(floor(ratio_long_all$Year))
 
-# ---- load StMoMo on each worker ----
-clusterEvalQ(cl, library(StMoMo))
+# ── Plot ──────────────────────────────────────────────────────────────────────
+ggplot(ratio_long_all, aes(x = as.factor(Year), y = as.factor(Age), fill = Ratio)) +
+  geom_tile() +
+  scale_fill_gradient(
+    low    = "white",
+    high   = "red",
+    limits = c(0, ratio_max),
+    breaks = seq(0, ratio_max, by = 0.05),
+    labels = scales::percent_format(accuracy = 1),
+    name   = "Opioid\nShare"
+  ) +
+  scale_x_discrete(
+    breaks = as.character(year_breaks)
+  ) +
+  facet_wrap(~ Region, ncol = 2) +
+  labs(
+    title = "Opioid Mortality as Share of Total LC Mortality Rate (2003-2020)",
+    x     = "Year",
+    y     = "Age"
+  ) +
+  theme_bw() +
+  theme(
+    axis.text.x     = element_text(angle = 45, hjust = 1, size = 7),
+    axis.text.y     = element_text(size = 7),
+    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5),
+    strip.text      = element_text(size = 11, face = "bold"),
+    legend.position = "right"
+  )
 
-# ---- run in parallel ----
-results <- parLapply(cl, data_list, rh_roll_1mo_forecast)
+ggsave("ratio_lc_all_regions.png", width = 14, height = 10, dpi = 300)
+```
 
-stopCluster(cl)
 
-# ---- extract results ----
-RH_Midwest   <- results$Midwest
-RH_Northeast <- results$Northeast
-RH_South     <- results$South
-RH_West      <- results$West
+## RH
+```{r}
+# setting
+ages     <- 25:65
+out_years <- colnames(west_opioid)
+
+# Extract Fitted Rate
+fitted_rh_Midwest   <- fitted(RH_Midwest,   type = "rates")
+fitted_rh_Northeast <- fitted(RH_Northeast, type = "rates")
+fitted_rh_South     <- fitted(RH_South,     type = "rates")
+fitted_rh_West      <- fitted(RH_West,      type = "rates")
+
+# Divide column names by 12 to convert to decimal year
+colnames(fitted_rh_Midwest)   <- as.numeric(colnames(fitted_rh_Midwest))   / 12
+colnames(fitted_rh_Northeast) <- as.numeric(colnames(fitted_rh_Northeast)) / 12
+colnames(fitted_rh_South)     <- as.numeric(colnames(fitted_rh_South))     / 12
+colnames(fitted_rh_West)      <- as.numeric(colnames(fitted_rh_West))      / 12
+
+# Divide row names by 12 to convert to age
+rownames(fitted_rh_Midwest)   <- as.numeric(rownames(fitted_rh_Midwest))   / 12
+rownames(fitted_rh_Northeast) <- as.numeric(rownames(fitted_rh_Northeast)) / 12
+rownames(fitted_rh_South)     <- as.numeric(rownames(fitted_rh_South))     / 12
+rownames(fitted_rh_West)      <- as.numeric(rownames(fitted_rh_West))      / 12
+
+# Subset to ages 25-65 and years 2003-2020 (monthly)
+mx_base_rh_Midwest   <- fitted_rh_Midwest[as.character(ages),   as.character(out_years)]
+mx_base_rh_Northeast <- fitted_rh_Northeast[as.character(ages), as.character(out_years)]
+mx_base_rh_South     <- fitted_rh_South[as.character(ages),     as.character(out_years)]
+mx_base_rh_West      <- fitted_rh_West[as.character(ages),      as.character(out_years)]
+
+# Combine two mortality
+mxt_rh_Midwest   <- mx_base_rh_Midwest   + midwest_opioid
+mxt_rh_Northeast <- mx_base_rh_Northeast + northeast_opioid
+mxt_rh_South     <- mx_base_rh_South     + south_opioid
+mxt_rh_West      <- mx_base_rh_West      + west_opioid
+
+# Ratio
+ratio_rh_Midwest   <- midwest_opioid   / mxt_rh_Midwest
+ratio_rh_Northeast <- northeast_opioid / mxt_rh_Northeast
+ratio_rh_South     <- south_opioid     / mxt_rh_South
+ratio_rh_West      <- west_opioid      / mxt_rh_West
 ```
 
 ```{r}
-RH_Midwest
+# ── Data ──────────────────────────────────────────────────────────────────────
+regions <- c("Midwest", "Northeast", "South", "West")
+
+ratio_list <- list(
+  Midwest   = ratio_rh_Midwest,
+  Northeast = ratio_rh_Northeast,
+  South     = ratio_rh_South,
+  West      = ratio_rh_West
+)
+
+# ── Build combined long format ────────────────────────────────────────────────
+ratio_long_all <- lapply(regions, function(reg) {
+  melt(ratio_list[[reg]],
+       varnames   = c("Age", "Year"),
+       value.name = "Ratio") %>%
+    mutate(Region = reg)
+}) %>% bind_rows()
+
+# ── Compute global max ────────────────────────────────────────────────────────
+ratio_max   <- ceiling(max(ratio_long_all$Ratio, na.rm = TRUE) * 100) / 100
+year_breaks <- unique(floor(ratio_long_all$Year))
+
+# ── Plot ──────────────────────────────────────────────────────────────────────
+ggplot(ratio_long_all, aes(x = as.factor(Year), y = as.factor(Age), fill = Ratio)) +
+  geom_tile() +
+  scale_fill_gradient(
+    low    = "white",
+    high   = "red",
+    limits = c(0, ratio_max),
+    breaks = seq(0, ratio_max, by = 0.05),
+    labels = scales::percent_format(accuracy = 1),
+    name   = "Opioid\nShare"
+  ) +
+  scale_x_discrete(
+    breaks = as.character(year_breaks)
+  ) +
+  facet_wrap(~ Region, ncol = 2) +
+  labs(
+    title = "Opioid Mortality as Share of Total RH Mortality Rate (2003-2020)",
+    x     = "Year",
+    y     = "Age"
+  ) +
+  theme_bw() +
+  theme(
+    axis.text.x     = element_text(angle = 45, hjust = 1, size = 7),
+    axis.text.y     = element_text(size = 7),
+    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5),
+    strip.text      = element_text(size = 11, face = "bold"),
+    legend.position = "right"
+  )
+
+ggsave("ratio_rh_all_regions.png", width = 14, height = 10, dpi = 300)
+```
+
+## CBD
+```{r}
+# setting
+ages      <- 25:65
+out_years <- colnames(west_opioid)
+
+# Extract Fitted qx (one-year death probability)
+fitted_cbd_Midwest   <- fitted(CBDfit_Midwest,   type = "rates")
+fitted_cbd_Northeast <- fitted(CBDfit_Northeast, type = "rates")
+fitted_cbd_South     <- fitted(CBDfit_South,     type = "rates")
+fitted_cbd_West      <- fitted(CBDfit_West,      type = "rates")
+
+# Divide column names by 12 to convert to decimal year
+colnames(fitted_cbd_Midwest)   <- as.numeric(colnames(fitted_cbd_Midwest))   / 12
+colnames(fitted_cbd_Northeast) <- as.numeric(colnames(fitted_cbd_Northeast)) / 12
+colnames(fitted_cbd_South)     <- as.numeric(colnames(fitted_cbd_South))     / 12
+colnames(fitted_cbd_West)      <- as.numeric(colnames(fitted_cbd_West))      / 12
+
+# Subset to ages 25-65 and years 2003-2020 (monthly)
+qx_base_cbd_Midwest   <- fitted_cbd_Midwest[as.character(ages),   as.character(out_years)]
+qx_base_cbd_Northeast <- fitted_cbd_Northeast[as.character(ages), as.character(out_years)]
+qx_base_cbd_South     <- fitted_cbd_South[as.character(ages),     as.character(out_years)]
+qx_base_cbd_West      <- fitted_cbd_West[as.character(ages),      as.character(out_years)]
+
+# Convert qx to central mortality rate mx = qx / (1 - qx)
+mx_base_cbd_Midwest   <- qx_base_cbd_Midwest   / (1 - qx_base_cbd_Midwest)
+mx_base_cbd_Northeast <- qx_base_cbd_Northeast / (1 - qx_base_cbd_Northeast)
+mx_base_cbd_South     <- qx_base_cbd_South     / (1 - qx_base_cbd_South)
+mx_base_cbd_West      <- qx_base_cbd_West      / (1 - qx_base_cbd_West)
+
+# Combine two mortality
+mxt_cbd_Midwest   <- mx_base_cbd_Midwest   + midwest_opioid
+mxt_cbd_Northeast <- mx_base_cbd_Northeast + northeast_opioid
+mxt_cbd_South     <- mx_base_cbd_South     + south_opioid
+mxt_cbd_West      <- mx_base_cbd_West      + west_opioid
+
+# Ratio
+ratio_cbd_Midwest   <- midwest_opioid   / mxt_cbd_Midwest
+ratio_cbd_Northeast <- northeast_opioid / mxt_cbd_Northeast
+ratio_cbd_South     <- south_opioid     / mxt_cbd_South
+ratio_cbd_West      <- west_opioid      / mxt_cbd_West
 ```
 
 ```{r}
-# save separately
-saveRDS(results$Midwest,   file = "rh_monthly_Midwest.rds")
-saveRDS(results$Northeast, file = "rh_monthly_Northeast.rds")
-saveRDS(results$South,     file = "rh_monthly_South.rds")
-saveRDS(results$West,      file = "rh_monthly_West.rds")
-```
+# ── Data ──────────────────────────────────────────────────────────────────────
+regions <- c("Midwest", "Northeast", "South", "West")
 
+ratio_list <- list(
+  Midwest   = ratio_cbd_Midwest,
+  Northeast = ratio_cbd_Northeast,
+  South     = ratio_cbd_South,
+  West      = ratio_cbd_West
+)
+
+# ── Build combined long format ────────────────────────────────────────────────
+ratio_long_all <- lapply(regions, function(reg) {
+  melt(ratio_list[[reg]],
+       varnames   = c("Age", "Year"),
+       value.name = "Ratio") %>%
+    mutate(Region = reg)
+}) %>% bind_rows()
+
+# ── Compute global max ────────────────────────────────────────────────────────
+ratio_max   <- ceiling(max(ratio_long_all$Ratio, na.rm = TRUE) * 100) / 100
+year_breaks <- unique(floor(ratio_long_all$Year))
+
+# ── Plot ──────────────────────────────────────────────────────────────────────
+ggplot(ratio_long_all, aes(x = as.factor(Year), y = as.factor(Age), fill = Ratio)) +
+  geom_tile() +
+  scale_fill_gradient(
+    low    = "white",
+    high   = "red",
+    limits = c(0, ratio_max),
+    breaks = seq(0, ratio_max, by = 0.05),
+    labels = scales::percent_format(accuracy = 1),
+    name   = "Opioid\nShare"
+  ) +
+  scale_x_discrete(
+    breaks = as.character(year_breaks)
+  ) +
+  facet_wrap(~ Region, ncol = 2) +
+  labs(
+    title = "Opioid Mortality as Share of Total CBD Mortality Rate (2003-2020)",
+    x     = "Year",
+    y     = "Age"
+  ) +
+  theme_bw() +
+  theme(
+    axis.text.x     = element_text(angle = 45, hjust = 1, size = 7),
+    axis.text.y     = element_text(size = 7),
+    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5),
+    strip.text      = element_text(size = 11, face = "bold"),
+    legend.position = "right"
+  )
+
+ggsave("ratio_cbd_all_regions.png", width = 14, height = 10, dpi = 300)
+```

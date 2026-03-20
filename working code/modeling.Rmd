@@ -366,3 +366,84 @@ View(region_matrices[[3]])
 View(region_matrices[[4]])
 ```
 
+# Convert Monthly opioid death
+```{r}
+# read region-level file
+df_region_raw <- read_csv(
+  "../data/wonder_opioid/Five-Year-Region.csv",
+  n_max = 2024,
+  show_col_types = FALSE,
+  na = c("", "NA", "Not Applicable", "Suppressed", 'Unreliable')
+) %>%
+  clean_names() %>%
+  filter(!is.na(year))
+
+df_region <- df_region_raw %>%
+  mutate(
+    year = as.integer(year),
+    age_groups = five_year_age_groups
+  ) %>%
+  mutate(
+    age_lo = case_when(
+      age_groups == "< 1 year" ~ 0,
+      TRUE ~ as.numeric(str_extract(age_groups, "^\\d+"))
+    ),
+    age_hi = case_when(
+      age_groups == "< 1 year" ~ 0,
+      str_detect(age_groups, "\\+") ~ age_lo + 9,
+      TRUE ~ as.numeric(str_extract(age_groups, "(?<=-)\\d+"))
+    ),
+    age = (age_lo + age_hi) / 2,
+    mortality = deaths / population
+  ) %>%
+  drop_na(age, deaths, population, census_region) %>%
+  filter(age >= 20, age <= 60, mortality > 0) %>%
+  mutate(log_rate = log(mortality))
+
+yrs_keep <- seq(2003, 2020, by = 1/12)
+age_fine <- seq(25, 65, by = 1)
+
+regions <- sort(unique(df_region$census_region))
+
+region_plots <- list()
+region_matrices <- list()
+
+for (reg in regions) {
+  
+  df_reg <- df_region %>%
+    filter(census_region == reg)
+  
+  fit_reg <- gam(
+    log_rate ~ s(age, k = 4) + s(year, k = 6),
+    data = df_reg,
+    method = "REML"
+  )
+  
+  grid_fine <- expand_grid(
+    year = yrs_keep,
+    age  = age_fine
+  )
+  
+  grid_fine$u_hat <- predict(fit_reg, newdata = grid_fine)
+  grid_fine$y_hat <- exp(grid_fine$u_hat)
+  
+  # matrix: rows = age, cols = year
+  mat_u <- grid_fine %>%
+    select(age, year, u_hat) %>%
+    pivot_wider(names_from = year, values_from = u_hat) %>%
+    arrange(age)
+  
+  u_xt <- as.matrix(mat_u %>% select(-age))
+  rownames(u_xt) <- mat_u$age
+  colnames(u_xt) <- as.character(sort(yrs_keep))
+  
+  region_matrices[[reg]] <- u_xt
+}
+```
+
+```{r}
+write.csv(region_matrices[[1]], file = "Northeast_opioid_logmxt.csv", row.names = TRUE)
+write.csv(region_matrices[[2]], file = "Midwest_opioid_logmxt.csv", row.names = TRUE)
+write.csv(region_matrices[[3]], file = "South_opioid_logmxt.csv", row.names = TRUE)
+write.csv(region_matrices[[4]], file = "West_opioid_logmxt.csv", row.names = TRUE)
+```
