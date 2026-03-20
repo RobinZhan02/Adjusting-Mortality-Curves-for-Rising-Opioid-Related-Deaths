@@ -1030,7 +1030,7 @@ origins   <- evalYears - 1
 ages      <- 25:65
 
 mort_F <- StMoMoData(US_data, type = "central", series = "total")
-
+LC <- lc(link = "log", const = "sum")
 # ── Extract observed data ONCE outside loop ───────────────────
 obs_death <- mort_F$Dxt[as.character(ages), as.character(evalYears)]
 obs_exp   <- mort_F$Ext[as.character(ages), as.character(evalYears)]
@@ -1112,7 +1112,10 @@ write.csv(mx_hat_lc_ar_upper, file = "mx_hat_lc_ar_upper.csv", row.names = TRUE)
 write.csv(obs_death,          file = "obs_death.csv",           row.names = TRUE)
 write.csv(obs_exp,            file = "obs_exp.csv",             row.names = TRUE)
 write.csv(obs_mx,             file = "obs_mx.csv",              row.names = TRUE)
+```
 
+```{r}
+# Load
 # Remove X prefix from column names when loading
 load_matrix <- function(file) {
   m <- as.matrix(read.csv(file, row.names = 1, check.names = FALSE))
@@ -1128,6 +1131,100 @@ mx_hat_lc_ar_upper <- load_matrix("mx_hat_lc_ar_upper.csv")
 obs_death          <- load_matrix("obs_death.csv")
 obs_exp            <- load_matrix("obs_exp.csv")
 obs_mx             <- load_matrix("obs_mx.csv")
+```
+
+#### Compare MRWD and AR(1)
+```{r}
+# ── Settings ──────────────────────────────────────────────────
+rep_ages  <- c(30, 40, 50, 60)
+evalYears <- 2003:2023
+
+# ── Compute observed mortality rate ───────────────────────────
+obs_mx <- obs_death / obs_exp
+
+# ── Helper: extract mean series ───────────────────────────────
+extract_age_series <- function(mat, age, years) {
+  data.frame(
+    year = years,
+    rate = as.numeric(mat[as.character(age), as.character(years)])
+  )
+}
+
+# ── Helper: extract CI series ─────────────────────────────────
+extract_age_ci <- function(mat_lower, mat_upper, age, years) {
+  data.frame(
+    year  = years,
+    lower = as.numeric(mat_lower[as.character(age), as.character(years)]),
+    upper = as.numeric(mat_upper[as.character(age), as.character(years)])
+  )
+}
+
+# ── Build long data frame for mean lines ──────────────────────
+plot_data <- lapply(rep_ages, function(age) {
+  bind_rows(
+    extract_age_series(obs_mx, age, evalYears) %>% mutate(model = "Actual"),
+    extract_age_series(mx_hat_lc_rw, age, evalYears) %>% mutate(model = "Lee-Carter (MRWD)"),
+    extract_age_series(mx_hat_lc_ar, age, evalYears) %>% mutate(model = "Lee-Carter (AR(1))")
+  ) %>% mutate(age = paste0("Age ", age))
+}) %>% bind_rows()
+
+# ── Build long data frame for CI ribbons ──────────────────────
+ci_data <- lapply(rep_ages, function(age) {
+  bind_rows(
+    extract_age_ci(mx_hat_lc_rw_lower, mx_hat_lc_rw_upper, age, evalYears) %>% 
+      mutate(model = "Lee-Carter (MRWD)"),
+    extract_age_ci(mx_hat_lc_ar_lower, mx_hat_lc_ar_upper, age, evalYears) %>%
+      mutate(model = "Lee-Carter (AR(1))")
+  ) %>% mutate(age = paste0("Age ", age))
+}) %>% bind_rows()
+
+# ── Plot ──────────────────────────────────────────────────────
+ggplot() +
+  # CI ribbons (behind lines)
+  geom_ribbon(data = ci_data,
+              aes(x = year, ymin = log(lower), ymax = log(upper), fill = model),
+              alpha = 0.2) +
+  # Mean forecast lines
+  geom_line(data = plot_data,
+            aes(x = year, y = log(rate), color = model, linetype = model),
+            linewidth = 0.8) +
+  # Actual points
+  geom_point(data = filter(plot_data, model == "Actual"),
+             aes(x = year, y = log(rate)),
+             size = 1.2, color = "black") +
+  facet_wrap(~ age, ncol = 2, scales = "free_y") +
+  scale_color_manual(values = c(
+    "Actual"           = "black",
+    "Lee-Carter (MRWD)"       = "#E41A1C",
+    "Lee-Carter (AR(1))" = "#377EB8"
+  )) +
+  scale_fill_manual(values = c(
+    "Lee-Carter (MRWD)"       = "#E41A1C",
+    "Lee-Carter (AR(1))" = "#377EB8"
+  )) +
+  scale_linetype_manual(values = c(
+    "Actual"           = "solid",
+    "Lee-Carter (MRWD)"       = "dashed",
+    "Lee-Carter (AR(1))" = "dotdash"
+  )) +
+  labs(
+    title    = "One-Year Ahead Forecast: MRWD vs AR(1) vs Actual (2003-2023)",
+    x        = "Year",
+    y        = "Log Mortality Rate",
+    color    = "Model",
+    linetype = "Model",
+    fill     = "Model"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom",
+    strip.text      = element_text(size = 12, face = "bold"),
+    axis.text.x     = element_text(angle = 45, hjust = 1),
+    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5)
+  )
+
+# ── Save ──────────────────────────────────────────────────────
+ggsave("MRWD_vs_AR(1).png", width = 12, height = 8, dpi = 300)
 ```
 
 ### RH
@@ -1366,7 +1463,7 @@ sum_list_best <- readRDS("sum_list_best_rh.rds")
 #### Plot Parameters
 
 ```{r}
-pdf("RH_parameter_plots.pdf", width = 40, height = 4 * length(years))
+pdf("RH_parameter_plots.pdf", width = 22, height = 4 * length(years))
 
 ages <- 25:65
 status_colors <- c(
@@ -1378,8 +1475,8 @@ status_colors <- c(
 years <- names(sum_list)
 n_year <- length(years)
 
-# Layout: rows = years, columns = 6 parameter blocks
-par(mfrow = c(n_year, 6), mar = c(2,2,2,1))
+# Layout: rows = years, columns = 5 parameter blocks
+par(mfrow = c(n_year, 5), mar = c(2,2,2,1))
 
 
 # ---------- LOOP THROUGH YEARS ----------
@@ -1412,7 +1509,6 @@ for (y in years) {
   bx2_block <- M[, grep("^bx2_",    colnames(M)), drop = FALSE]
   kt_block  <- M[, grep("^kt_",     colnames(M)), drop = FALSE]
   gc_block  <- M[, grep("^gc_",     colnames(M)), drop = FALSE]
-  mx_block  <- M[, grep("^mx_fc_",  colnames(M)), drop = FALSE]
 
   cols <- status_colors[M$status]
 
@@ -1472,20 +1568,7 @@ for (y in years) {
            col=status_colors, lty=1, cex=1, bty="n")
   } else plot.new()
 
-  # mx forecast (only successful)
-  idx_ok <- which(M$status == "Converged + Forecast")
-
-  if (length(idx_ok) > 0 && ncol(mx_block) > 0) {
-    matplot(ages, t(mx_block[idx_ok, , drop = FALSE]),
-            type = "l", lty = 1,
-            col = status_colors["Converged + Forecast"],
-            main = paste("mx_fc -", as.integer(y) + 1),
-            xlab = "", ylab = "")
-    legend("topleft", legend=names(status_colors),
-           col=status_colors, lty=1, cex=1, bty="n")
-  } else {
-    plot.new()
-  }
+  
 }
 
 # Reset layout
@@ -1841,68 +1924,163 @@ ggsave("forecast_vs_actual.png", width = 12, height = 8, dpi = 300)
 ```
 
 ```{r}
-# ── Settings ──────────────────────────────────────────────────
-rep_ages  <- c(30, 40, 50, 60)
-evalYears <- 2003:2019
-# ── Compute observed mortality rate ───────────────────────────
-obs_mx <- obs_death / obs_exp
+png("random_restart.png", width = 1200, height = 400 * length(years), res = 100)
 
-# ── Helper: extract one age across all years ──────────────────
-extract_age_series <- function(mat, age, years) {
-  data.frame(
-    year = years,
-    rate = as.numeric(mat[as.character(age), as.character(years)])
+ages <- 25:65
+status_colors <- c(
+  "Converged + Forecast"        = "darkgreen",
+  "Converged + No Forecast"     = "orange",
+  "Not Converged + No Forecast" = "red"
+)
+
+years <- names(sum_list)[1:3]
+n_year <- length(years)
+
+# Layout: rows = years, columns = 5 parameter blocks
+par(mfrow = c(n_year, 3), mar = c(2,2,2,1))
+
+
+# ---------- LOOP THROUGH YEARS ----------
+for (y in years) {
+
+  M <- as.data.frame(sum_list[[y]])
+
+  # Drop rows where parameter part all NA
+  M <- M[rowSums(!is.na(M[, -c(1,2)])) > 0, ]
+
+  # Convert conv / fc_ok to logical
+  M$conv  <- as.integer(M$conv) == 1
+  M$fc_ok <- as.integer(M$fc_ok) == 1
+
+  # Status label
+  M$status <- with(M,
+    ifelse(conv & fc_ok, "Converged + Forecast",
+    ifelse(!conv & !fc_ok, "Not Converged + No Forecast",
+           "Converged + No Forecast"))
   )
+
+  # transparent colors by status
+  cols <- adjustcolor(status_colors[M$status], alpha.f = 0.35)
+  
+  M$iter <- seq_len(nrow(M))
+
+  # Extract parameter blocks (robust)
+  ax_block  <- M[, grep("^ax_",     colnames(M)), drop = FALSE]
+  kt_block  <- M[, grep("^kt_",     colnames(M)), drop = FALSE]
+  gc_block  <- M[, grep("^gc_",     colnames(M)), drop = FALSE]
+
+  cols <- status_colors[M$status]
+
+  # =========================
+  # 5) PLOT BLOCKS
+  # =========================
+
+  # ax
+  if (ncol(ax_block) > 0) {
+    matplot(ages, t(ax_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("ax -", y),
+            xlab = "", ylab = "",
+            cex.main = 1.8)
+    legend("bottomright", legend = names(status_colors),
+           col = status_colors, lty = 1, cex = 1.2, bty = "n")
+  } else plot.new()
+
+  # kt (period index)
+  if (ncol(kt_block) > 0) {
+    kt_years <- as.numeric(sub("kt_", "", colnames(kt_block)))
+    matplot(kt_years, t(kt_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("kt -", y),
+            xlab = "", ylab = "",
+            cex.main = 1.8)
+    legend("topright", legend = names(status_colors),
+           col = status_colors, lty = 1, cex = 1.2, bty = "n")
+  } else plot.new()
+
+  # gc (cohort index)
+  if (ncol(gc_block) > 0) {
+    gc_vals <- as.numeric(sub("gc_", "", colnames(gc_block)))
+    matplot(gc_vals, t(gc_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("gc -", y),
+            xlab = "", ylab = "",
+            cex.main = 1.8)
+    legend("bottomright", legend = names(status_colors),
+           col = status_colors, lty = 1, cex = 1.2, bty = "n")
+  } else plot.new()
+  
 }
 
-# convert qx to mx before plotting
-mx_hat_CBD <- qx_hat_CBD / (1 - qx_hat_CBD)
+# Reset layout
+par(mfrow = c(1,1))
+dev.off()
+```
+```{r}
+png("random_restart2.png", width = 1200, height = 400 *1, res = 100)
 
-# ── Build long data frame ─────────────────────────────────────
-plot_data <- lapply(rep_ages, function(age) {
-  bind_rows(
-    extract_age_series(obs_mx,       age, evalYears) %>% mutate(model = "Actual"),
-    extract_age_series(mx_hat_lc_rw, age, evalYears) %>% mutate(model = "Lee-Carter"),
-    extract_age_series(mx_hat_rh_ar, age, evalYears) %>% mutate(model = "Renshaw-Haberman"),
-    extract_age_series(mx_hat_CBD,   age, evalYears) %>% mutate(model = "CBD")
-  ) %>% mutate(age = paste0("Age ", age))
-}) %>% bind_rows()
+ages <- 25:65
+status_colors <- c(
+  "Converged + Forecast"        = "darkgreen",
+  "Converged + No Forecast"     = "orange",
+  "Not Converged + No Forecast" = "red"
+)
 
-# ── Plot ──────────────────────────────────────────────────────
-ggplot(plot_data, aes(x = year, y = log(rate), color = model, linetype = model)) +
-  geom_line(linewidth = 0.8) +
-  geom_point(data = filter(plot_data, model == "Actual"), 
-             size = 1.2, show.legend = FALSE) +
-  facet_wrap(~ age, ncol = 2, scales = "free_y") +
-  scale_color_manual(values = c(
-    "Actual"           = "black",
-    "Lee-Carter"       = "#E41A1C",
-    "Renshaw-Haberman" = "#377EB8",
-    "CBD"              = "#FF7F00"
-  )) +
-  scale_linetype_manual(values = c(
-    "Actual"           = "solid",
-    "Lee-Carter"       = "dashed",
-    "Renshaw-Haberman" = "dotdash",
-    "CBD"              = "dotted"
-  )) +
-  labs(
-    title    = "One-Step Ahead Forecast vs Actual Mortality Rate (2003-2019)",
-    x        = "Year",
-    y        = "Log Mortality Rate",
-    color    = "Model",
-    linetype = "Model"
-  ) +
-  theme_bw() +
-  theme(
-    legend.position = "bottom",
-    strip.text      = element_text(size = 12, face = "bold"),
-    axis.text.x     = element_text(angle = 45, hjust = 1),
-    plot.title      = element_text(size = 13, face = "bold", hjust = 0.5)
+years <- names(sum_list)[1:3]
+n_year <- length(years)
+
+# Layout: rows = years, columns = 5 parameter blocks
+par(mfrow = c(1, 3), mar = c(2,2,2,1))
+
+
+# ---------- LOOP THROUGH YEARS ----------
+for (y in years) {
+
+  M <- as.data.frame(sum_list[[y]])
+
+  # Drop rows where parameter part all NA
+  M <- M[rowSums(!is.na(M[, -c(1,2)])) > 0, ]
+
+  # Convert conv / fc_ok to logical
+  M$conv  <- as.integer(M$conv) == 1
+  M$fc_ok <- as.integer(M$fc_ok) == 1
+
+  # Status label
+  M$status <- with(M,
+    ifelse(conv & fc_ok, "Converged + Forecast",
+    ifelse(!conv & !fc_ok, "Not Converged + No Forecast",
+           "Converged + No Forecast"))
   )
 
-# ── Save ──────────────────────────────────────────────────────
-ggsave("forecast_vs_actual.png", width = 12, height = 8, dpi = 300)
+  # transparent colors by status
+  cols <- adjustcolor(status_colors[M$status], alpha.f = 0.35)
+  
+  M$iter <- seq_len(nrow(M))
+
+  # Extract parameter blocks (robust)
+  bx2_block <- M[, grep("^bx2_",    colnames(M)), drop = FALSE]
+
+  cols <- status_colors[M$status]
+
+  # =========================
+  # 5) PLOT BLOCKS
+  # =========================
+  # bx2
+  if (ncol(bx2_block) > 0) {
+    matplot(ages, t(bx2_block),
+            type = "l", lty = 1, col = cols,
+            main = paste("bx2 -", y),
+            xlab = "", ylab = "", cex.main = 1.8)
+    legend("topright", legend=names(status_colors),
+           col=status_colors, lty=1, cex=1.2, bty="n")
+  } else plot.new()
+
+
+}
+
+# Reset layout
+par(mfrow = c(1,1))
+dev.off()
 ```
 
 # DM Test
